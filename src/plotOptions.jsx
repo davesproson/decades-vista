@@ -1,7 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { 
-    toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle
+    toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
+    setServer
 } from './redux/optionsSlice';
+import { useServers } from './hooks'
 
 
 const ToggleSwitch = (props) => {
@@ -88,7 +90,26 @@ const ParameterSelectorDropdown = (props) => {
 }
 
 const ServerSelectorDropDown = (props) => {
-    return "fish (192.168.101.110)"
+
+    const servers = useServers()
+    const server = useSelector(state => state.options.server)
+    const dispatch = useDispatch()
+
+    const options = servers.map(s=>{
+        return <option key={s} value={s}>{s}</option>
+    })
+
+    const onChange = (e) => {
+        dispatch(setServer(e.target.value))
+    }
+
+    return (
+        <div className="select">
+            <select value={server} onChange={onChange}>
+                {options}
+            </select>
+        </div>
+    )
 }
 
 const PlotOptionCard = () => {

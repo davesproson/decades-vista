@@ -28,14 +28,18 @@ const ParameterTable = (props) => {
     const vars = useSelector(state => state.vars)
     const filterText = useSelector(state => state.paramfilter)
 
-    const rows = vars.params.filter(
+    if(!vars.params) return (<div></div>);
+
+    const params = [...vars.params];
+
+    const rows = params.filter(
         x=> {
             return (
                 x.name.toLowerCase().includes(filterText.filterText.toLowerCase()) | 
                 x.id.toString().toLowerCase().includes(filterText.filterText.toLowerCase())
             )
         }
-    ).map(
+    ).sort((a, b)=>a.id - b.id).map(
         param => <ParameterLine key={param.id} id={param.id} name={param.name} selected={param.selected} units={param.units} />
     )
 

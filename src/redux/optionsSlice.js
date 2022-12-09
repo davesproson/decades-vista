@@ -11,10 +11,7 @@ export const optionsSlice = createSlice({
         scrollingWindow: false,
         dataHeader: false,
         ordinateAxis: 'utc_time',
-        server: {
-            name: 'fish',
-            ip: '192.168.101.108'
-        },
+        server: "",
         timeframes: [
             {selected: false, value: 'all', label: 'All'},
             {selected: false, value: '2hr', label: '2 hours'},
@@ -46,6 +43,9 @@ export const optionsSlice = createSlice({
                 timeframe.selected = false;
             }
             state.timeframes.find(x=>x.value===action.payload.value).selected = true;
+        },
+        setServer: (state, action) => {
+            state.server = action.payload;
         }
 	},
 });
@@ -53,7 +53,7 @@ export const optionsSlice = createSlice({
 
 export const { 
     toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
-    setTimeframe
+    setTimeframe, setServer
 } = optionsSlice.actions;
 
 export default optionsSlice.reducer;
