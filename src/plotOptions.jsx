@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { 
     toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle
 } from './redux/optionsSlice';
-import { usePlotUrl } from './hooks';
+
 
 const ToggleSwitch = (props) => {
 
@@ -56,9 +56,11 @@ const OptionBlock = (props) => {
         border: "1px solid #dddddd"
     }
 
+    const titleElem = props.title ? <span className="mt-2">{props.title}</span> : null
+
     return (
         <div className={classOpts} style={styleOpts}>
-            <span className="mt-2">{props.title}</span>
+            {titleElem}
             {props.optionComponent}
         </div>
     )
@@ -66,7 +68,7 @@ const OptionBlock = (props) => {
 }
 
 const ParameterSelectorDropdown = (props) => {
-    const params = [{name: 'Time', id: 0}, ...useSelector(state => state.params)]
+    const params = [{name: 'Time', id: -1, raw: "utc_time"}, ...useSelector(state => state.vars.params)]
     const options = params.map(p=>{
         return <option key={p.id}>{p.name}</option>
     })
@@ -115,4 +117,4 @@ const PlotOptionCard = () => {
     )
 }
 
-export { PlotOptionCard }
+export { PlotOptionCard, OptionBlock }

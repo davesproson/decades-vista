@@ -7,8 +7,7 @@ const ParameterLine = (props) => {
 
     const toggleSelected = () => {
         dispatch(toggleParamSelected({
-            id: props.id,
-            selected: !props.selected
+            id: props.id
         }))
     }
 
@@ -26,10 +25,10 @@ const ParameterLine = (props) => {
 
 const ParameterTable = (props) => {
     
-    const params = useSelector(state => state.params)
+    const vars = useSelector(state => state.vars)
     const filterText = useSelector(state => state.paramfilter)
 
-    const rows = params.filter(
+    const rows = vars.params.filter(
         x=> {
             return (
                 x.name.toLowerCase().includes(filterText.filterText.toLowerCase()) | 

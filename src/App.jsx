@@ -5,6 +5,7 @@ import Navbar  from './navbar'
 import { ParameterTable } from './params'
 import { Options } from './options'
 import { Routes, Route } from 'react-router-dom'
+import { useParameters } from './hooks';
 
 const NBWrapped = (props) => {
   return (
@@ -16,6 +17,8 @@ const NBWrapped = (props) => {
 }
 
 function App() {
+
+  const parameters = useParameters()
 
   return (
     // Wrapped Navbar to avoid having to repeat it in every route. Sure there must

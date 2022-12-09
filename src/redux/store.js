@@ -7,9 +7,9 @@ import optionsReducer from './optionsSlice'
 
 const store = configureStore({
   reducer: {
-    params: paramReducer,
+    vars: paramReducer,
     paramfilter: paramFilterReducer,
-    options: optionsReducer
+    options: optionsReducer,
   }
 })
 
