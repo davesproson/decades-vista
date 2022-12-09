@@ -10,11 +10,19 @@ export const optionsSlice = createSlice({
         },
         scrollingWindow: false,
         dataHeader: false,
-        ordinateAxis: 'javascript_time',
+        ordinateAxis: 'utc_time',
         server: {
             name: 'fish',
             ip: '192.168.101.108'
-        }
+        },
+        timeframes: [
+            {selected: false, value: 'all', label: 'All'},
+            {selected: false, value: '2hr', label: '2 hours'},
+            {selected: false, value: '1hr', label: '1 hour'},
+            {selected: true, value: '30min', label: '30 minutes'},
+            {selected: false, value: '5min', label: '5 minutes'},
+            {selected: false, value: '1min', label: '1 minute'},
+        ]
     },
 	reducers: {
         toggleSwapOrientation: (state) => {
@@ -32,13 +40,20 @@ export const optionsSlice = createSlice({
             } else {
                 state.plotStyle.value = state.plotStyle.options[0];
             }
+        },
+        setTimeframe: (state, action) => {
+            for(const timeframe of state.timeframes) {
+                timeframe.selected = false;
+            }
+            state.timeframes.find(x=>x.value===action.payload.value).selected = true;
         }
 	},
 });
 
 
 export const { 
-    toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle
+    toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
+    setTimeframe
 } = optionsSlice.actions;
 
 export default optionsSlice.reducer;

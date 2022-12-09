@@ -19,6 +19,8 @@ const usePlotUrl = () => {
 
     const plotOptions = useSelector(state => state.options);
     const vars = useSelector(state => state.vars);
+
+    const timeframe = plotOptions.timeframes.find(x=>x.selected).value;
     const params = vars.params
     const axes = {}
     for(const ax of vars.axes) {
@@ -43,7 +45,7 @@ const usePlotUrl = () => {
 
         setPlotUrl(
             `http://${plotOptions.server.ip}/decades-viz/viz/plot?`
-            + `timeframe=30min`
+            + `timeframe=${timeframe}`
             + `&params=${selectedParams.join(',')}`
             + axisArgs
             + `&swapxy=${plotOptions.swapOrientation}`

@@ -3,6 +3,7 @@ import { useState } from "react"
 import { setFilterText } from "./redux/filterSlice"
 import { Link, useLocation } from "react-router-dom"
 import { unselectAllParams } from "./redux/parametersSlice"
+import { setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
 
 const NavSearchInput = (props) => {
@@ -24,6 +25,24 @@ const NavSearchInput = (props) => {
 }
 
 const NavTimeFrameSelector = (props) => {
+
+    const dispatch = useDispatch()
+
+    const timeframes = useSelector(state => state.options.timeframes)
+    const timeFrameElements = timeframes.map(x => {
+    const active = x.selected ? "has-text-success is-underlined" : ""
+
+    const onSetTimeframe = (e) => {
+        dispatch(setTimeframe({value: e}))
+    }
+
+    return (
+        <a className="navbar-item" key={x.value} onClick={()=>onSetTimeframe(x.value)}>
+            <span className={active}>{x.label}</span>
+        </a>
+    )
+    })
+
     return (
         <div className="navbar-item has-dropdown is-hoverable">
             <a className="navbar-link">
@@ -31,25 +50,7 @@ const NavTimeFrameSelector = (props) => {
             </a>
 
             <div className="navbar-dropdown">
-                <a className="navbar-item">
-                    All
-                </a>
-                <hr className="navbar-divider" />
-                <a className="navbar-item">
-                    2 hours
-                </a>
-                <a className="navbar-item">
-                    1 hour
-                </a>
-                <a className="navbar-item">
-                    30 mins
-                </a>
-                <a className="navbar-item">
-                    5 mins
-                </a>
-                <a className="navbar-item">
-                    1 min
-                </a>
+                {timeFrameElements}
             </div>
         </div>
     )
