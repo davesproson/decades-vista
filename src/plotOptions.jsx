@@ -50,7 +50,13 @@ const OptionSwitch = (props) => {
 
 const OptionBlock = (props) => {
 
-    const classOpts = "is-flex is-flex-direction-row is-justify-content-space-between"
+    const flexDirectionClass = props.flexDirection 
+        ? props.flexDirection == 'column'
+            ? 'is-flex-direction-column'
+            : 'is-flex-direction-row'
+        : 'is-flex-direction-row'
+
+    const classOpts = "is-flex is-justify-content-space-between " + flexDirectionClass
     const styleOpts = {
         padding: "0.8em",
         border: "1px solid #dddddd"

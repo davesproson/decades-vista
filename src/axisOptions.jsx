@@ -35,8 +35,8 @@ const AxisSelectorItem = (props) => {
 
     return (
         <div className="field has-addons">
-            <div className="control">
-                <div className="select">
+            <div className="control is-flex-grow-1">
+                <div className="select is-fullwidth">
                     <select value={props.param.axisId} onChange={changeAxis}>
                         {axesOptions}
                     </select>
@@ -50,7 +50,10 @@ const AxisSelectorItem = (props) => {
 const AxisSelectorGroup = (props) => {
     const vars = useSelector(state => state.vars)
     return vars.params.filter(x => x.selected).map(
-        x => <OptionBlock key={x.id} title={`${x.name} (${x.units})`} optionComponent={<AxisSelectorItem key={x.id} param={x} />} />
+        x => <OptionBlock key={x.id} 
+                          title={`${x.name} (${x.units})`} 
+                          optionComponent={<AxisSelectorItem key={x.id} param={x} />}
+                          flexDirection="column" />
     )
 }
 
