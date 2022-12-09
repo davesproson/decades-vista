@@ -83,10 +83,11 @@ const ViewsSelector = (props) => {
 }
 
 const PlotButton = (props) => {
-
+    const params = useSelector(state => state.vars.params)
+    const disable = params.filter(x => x.selected).length == 0
     
     return (
-        <a href="plot/" className="button is-primary" >
+        <a href="plot/" className="button is-primary" disabled={disable}>
             Plot
         </a>
     )
@@ -101,8 +102,11 @@ const TephiButton = (props) => {
 }
 
 const DashButton = (props) => {
+    const params = useSelector(state => state.vars.params)
+    const disable = params.filter(x => x.selected).length == 0
+
     return (
-        <a className="button is-primary">
+        <a className="button is-primary" disabled={disable}>
             Dashboard
         </a>
     )
