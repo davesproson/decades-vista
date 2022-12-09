@@ -6,7 +6,14 @@ import { AxisOptionsCard } from './axisOptions';
 const AddressBar = () => {
     const address = usePlotUrl()
     return (
-        <input className="input" type="text" value={address} readOnly />
+        <div className="field has-addons">
+            <div className='control is-flex-grow-1'>
+                <input className="input" type="text" value={address} readOnly />
+            </div>
+            <div className='control'>
+                <button className="button is-info" onClick={() => navigator.clipboard.writeText(address)}>Copy</button>
+            </div>
+        </div>
     )
 }
 
