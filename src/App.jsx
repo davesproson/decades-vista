@@ -6,14 +6,24 @@ import { ParameterTable } from './params'
 import { Options } from './options'
 import { Routes, Route } from 'react-router-dom'
 
-function App() {
-
+const NBWrapped = (props) => {
   return (
     <>
       <Navbar />
+      {props.component}
+    </>
+  )
+}
+
+function App() {
+
+  return (
+    // Wrapped Navbar to avoid having to repeat it in every route. Sure there must
+    // be a Router way to do this...
+    <>
       <Routes>
-        <Route path="/" element={<ParameterTable />} />
-        <Route path="/options" element={<Options />} />
+        <Route path="/" element={<NBWrapped component={<ParameterTable />} />} />
+        <Route path="/options" element={<NBWrapped component={<Options />} />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </>
