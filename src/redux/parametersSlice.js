@@ -75,6 +75,7 @@ export const paramSlice = createSlice({
         },
         unselectAllParams: (state) => {
             state.params.forEach(param => param.selected = false);
+            state.axes = []
         },
         addNewAxis: (state, action) => {
             const paramId = action.payload.paramId;
