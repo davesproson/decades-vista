@@ -7,6 +7,7 @@ import { Options } from './options'
 import { Routes, Route } from 'react-router-dom'
 import { Plot } from './plot';
 import { useDispatchParameters } from './hooks'
+import { Dashboard } from './dashboard'
 
 const NBWrapped = (props) => {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/" element={<NBWrapped component={<ParameterTable />} />} />
         <Route path="/options" element={<NBWrapped component={<Options />} />} />
         <Route path="/plot" element={<Plot />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </>
