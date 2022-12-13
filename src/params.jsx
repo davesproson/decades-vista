@@ -33,16 +33,16 @@ const ParameterTable = (props) => {
 
     const params = [...vars.params];
 
-    const rows = params.filter(
-        x=> {
-            return (
-                x.name.toLowerCase().includes(filterText.filterText.toLowerCase()) | 
-                x.id.toString().toLowerCase().includes(filterText.filterText.toLowerCase())
-            )
-        }
-    ).sort((a, b)=>a.id - b.id).map(
-        param => <ParameterLine key={param.id} id={param.id} name={param.name} selected={param.selected} units={param.units} />
-    )
+    const rows = params
+        .filter(
+            x => (x.name.toLowerCase().includes(filterText.filterText.toLowerCase())
+               || x.id.toString().toLowerCase().includes(filterText.filterText.toLowerCase())))
+        .sort((a, b)=>(a.id - b.id))
+        .map(param => <ParameterLine key={param.id} 
+                                     id={param.id} 
+                                     name={param.name} 
+                                     selected={param.selected} 
+                                     units={param.units} />)
 
     return (
         <div className="container mt-4">
