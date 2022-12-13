@@ -3,7 +3,7 @@ import { useState } from "react"
 import { setFilterText } from "./redux/filterSlice"
 import { Link, useLocation } from "react-router-dom"
 import { unselectAllParams } from "./redux/parametersSlice"
-import { setTimeframe } from "./redux/optionsSlice"
+import { setOrdinateAxis, setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
 import { usePlotUrl } from "./hooks"
 
@@ -135,6 +135,7 @@ const ClearButton = (props) => {
     const clear = () => {
         dispatch(unselectAllParams())
         dispatch(setFilterText({filterText: ""}))
+        dispatch(setOrdinateAxis('utc_time'))
     }
 
     return (

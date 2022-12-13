@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { 
     toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
-    setServer
+    setServer, setOrdinateAxis
 } from './redux/optionsSlice';
 import { useServers } from './hooks'
 
@@ -76,15 +77,39 @@ const OptionBlock = (props) => {
 }
 
 const ParameterSelectorDropdown = (props) => {
-    const params = [{name: 'Time', id: -1, raw: "utc_time"}, ...useSelector(state => state.vars.params)]
-    const options = params.map(p=>{
-        return <option key={p.id}>{p.name}</option>
-    })
+    const [filterText, setFilterText] = useState('')
+    const dispatch = useDispatch()
+    const serverParams = useSelector(state => state.vars.params)
+    const ordinateAxis = useSelector(state => state.options.ordinateAxis)
+
+    if(!serverParams) return null
+
+    const params = [{name: 'Time', id: -1, raw: "utc_time", units: 's'}, ...serverParams]
+    const options = params.filter(x=>x.name.toLowerCase().includes(filterText.toLowerCase()))
+        .map(p=>{
+            return <option key={p.id} value={p.raw}>{p.name} ({p.units})</option>
+        })
+
+    const onChange = (e) => {
+        setFilterText(e.target.value)
+    }
+
+    const onSelectChange = (e) => {
+        dispatch(setOrdinateAxis(e.target.value))
+    }
+
     return (
-        <div className="select">
-            <select>
-                {options}
-            </select>
+        <div className="field has-addons">
+            <div className="control">
+                <input className="input" placeholder='filter...' value={filterText} onChange={onChange}/>
+            </div>
+            <div className="control">
+                <div className="select">
+                    <select onChange={onSelectChange} value={ordinateAxis}>
+                        {options}
+                    </select>
+                </div>
+            </div>
         </div>
     )
 }

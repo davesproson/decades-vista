@@ -46,6 +46,9 @@ export const optionsSlice = createSlice({
         },
         setServer: (state, action) => {
             state.server = action.payload;
+        },
+        setOrdinateAxis: (state, action) => {
+            state.ordinateAxis = action.payload;
         }
 	},
 });
@@ -53,7 +56,7 @@ export const optionsSlice = createSlice({
 
 export const { 
     toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
-    setTimeframe, setServer
+    setTimeframe, setServer, setOrdinateAxis
 } = optionsSlice.actions;
 
 export default optionsSlice.reducer;

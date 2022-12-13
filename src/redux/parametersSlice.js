@@ -39,10 +39,9 @@ export const paramSlice = createSlice({
 		},
         setParams: (state, action) => {
             const params = action.payload;
-            state.params = [];
+            state.params = new Array();
             for(const param of params) {
-                const paramToAdd = paramFromDecadesParam(param)
-                
+                const paramToAdd = paramFromDecadesParam(param)     
                 state.params.push(paramToAdd);
             }
         },
