@@ -67,6 +67,11 @@ export const paramSlice = createSlice({
                         state.axes.splice(axisIndex, 1);
                     }
                 }
+                const usedAxes = [...new Set(
+                    state.params.filter(param => param.selected).map(param => param.axisId)
+                )];
+    
+                state.axes = state.axes.filter(axis => usedAxes.includes(axis.id));
             }
         },
         unselectAllParams: (state) => {
