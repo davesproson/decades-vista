@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom"
 import { unselectAllParams } from "./redux/parametersSlice"
 import { setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
+import { usePlotUrl } from "./hooks"
 
 const NavSearchInput = (props) => {
     const dispatch = useDispatch()
@@ -85,11 +86,13 @@ const ViewsSelector = (props) => {
 const PlotButton = (props) => {
     const params = useSelector(state => state.vars.params)
     const disable = params.filter(x => x.selected).length == 0
+    const plotUrl = usePlotUrl()
     
     return (
-        <a href="plot/" className="button is-primary" disabled={disable}>
+        <Link to={plotUrl} target="_blank" rel="noopener noreferrer" 
+              className="button is-primary" disabled={disable}>
             Plot
-        </a>
+        </Link>
     )
 }
 

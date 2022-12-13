@@ -1,6 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import { toggleParamSelected } from "./redux/parametersSlice"
+import { useDispatchParameters } from "./hooks"
 
 const ParameterLine = (props) => {
     const dispatch = useDispatch()
@@ -27,6 +28,7 @@ const ParameterTable = (props) => {
     
     const vars = useSelector(state => state.vars)
     const filterText = useSelector(state => state.paramfilter)
+    useDispatchParameters()
 
     if(!vars.params) return (<div></div>);
 

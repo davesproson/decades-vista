@@ -7,20 +7,24 @@ const getNewAxis = (units, id) => {
     }
 }
 
+const paramFromDecadesParam = (param) => {
+    return {
+        id: param.ParameterIdentifier,
+        raw: param.ParameterName,
+        name: param.DisplayText,
+        units: param.DisplayUnits,
+        selected: false,
+        axisId: null,
+    }
+}
+
 export const paramSlice = createSlice({
 
 	name: 'params',
 	initialState: {
-        params: [
-            // { axisId: null, id: 1, units: 'K', raw: "deiced_true_air_temp_k", name: 'True air temperature', selected: false },
-            // { axisId: null, id: 2, units: 'C', raw: "ind_air_temp", name: 'Indicated air temperature', selected: false },
-            // { axisId: null, id: 3, units: 'C', raw: "dew_point", name: 'Dew Point temperature', selected: false },
-            // { axisId: null, id: 4, units: 'deg', raw: "lat_gin", name: 'Latitude (GIN)', selected: false },
-            // { axisId: null, id: 5, units: 'deg', raw: "lon_gin", name: 'Longitude (GIN)', selected: false },
-        ],
-        axes: [
-
-        ]
+        // Params = {axisId=null, id, name, raw, units, selected=False}
+        params: [],
+        axes: []
     },
 	reducers: {
 		addParam: (state, action) => {
@@ -37,14 +41,7 @@ export const paramSlice = createSlice({
             const params = action.payload;
             state.params = [];
             for(const param of params) {
-                const paramToAdd = {
-                    id: param.ParameterIdentifier,
-                    raw: param.ParameterName,
-                    name: param.DisplayText,
-                    units: param.DisplayUnits,
-                    selected: false,
-                    axisId: null,
-                }
+                const paramToAdd = paramFromDecadesParam(param)
                 
                 state.params.push(paramToAdd);
             }
