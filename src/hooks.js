@@ -124,7 +124,6 @@ const usePlotOptions = () => {
     }
 }
 
-
 const usePlot = () => {
     const [plot, setPlot] = useState(null);
     const options = usePlotOptions();
@@ -247,6 +246,14 @@ const usePlot = () => {
             } else {
                 opts.mode = "lines";
             }
+
+            try {
+                const paramName = paramFromRawName(options.params[i], params).DisplayText
+                if(paramName.toLowerCase().includes('red')) opts.line.color = '#DD0000';
+                if(paramName.toLowerCase().includes('green')) opts.line.color = '#00DD00';
+                if(paramName.toLowerCase().includes('blue')) opts.line.color = '#0000DD';
+            } catch(e) {}
+
             traces.push(opts);
         }
         
