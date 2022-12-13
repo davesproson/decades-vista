@@ -89,10 +89,10 @@ const PlotButton = (props) => {
     const plotUrl = usePlotUrl()
     
     return (
-        <Link to={plotUrl} target="_blank" rel="noopener noreferrer" 
+        <a href={plotUrl} target="_blank" rel="noopener noreferrer" 
               className="button is-primary" disabled={disable}>
             Plot
-        </Link>
+        </a>
     )
 }
 
