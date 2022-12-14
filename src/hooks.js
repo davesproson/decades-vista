@@ -180,7 +180,7 @@ const usePlot = () => {
             }
         }
 
-        var _ordAxis = options.swapAxes ? "yaxis" : "xaxis";
+        var _ordAxis = options.swapxy ? "yaxis" : "xaxis";
 
         // This is to box the plot
         layout[_ordAxis] = {

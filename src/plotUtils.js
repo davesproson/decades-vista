@@ -14,16 +14,22 @@ const updatePlot = (options, data) => {
         return options.ordvar == 'utc_time' ? data * 1000 : data
     }
 
-    const yData = []
-    const xData = []
-    for(const param of options.params) {
-        yData.push(data[param].map(x=>x==-999.99 ? null : x))
-        xData.push(data[options.ordvar].map(timeMap))
+    const badDataMap = (data) => {
+        return data == -999.99 ? null : data
     }
 
-    console.log({
-        y: yData, x: xData
-    })
+    let yData = []
+    let xData = []
+    for(const param of options.params) {
+        yData.push(data[param].map(badDataMap))
+        xData.push(data[options.ordvar].map(badDataMap).map(timeMap))
+    }
+
+    if(options.swapxy) {
+        const temp = xData
+        xData = yData
+        yData = temp
+    }
     
     Plotly.extendTraces('graph', {
         y: yData, x: xData
