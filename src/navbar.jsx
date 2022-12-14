@@ -86,11 +86,17 @@ const ViewsSelector = (props) => {
 const PlotButton = (props) => {
     const params = useSelector(state => state.vars.params)
     const disable = params.filter(x => x.selected).length == 0
+
     const plotUrl = usePlotUrl()
+
+    if(disable) {
+        return (
+            <button className="button is-primary" disabled>Plot</button>
+        )
+    }
     
     return (
-        <a href={plotUrl} target="_blank" rel="noopener noreferrer" 
-              className="button is-primary" disabled={disable}>
+        <a href={plotUrl} target="_blank" rel="noopener noreferrer" className="button is-primary">
             Plot
         </a>
     )
@@ -109,8 +115,14 @@ const DashButton = (props) => {
     const disable = params.filter(x => x.selected).length == 0
     const dashUrl = useDashboardUrl()
 
+    if(disable) {
+        return (
+            <button className="button is-primary" disabled>Dashboard</button>
+        )
+    }
+
     return (
-        <a href={dashUrl} className="button is-primary" disabled={disable} target="_blank"
+        <a href={dashUrl} className="button is-primary" target="_blank"
            rel="noopener noreferrer">
             Dashboard
         </a>
