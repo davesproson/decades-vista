@@ -8,6 +8,7 @@ import { Routes, Route } from 'react-router-dom'
 import { Plot } from './plot';
 import { useDispatchParameters } from './hooks'
 import { Dashboard } from './dashboard'
+import { Tephigram } from './tephi';
 
 const NBWrapped = (props) => {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/options" element={<NBWrapped component={<Options />} />} />
         <Route path="/plot" element={<Plot />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/tephigram" element={<Tephigram />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </>

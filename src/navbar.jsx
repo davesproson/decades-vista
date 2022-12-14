@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom"
 import { unselectAllParams } from "./redux/parametersSlice"
 import { setOrdinateAxis, setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
-import { usePlotUrl, useDashboardUrl } from "./hooks"
+import { usePlotUrl, useDashboardUrl, useTephiAvailable, useTephiUrl } from "./hooks"
 
 const NavSearchInput = (props) => {
     const dispatch = useDispatch()
@@ -103,8 +103,18 @@ const PlotButton = (props) => {
 }
 
 const TephiButton = (props) => {
+
+    const available = useTephiAvailable()
+    const url = useTephiUrl()
+
+    if(!available) {
+        return (
+            <button className="button is-primary" disabled>Tephigram</button>
+        )
+    }
+
     return (
-        <a className="button is-primary " disabled>
+        <a href={url} className="button is-primary" target="_blank" rel="noopener noreferrer">
             Tephigram
         </a>
     )

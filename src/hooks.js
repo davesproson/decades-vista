@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { setParams } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
-import { getData, paramFromRawName, getYAxis } from "./plotUtils";
+import { startData, paramFromRawName, getYAxis, getTimeLims } from "./plotUtils";
 import Plotly from 'plotly.js-dist'
 
 const serverPrefix = "http://192.168.101.108/"
@@ -118,6 +118,47 @@ const useDashboardUrl = () => {
     return origin + `/dashboard?params=${selectedParams.join(',')}`
 }
 
+const useTephiUrl = () => {
+    const params = useSelector(state => state.vars.params);
+    const plotOptions = useSelector(state => state.options);
+
+    const origin = window.location.origin
+    const selectedParams = params.filter(param => param.selected)
+                                    .map(param => param.raw)
+    
+    const timeframe = plotOptions.timeframes.find(x=>x.selected).value;
+    
+    return origin + `/tephigram?params=${selectedParams.join(',')}&timeframe=${timeframe}`
+}
+
+const useTephiAvailable = () => {
+    const params = useSelector(state => state.vars.params);
+    const selectedParams = params.filter(param => param.selected)
+                                    .map(param => param.raw)
+    
+    const required_temps = [
+        'deiced_true_air_temp_c', 'nondeiced_true_air_temp_c'
+    ]
+
+    const required_humids = [
+        'dew_point'
+    ]
+
+    let has_required_temps = false
+    let has_required_humids = false
+
+    for(const param of selectedParams) {
+        if(required_temps.includes(param)) {
+            has_required_temps = true
+        }
+        if(required_humids.includes(param)) {
+            has_required_humids = true
+        }
+    }
+
+    return has_required_temps && has_required_humids
+}
+
 const usePlotOptions = () => {
     const [searchParams, _] = useSearchParams();
 
@@ -142,22 +183,7 @@ const usePlot = () => {
     useEffect(() => {
         
         if(!initDone) return
-
-        const end = Math.floor(new Date().getTime() / 1000) 
-        let tf = options.timeFrame
-        let multiplier = 1
-        if(tf.includes('h')) {
-            multiplier = 60 * 60
-        }
-        if(tf.includes('m')) {
-            multiplier = 60
-        }
-
-        tf = tf.replace(/[a-zA-Z]+/, '')
-
-        const start = end - tf * multiplier
-
-        getData(options, start, end)
+        startData(options, ...getTimeLims(options.timeFrame))
  
     }, [initDone])
 
@@ -277,5 +303,5 @@ const usePlot = () => {
 
 export { 
     usePlotUrl, useDispatchParameters, useServers, usePlotOptions, useGetParameters,
-    usePlot, useDashboardUrl
+    usePlot, useDashboardUrl, useTephiAvailable, useTephiUrl 
 }

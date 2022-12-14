@@ -8,6 +8,24 @@ const nowSecs = () => {
     return Math.floor(new Date().getTime() / 1000)
 }
 
+const getTimeLims = (tf) => {
+    const end = Math.floor(new Date().getTime() / 1000) 
+    
+    let multiplier = 1
+    if(tf.includes('h')) {
+        multiplier = 60 * 60
+    }
+    if(tf.includes('m')) {
+        multiplier = 60
+    }
+
+    tf = tf.replace(/[a-zA-Z]+/, '')
+
+    const start = end - tf * multiplier
+
+    return [start, end]
+}
+
 const updatePlot = (options, data) => {
 
     const timeMap = (data) => {
@@ -45,7 +63,10 @@ function getYAxis(options, param) {
     }
 }
 
-const getData = (options, start, end) => {
+const startData = (options, start, end, callback) => {
+
+    if(!callback) callback = updatePlot
+
     let url = `http://192.168.101.108/livedata?frm=${start}&to=${end}`
     for (const para of options.params) {
         url += `&para=${para}`
@@ -58,24 +79,41 @@ const getData = (options, start, end) => {
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                updatePlot(options, data)
+                callback(options, data)
                 newStart = data.utc_time[data.utc_time.length-1] + 1
                 
                 setTimeout(() => {
-                    getData(options, newStart, nowSecs())
+                    startData(options, newStart, nowSecs(), callback)
                 }, 1000)      
             }).catch(e => {
                 console.log('Error fetching data', e)
                 setTimeout(() => {
-                    getData(options, newStart, nowSecs())
+                    startData(options, newStart, nowSecs(), callback)
                 }, 1000)   
             })
     } catch(e) {
         setTimeout(() => {
-            getData(options, newStart, nowSecs())
+            startData(options, newStart, nowSecs(), callback)
         }, 1000) 
     }
+}
+
+const getData = async (options, start, end) => {
+
+    if(!start) start = nowSecs() - 5
+    if(!end) end = nowSecs() - 5
+
+    let url = `http://192.168.101.108/livedata?frm=${start}&to=${end}`
+    for (const para of options.params) {
+        url += `&para=${para}`
+    }
+
+    if(options.ordvar) {
+        url += `&para=${options.ordvar}`
+    }
+
+    return fetch(url).then(response => response.json())
 
 }
 
-export { getData, paramFromRawName, getYAxis }
+export { getData, startData, paramFromRawName, getYAxis, getTimeLims }
