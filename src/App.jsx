@@ -9,6 +9,7 @@ import { Plot } from './plot';
 import { useDispatchParameters } from './hooks'
 import { Dashboard } from './dashboard'
 import { Tephigram } from './tephi';
+import TimeframeSelector from './timeframe';
 
 const NBWrapped = (props) => {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/plot" element={<Plot />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tephigram" element={<Tephigram />} />
+        <Route path="/timeframe" element={<NBWrapped component={<TimeframeSelector />} />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </>

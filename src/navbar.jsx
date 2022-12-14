@@ -31,17 +31,17 @@ const NavTimeFrameSelector = (props) => {
 
     const timeframes = useSelector(state => state.options.timeframes)
     const timeFrameElements = timeframes.map(x => {
-    const active = x.selected ? "has-text-success is-underlined" : ""
+        const active = x.selected ? "has-text-success is-underlined" : ""
 
-    const onSetTimeframe = (e) => {
-        dispatch(setTimeframe({value: e}))
-    }
+        const onSetTimeframe = (e) => {
+            dispatch(setTimeframe({value: e}))
+        }
 
-    return (
-        <a className="navbar-item" key={x.value} onClick={()=>onSetTimeframe(x.value)}>
-            <span className={active}>{x.label}</span>
-        </a>
-    )
+        return (
+            <a className="navbar-item" key={x.value} onClick={()=>onSetTimeframe(x.value)}>
+                <span className={active}>{x.label}</span>
+            </a>
+        )
     })
 
     return (
@@ -52,6 +52,10 @@ const NavTimeFrameSelector = (props) => {
 
             <div className="navbar-dropdown">
                 {timeFrameElements}
+                <hr className="navbar-divider" />
+                <a className="navbar-item">
+                    <Link to="/timeframe"><a>Custom...</a></Link>
+                </a>
             </div>
         </div>
     )
