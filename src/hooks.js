@@ -109,6 +109,15 @@ const usePlotUrl = () => {
     return plotUrl;
 }
 
+const useDashboardUrl = () => {
+    const params = useSelector(state => state.vars.params);
+    const origin = window.location.origin
+    const selectedParams = params.filter(param => param.selected)
+                                    .map(param => param.raw)
+
+    return origin + `/dashboard?params=${selectedParams.join(',')}`
+}
+
 const usePlotOptions = () => {
     const [searchParams, _] = useSearchParams();
 
@@ -268,5 +277,5 @@ const usePlot = () => {
 
 export { 
     usePlotUrl, useDispatchParameters, useServers, usePlotOptions, useGetParameters,
-    usePlot
+    usePlot, useDashboardUrl
 }

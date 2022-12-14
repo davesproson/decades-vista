@@ -3,17 +3,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 const DashPanel = (props) => {
+    let dataVal = props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)
+
+
     return (
-        <div className="m-4 is-flex " style={{
-            border: "2px solid black",
+        <div className="m-4 is-flex is-justify-content-center is-flex-grow-1" style={{
+            border: "1px solid black",
             borderRadius: "5px"
         }}>
-            <div className="is-flex is-flex-direction-column" >
-                <h3 className="p-3" style={{background: "#dddddd", borderBottom: "1px solid black"}}>
+            <div className="is-flex is-flex-direction-column is-flex-grow-1" >
+                <h3 className="p-3 is-uppercase is-justify-content-center is-flex-grow-1 is-flex" style={{
+                    background: "#252243",
+                    color: "#0abbef",
+                    borderBottom: "1px solid black"
+                }}>
                     {props.param.name}
                 </h3>
                 <span className="p-3 is-flex is-justify-content-center is-size-1">
-                    {props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)} {props.param.units}
+                    {dataVal} {props.param.units}
                 </span>
             </div>
         </div>
@@ -43,6 +50,7 @@ const Dashboard = () => {
                 .then(data => setData(data))
         }
         
+        fetchData()
         const interval = setInterval(fetchData, 1000)
         return () => clearInterval(interval)
     }, [setData])

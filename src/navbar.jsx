@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom"
 import { unselectAllParams } from "./redux/parametersSlice"
 import { setOrdinateAxis, setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
-import { usePlotUrl } from "./hooks"
+import { usePlotUrl, useDashboardUrl } from "./hooks"
 
 const NavSearchInput = (props) => {
     const dispatch = useDispatch()
@@ -107,9 +107,11 @@ const TephiButton = (props) => {
 const DashButton = (props) => {
     const params = useSelector(state => state.vars.params)
     const disable = params.filter(x => x.selected).length == 0
+    const dashUrl = useDashboardUrl()
 
     return (
-        <a className="button is-primary" disabled={disable}>
+        <a href={dashUrl} className="button is-primary" disabled={disable} target="_blank"
+           rel="noopener noreferrer">
             Dashboard
         </a>
     )
