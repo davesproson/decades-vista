@@ -84,6 +84,17 @@ const PresetSelector = (props) => {
 }
 
 const ViewsSelector = (props) => {
+    const savedViews = useSelector(state => state.view.savedViews)
+
+    const viewElements = savedViews.map((x, i) => {
+        return (
+            <a className="navbar-item" key={i}>
+                <span>{x.name}</span>
+            </a>
+        )
+    })
+
+
     return (
         <div className="navbar-item has-dropdown is-hoverable">
             <a className="navbar-link">
@@ -94,6 +105,7 @@ const ViewsSelector = (props) => {
                     Config...
                 </Link>
                 <hr className="navbar-divider" />
+                {viewElements}
             </div>
         </div>
     )
