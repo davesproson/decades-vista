@@ -465,8 +465,6 @@ const populateTephigram = (nbg, data, ref) => {
             continue;
         }
         
-        
-
         var x = [],
             y = [];
 
@@ -481,12 +479,6 @@ const populateTephigram = (nbg, data, ref) => {
         range.push(nbg+cnt);
         cnt++;
     }
-
-    console.log({
-        x: xs,
-        y: ys,
-        range, range
-    })
 
     Plotly.extendTraces(ref.current, {
         x: xs,
