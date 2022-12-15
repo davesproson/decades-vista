@@ -67,8 +67,15 @@ const usePlotUrl = () => {
     const plotOptions = useSelector(state => state.options);
     const vars = useSelector(state => state.vars);
     const server = useSelector(state => state.options.server);
+    const useCustomTimeframe = useSelector(state => state.options.useCustomTimeframe);
 
-    const timeframe = plotOptions.timeframes.find(x=>x.selected).value;
+    let timeframe = ""
+    if(useCustomTimeframe) {
+
+    } else {
+        timeframe = plotOptions.timeframes.find(x=>x.selected).value;
+    }
+
     const params = vars.params
     const axes = {}
     for(const ax of vars.axes) {
@@ -121,12 +128,18 @@ const useDashboardUrl = () => {
 const useTephiUrl = () => {
     const params = useSelector(state => state.vars.params);
     const plotOptions = useSelector(state => state.options);
+    const useCustomTimeframe = useSelector(state => state.options.useCustomTimeframe);
 
     const origin = window.location.origin
     const selectedParams = params.filter(param => param.selected)
                                     .map(param => param.raw)
     
-    const timeframe = plotOptions.timeframes.find(x=>x.selected).value;
+    let timeframe = ""
+    if(useCustomTimeframe) {
+
+    } else {
+        timeframe = plotOptions.timeframes.find(x=>x.selected).value;
+    }
     
     return origin + `/tephigram?params=${selectedParams.join(',')}&timeframe=${timeframe}`
 }

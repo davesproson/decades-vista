@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { setFilterText } from "./redux/filterSlice"
 import { Link, useLocation } from "react-router-dom"
 import { unselectAllParams } from "./redux/parametersSlice"
@@ -27,9 +27,17 @@ const NavSearchInput = (props) => {
 
 const NavTimeFrameSelector = (props) => {
 
+    const [visible, setVisible] = useState(false)
     const dispatch = useDispatch()
 
     const timeframes = useSelector(state => state.options.timeframes)
+    const selectedTimeframes = timeframes.filter(x => x.selected)
+    const customActiveClass = selectedTimeframes.length == 0 ? "has-text-success is-underlined" : ""
+
+    const toggleVisible = (e) => {
+        setVisible(!visible)
+    }
+
     const timeFrameElements = timeframes.map(x => {
         const active = x.selected ? "has-text-success is-underlined" : ""
 
@@ -38,24 +46,28 @@ const NavTimeFrameSelector = (props) => {
         }
 
         return (
-            <a className="navbar-item" key={x.value} onClick={()=>onSetTimeframe(x.value)}>
+            <a className="navbar-item" key={x.value} onClick={()=>{onSetTimeframe(x.value);toggleVisible()}}>
                 <span className={active}>{x.label}</span>
             </a>
         )
     })
 
+    const visibleClass = visible ? "is-active" : ""
+
     return (
-        <div className="navbar-item has-dropdown is-hoverable">
-            <a className="navbar-link">
+        <div className={`navbar-item has-dropdown ${visibleClass}`}>
+            <a className="navbar-link" onClick={toggleVisible}>
                 Timeframe
             </a>
 
-            <div className="navbar-dropdown">
+            <div className="navbar-dropdown" >
                 {timeFrameElements}
                 <hr className="navbar-divider" />
-                <a className="navbar-item">
-                    <Link to="/timeframe"><a>Custom...</a></Link>
-                </a>
+                <div  onClick={toggleVisible}>
+                <Link to="/timeframe" className="navbar-item" >
+                    <span className={customActiveClass}>Custom...</span>
+                </Link>
+                </div>
             </div>
         </div>
     )
