@@ -3,8 +3,6 @@ import 'bulma/css/bulma.min.css';
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom'
 
-import { useDispatchParameters } from './hooks'
-
 const Navbar = lazy(() => import('./navbar'))
 const TimeframeSelector = lazy(() => import('./timeframe'))
 const ViewConfig = lazy(() => import('./views'))
@@ -16,8 +14,6 @@ const ParameterTable = lazy(() => import('./params'))
 import  { View } from './views'
 
 function App() {
-
-  useDispatchParameters()
 
   return (
     <>

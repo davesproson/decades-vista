@@ -1,28 +1,51 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { setParams } from "./redux/parametersSlice";
+import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getTimeLims } from "./plotUtils";
 import { serverPrefix, apiEndpoints, apiTransforms } from "./settings";
+import { getData } from "./plotUtils";
 
 const useTransform = (name) => {
     if(apiTransforms[name]) return apiTransforms[name];
     return (data) => data;
 }
 
+let parametersDispatched = false;
 const useDispatchParameters = () => {
+
     const dispatch = useDispatch();
+    const params = useSelector(state => state.vars.params);
+    const [getStatus, setGetStatus] = useState(false);
 
     useEffect(() => {
+        if(parametersDispatched) return;
         fetch(`${serverPrefix}${apiEndpoints.parameters}`)
             .then(response => response.json())
             .then(data => useTransform('parameters')(data))
-            .then(data => {
-                console.log(data)
-                dispatch(setParams(data));
-            });
-    }, [])
+            .then(data => dispatch(setParams(data)))
+            .then(()=>setGetStatus(true))
+        }, [])
+    
+    useEffect(() => {
+        if(parametersDispatched) return;
+        if(!getStatus) return;
+        
+        for(let param of params) {
+            const end = Math.floor(new Date().getTime() / 1000) - 1
+            const start = end - 5
+            getData({params: [param.raw]}, start, end).then(
+                (data) => {
+                    const last = data[param.raw]?.filter(x => x != null)?.filter(x => x != -999.99)
+                    const status = (last?.length && last.length) > 0 ? true : false
+                    dispatch(setParamStatus({id: param.id, status: status}))
+                }
+            )
+        }
+        parametersDispatched = true;
+    }, [getStatus])
+
 }
 
 const useGetParameters = () => {
@@ -323,5 +346,5 @@ const usePlot = () => {
 
 export { 
     usePlotUrl, useDispatchParameters, useServers, usePlotOptions, useGetParameters,
-    usePlot, useDashboardUrl, useTephiAvailable, useTephiUrl 
+    usePlot, useDashboardUrl, useTephiAvailable, useTephiUrl
 }
