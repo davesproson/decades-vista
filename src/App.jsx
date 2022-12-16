@@ -13,6 +13,7 @@ const Dashboard = lazy(() => import('./dashboard'))
 const Plot = lazy(() => import('./plot'))
 const Options = lazy(() => import('./options'))
 const ParameterTable = lazy(() => import('./params'))
+import  { View } from './views'
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/timeframe" element={<Suspense><TimeframeSelector /></Suspense>} />
           <Route path="/config-view" element={<Suspense><ViewConfig /></Suspense>} />
         </Route>
+        <Route path="/view" element={<View />} />
         <Route path="/plot" element={<Suspense><Plot /></Suspense>} />
         <Route path="/dashboard" element={<Suspense><Dashboard /></Suspense>} />
         <Route path="/tephigram" element={<Suspense><Tephigram /></Suspense>} />

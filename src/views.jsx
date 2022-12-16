@@ -1,12 +1,30 @@
 
+import { decode, encode } from 'base-64';
 import { useSelector, useDispatch } from 'react-redux'
+import { useSearchParams, Link } from 'react-router-dom'
 import { addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView  } from './redux/viewSlice'
 import { usePlotUrl } from './hooks'
 
 
+const useViewUrl = () => {
+    const ViewConfig = useSelector(s => s.view)
+    const nRows = ViewConfig.nRows
+    const nCols = ViewConfig.nCols
+    const plots = ViewConfig.plots
+    const encodedPlots = plots.map(x => encode(x))
+    let url = `/view?nRows=${nRows}&nCols=${nCols}`
+    for(let eurl of encodedPlots) {
+        url += `&plot=${eurl}`
+    }
+
+    console.log(url)
+    return url
+}
+
 const ViewConfigButtons = (props) => {
     const dispatch = useDispatch()
     const viewState = useSelector(s => s.view)
+    const viewUrl = useViewUrl()
 
     const save = () => {
         const savedView = {
@@ -21,7 +39,7 @@ const ViewConfigButtons = (props) => {
     return (
         <>
             <div className="field is-grouped is-expanded">
-                <button className="button is-info is-fullwidth">Plot</button>
+                <Link to={viewUrl} className="button is-info is-fullwidth" target="_blank">Plot</Link>
             </div>
             <div className="field is-grouped is-expanded">
                 <p className="control is-expanded">
@@ -139,15 +157,34 @@ const ViewConfig = (props) => {
                             reducers={[addRow, removeRow]} />
                     </div>
                 </div>
-
-
-
             </div>
-
             <ViewConfigPlotSelector />
             <ViewConfigButtons />
         </div>
     )
 }
 
+const View = (props) => {
+    const [searchParams, _] = useSearchParams();
+    const encodedUrls = searchParams.getAll('plot')
+    const urls = encodedUrls.map(url => decode(url))
+    const nRows = parseInt(searchParams.get('nRows')) || urls.length
+    const nCols = parseInt(searchParams.get('nCols')) || 1
+
+    const width = `${99 / nCols}%`
+    const height = `${99 / nRows}%`
+    
+    return (
+        <div style={{top: 0, left: 0, width: '100%', height: '100%', position: 'absolute'}}>
+        {urls.map((url,i)=>{
+            return (
+                <iframe key={i} src={url} scrolling="no" width={width} frameBorder="0"
+                        height={height} />
+            )
+        })}
+        </div>
+    )
+}
+
 export default ViewConfig
+export { View }
