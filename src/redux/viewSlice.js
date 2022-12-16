@@ -46,6 +46,11 @@ export const viewSlice = createSlice({
             plots[action.payload.index] = action.payload.url;
             state.plots = plots;
         },
+        setConfig: (state, action) => {
+            state.nRows = action.payload.nRows;
+            state.nCols = action.payload.nCols;
+            state.plots = action.payload.plots;
+        },
         reset: (state) => {
             state.nRows = 1;
             state.nCols = 1;
@@ -66,7 +71,8 @@ export const viewSlice = createSlice({
 });   
 
 export const { 
-    addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, loadSavedView
+    addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, loadSavedView,
+    setConfig
 } = viewSlice.actions;
 
 export default viewSlice.reducer;

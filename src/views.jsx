@@ -2,8 +2,9 @@
 import { decode, encode } from 'base-64';
 import { useSelector, useDispatch } from 'react-redux'
 import { useSearchParams, Link } from 'react-router-dom'
-import { addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView  } from './redux/viewSlice'
+import { addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, setConfig } from './redux/viewSlice'
 import { usePlotUrl } from './hooks'
+import { useRef, useState } from 'react';
 
 
 const useViewUrl = () => {
@@ -13,11 +14,10 @@ const useViewUrl = () => {
     const plots = ViewConfig.plots
     const encodedPlots = plots.map(x => encode(x))
     let url = `/view?nRows=${nRows}&nCols=${nCols}`
-    for(let eurl of encodedPlots) {
+    for (let eurl of encodedPlots) {
         url += `&plot=${eurl}`
     }
 
-    console.log(url)
     return url
 }
 
@@ -25,16 +25,56 @@ const ViewConfigButtons = (props) => {
     const dispatch = useDispatch()
     const viewState = useSelector(s => s.view)
     const viewUrl = useViewUrl()
+    const ref = useRef(null)
+    const [saveModalActive, setSaveModalActive] = useState(false)
 
-    const save = () => {
-        const savedView = {
+    const download = () => {
+        const json = {
+            config: {
+                nRows: viewState.nRows,
+                nCols: viewState.nCols,
+            },
             plots: [...viewState.plots],
-            nRows: viewState.nRows,
-            nCols: viewState.nCols,
-            name: "This is a test plot",
-            id: new Date().getTime()
+            version: 2
         }
-        dispatch(saveView(savedView))
+
+        const element = document.createElement("a");
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(json)));
+        element.setAttribute('download', "view-config.json");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+
+    const showFileSelect = () => {
+        ref.current.click()
+    }
+
+    const parseV2 = (json) => {
+        const nRows = json.config.nRows
+        const nCols = json.config.nCols
+        const plots = json.plots
+        dispatch(setConfig({ nRows, nCols, plots }))
+    }
+
+    const importView = (e) => {
+        const parseMap = {
+            1: () => alert("Version 1 not supported"),
+            2: parseV2
+        }
+        const selectedFile = e.target.files[0]
+        if (!selectedFile) {
+            return
+        }
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const text = e.target.result
+            const json = JSON.parse(text)
+            const version = json.version || 1
+            parseMap[version](json)
+        }
+        reader.readAsText(selectedFile)
     }
 
     return (
@@ -44,22 +84,27 @@ const ViewConfigButtons = (props) => {
             </div>
             <div className="field is-grouped is-expanded">
                 <p className="control is-expanded">
-                    <button className="button is-outlined is-primary is-fullwidth" onClick={save}>
+                    <button className="button is-outlined is-primary is-fullwidth" onClick={()=>setSaveModalActive(true)}>
                         Save
                     </button>
                 </p>
                 <p className="control is-expanded">
-                    <button className="button  is-outlined is-primary is-fullwidth">Import</button>
+                    <span className="button  is-outlined is-primary is-fullwidth" onClick={showFileSelect}>
+                        Import <input ref={ref} type="file" style={{ display: "none" }} onChange={importView} />
+                    </span>
                 </p>
                 <p className="control is-expanded">
-                    <button className="button  is-outlined is-primary is-fullwidth">Export</button>
+                    <button className="button  is-outlined is-primary is-fullwidth" onClick={download}>
+                        Export
+                    </button>
                 </p>
                 <p className="control is-expanded">
-                    <button className="button is-outlined is-secondary is-fullwidth" onClick={()=>dispatch(reset())}>
+                    <button className="button is-outlined is-secondary is-fullwidth" onClick={() => dispatch(reset())}>
                         Reset
                     </button>
                 </p>
             </div>
+            <SaveModal active={saveModalActive} close={()=>setSaveModalActive(false)}/>
         </>
     )
 }
@@ -111,6 +156,60 @@ const ViewConfigPlotSelector = (props) => {
     )
 }
 
+const SaveModal = (props) => {
+    const dispatch = useDispatch()
+    const viewState = useSelector(s => s.view)
+    const [viewName, setViewName] = useState("")
+
+    const active = props.active;
+    const modalClass = active ? "modal is-active" : "modal"
+    const close = props.close
+
+    const save = () => {
+        const savedView = {
+            plots: [...viewState.plots],
+            nRows: viewState.nRows,
+            nCols: viewState.nCols,
+            name: viewName,
+            id: new Date().getTime()
+        }
+        dispatch(saveView(savedView))
+        setViewName("")
+        close()
+    }
+
+    const onViewNameChange = (e) => {
+        setViewName(e.target.value)
+    }
+
+    const checkKey = (e) => {
+        if (e.key === "Enter") {
+            save()
+        }
+    }
+
+    return (
+        <div className={modalClass}>
+            <div className="modal-background"></div>
+            <div className="modal-content">
+                <div className="box">
+                    <p className="is-size-5 mb-2">Save Current View</p>
+                    <input className="input" type="text" value={viewName} onKeyDown={checkKey} onChange={onViewNameChange} placeholder="View Name" />
+                    <div className="field is-grouped mt-2">
+                        <div className="control is-expanded">
+                    <button className="button is-primary is-fullwidth" onClick={save}>Save</button>
+                    </div>
+                    <div className="control is-expanded">
+                    <button className="button is-secondary is-fullwidth" onClick={close}>Cancel</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <button className="modal-close is-large" aria-label="close" onClick={close}></button>
+        </div>
+    )
+}
+
 const ViewConfigNumSelector = (props) => {
 
     const value = useSelector(props.selector)
@@ -142,6 +241,7 @@ const ViewConfigNumSelector = (props) => {
 }
 
 const ViewConfig = (props) => {
+
     return (
         <div className="container">
             <div className="panel mt-2">
@@ -174,15 +274,15 @@ const View = (props) => {
 
     const width = `${99 / nCols}%`
     const height = `${99 / nRows}%`
-    
+
     return (
-        <div style={{top: 0, left: 0, width: '100%', height: '100%', position: 'absolute'}}>
-        {urls.map((url,i)=>{
-            return (
-                <iframe key={i} src={url} scrolling="no" width={width} frameBorder="0"
+        <div style={{ top: 0, left: 0, width: '100%', height: '100%', position: 'absolute' }}>
+            {urls.map((url, i) => {
+                return (
+                    <iframe key={i} src={url} scrolling="no" width={width} frameBorder="0"
                         height={height} />
-            )
-        })}
+                )
+            })}
         </div>
     )
 }
