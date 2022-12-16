@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { setFilterText } from "./redux/filterSlice"
 import { Link, useLocation } from "react-router-dom"
 import { unselectAllParams } from "./redux/parametersSlice"

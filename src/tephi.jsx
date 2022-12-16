@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import Plotly from "plotly.js-dist";
 import { getData, getTimeLims } from "./plotUtils";
 
 
@@ -480,10 +479,12 @@ const populateTephigram = (nbg, data, ref) => {
         cnt++;
     }
 
-    Plotly.extendTraces(ref.current, {
-        x: xs,
-        y: ys
-    }, range);
+    import('plotly.js-dist').then((Plotly) => {
+        Plotly.extendTraces(ref.current, {
+            x: xs,
+            y: ys
+        }, range);
+    });
 
 }
 
@@ -523,34 +524,36 @@ const useTephigram = (ref) => {
             });
         });
 
-        Plotly.newPlot(ref.current, plotTraces,  {
-            margin: {t: 0, l: 0, r: 0, b: 0},
-            legend: {
-                font: {
-                    size: 8,
-                },
-                x: 0,
-                y: 0
-            },
-
-            hoverinfo: 'none',
-            yaxis: {
-                range: [1678, 1820],
-                showline: false,
-                ticks: '',
-                showgrid: false,
-                showticklabels: false
-            },
-            xaxis: {
-                range: [1600, 1780],
-                showline: false,
-                ticks: '',
-                showgrid: false,
-                showticklabels: false
-            }
-        }, {
-            displayModeBar:false 
-        }).then(x=>setTephi(x))
+        import('plotly.js-dist').then((Plotly) => {
+            Plotly.newPlot(ref.current, plotTraces  ,  {
+                margin: {t: 0, l: 0, r: 0, b: 0},   
+                legend: {   
+                    font: { 
+                        size: 8,    
+                    },  
+                    x: 0,   
+                    y: 0    
+                },  
+                
+                hoverinfo: 'none',  
+                yaxis: {    
+                    range: [1678, 1820],    
+                    showline: false,    
+                    ticks: '',  
+                    showgrid: false,    
+                    showticklabels: false   
+                },  
+                xaxis: {    
+                    range: [1600, 1780],    
+                    showline: false,    
+                    ticks: '',  
+                    showgrid: false,    
+                    showticklabels: false   
+                }   
+            }, {    
+                displayModeBar:false    
+            }).then(x=>setTephi(x)) 
+        });
 
         
         getData(options, ...getTimeLims(options.timeFrame))
@@ -566,7 +569,7 @@ const useTephigram = (ref) => {
 }
 
 
-export const Tephigram = (props) => {
+const Tephigram = (props) => {
     
     const ref = useRef(null)
     useTephigram(ref)
@@ -577,3 +580,5 @@ export const Tephigram = (props) => {
         <div className={props.class} ref={ref} style={style}></div>
     )
 }
+
+export default Tephigram

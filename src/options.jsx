@@ -28,4 +28,4 @@ const Options = () => {
     )
 }
 
-export { Options }
+export default Options 

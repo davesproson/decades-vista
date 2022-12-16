@@ -61,4 +61,4 @@ const ParameterTable = (props) => {
     )
 }
 
-export { ParameterTable }
+export default ParameterTable

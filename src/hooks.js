@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 import { setParams } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getTimeLims } from "./plotUtils";
-import Plotly from 'plotly.js-dist'
 
 const serverPrefix = "http://192.168.101.108/"
 
@@ -305,8 +304,10 @@ const usePlot = () => {
             traces.push(opts);
         }
         
-        Plotly.newPlot('graph', traces, layout, {responsive: true})
-              .then(setInitDone(true))
+        import('plotly.js-dist').then(Plotly => {
+            Plotly.newPlot('graph', traces, layout, {responsive: true})
+                .then(setInitDone(true))
+        })
 
     }, [params])
 

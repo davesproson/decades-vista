@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 const DashPanel = (props) => {
@@ -67,4 +67,4 @@ const Dashboard = () => {
     )
 }
 
-export { Dashboard }
+export default Dashboard

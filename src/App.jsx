@@ -1,16 +1,18 @@
-
 import 'bulma/css/bulma.min.css';
 
-import Navbar  from './navbar'
-import { ParameterTable } from './params'
-import { Options } from './options'
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom'
-import { Plot } from './plot';
+
 import { useDispatchParameters } from './hooks'
-import { Dashboard } from './dashboard'
-import { Tephigram } from './tephi';
-import TimeframeSelector from './timeframe';
-import ViewConfig from './views';
+
+const Navbar = lazy(() => import('./navbar'))
+const TimeframeSelector = lazy(() => import('./timeframe'))
+const ViewConfig = lazy(() => import('./views'))
+const Tephigram = lazy(() => import('./tephi'))
+const Dashboard = lazy(() => import('./dashboard'))
+const Plot = lazy(() => import('./plot'))
+const Options = lazy(() => import('./options'))
+const ParameterTable = lazy(() => import('./params'))
 
 function App() {
 
