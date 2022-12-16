@@ -87,7 +87,7 @@ const PresetSelector = (props) => {
     const setPreset = (presets) => {
         dispatch(unselectAllParams())
         for(let p of presets) {
-            dispatch(toggleParamSelected({id: p}))
+            dispatch(toggleParamSelected({id: p.toString()}))
         }
         setVisible(false)
     }

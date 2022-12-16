@@ -1,3 +1,5 @@
+import { serverPrefix, apiEndpoints } from './settings'
+
 import Plotly from 'plotly.js-dist'
 
 const paramFromRawName = (rawName, parameters) => {
@@ -63,15 +65,32 @@ function getYAxis(options, param) {
     }
 }
 
+const getDataUrl = (options, start, end) => {
+    let url = `${serverPrefix}${apiEndpoints.data}`
+
+    // Allow the endpoint to include a query string
+    if(url.includes('?')) {
+        url += `&frm=${start}&to=${end}`
+    } else {
+        url += `?frm=${start}&to=${end}`
+    }
+
+    for (const para of options.params) {
+        url += `&para=${para}`
+    }
+
+    if(options.ordvar) {
+        url += `&para=${options.ordvar}`
+    }
+
+    return url
+}
+
 const startData = (options, start, end, callback) => {
 
     if(!callback) callback = updatePlot
 
-    let url = `http://192.168.101.108/livedata?frm=${start}&to=${end}`
-    for (const para of options.params) {
-        url += `&para=${para}`
-    }
-    url += `&para=${options.ordvar}`
+    const url = getDataUrl(options, start, end)
 
     let newStart = start;
 
@@ -103,14 +122,7 @@ const getData = async (options, start, end) => {
     if(!start) start = nowSecs() - 5
     if(!end) end = nowSecs() - 5
 
-    let url = `http://192.168.101.108/livedata?frm=${start}&to=${end}`
-    for (const para of options.params) {
-        url += `&para=${para}`
-    }
-
-    if(options.ordvar) {
-        url += `&para=${options.ordvar}`
-    }
+    const url = getDataUrl(options, start, end)
 
     return fetch(url).then(response => response.json())
 

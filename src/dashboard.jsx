@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { getData } from "./plotUtils";
 
 const DashPanel = (props) => {
     let dataVal = props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)
@@ -36,22 +37,15 @@ const Dashboard = () => {
     const [data, setData] = useState({})
 
     useEffect(() => {
-        const fetchData = () => {
+        const end = Math.floor(new Date().getTime() / 1000) - 1
+        const start = end - 5
+
+        getData({params: parameters}, start, end).then(data => setData(data))
+        const interval = setInterval(() => {
             const end = Math.floor(new Date().getTime() / 1000) - 1
             const start = end - 5
-
-            let url = `http://192.168.101.108/livedata?frm=${start}&to=${end}`
-            for (const para of parameters) {
-                url += `&para=${para}`
-            }
-
-            fetch(url)
-                .then(result => result.json())
-                .then(data => setData(data))
-        }
-        
-        fetchData()
-        const interval = setInterval(fetchData, 1000)
+            getData({params: parameters}, start, end).then(data => setData(data))
+        }, 1000)
         return () => clearInterval(interval)
     }, [setData])
 

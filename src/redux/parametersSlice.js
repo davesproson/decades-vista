@@ -29,7 +29,7 @@ export const paramSlice = createSlice({
 	reducers: {
 		addParam: (state, action) => {
 			const param = {
-				id: action.payload.id,
+				id: action.payload.id.toString(),
 				name: action.payload.name,
                 raw: action.payload.raw,
                 units: action.payload.units,

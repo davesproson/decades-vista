@@ -4,16 +4,22 @@ import { useSearchParams } from "react-router-dom";
 import { setParams } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getTimeLims } from "./plotUtils";
+import { serverPrefix, apiEndpoints, apiTransforms } from "./settings";
 
-const serverPrefix = "http://192.168.101.108/"
+const useTransform = (name) => {
+    if(apiTransforms[name]) return apiTransforms[name];
+    return (data) => data;
+}
 
 const useDispatchParameters = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch(`${serverPrefix}live/parano.json`)
+        fetch(`${serverPrefix}${apiEndpoints.parameters}`)
             .then(response => response.json())
+            .then(data => useTransform('parameters')(data))
             .then(data => {
+                console.log(data)
                 dispatch(setParams(data));
             });
     }, [])
@@ -23,8 +29,9 @@ const useGetParameters = () => {
     const [params, setParams] = useState(null);
 
     useEffect(() => {
-        fetch(`${serverPrefix}live/parano.json`)
+        fetch(`${serverPrefix}${apiEndpoints.parameters}`)
             .then(response => response.json())
+            .then(data => useTransform('parameters')(data))
             .then(data => {
                 setParams(data);
             });
@@ -37,7 +44,6 @@ const useServers = () => {
     const [servers, setServers] = useState([]);
     const serverState = useSelector(state => state.options.server);
     const dispatch = useDispatch();
-    console.log('userServers')
 
     useEffect(() => {
         fetch(`${serverPrefix}tank_status`)
