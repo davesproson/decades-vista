@@ -2,13 +2,14 @@ import { useDispatch } from "react-redux"
 import { useState } from "react"
 import { setFilterText } from "./redux/filterSlice"
 import { Link, useLocation } from "react-router-dom"
-import { unselectAllParams } from "./redux/parametersSlice"
+import { toggleParamSelected, unselectAllParams } from "./redux/parametersSlice"
 import { setOrdinateAxis, setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
 import { usePlotUrl, useDashboardUrl, useTephiAvailable, useTephiUrl } from "./hooks"
 import { Outlet } from "react-router-dom"
 import { loadSavedView } from "./redux/viewSlice"
 import { useNavigate } from "react-router-dom"
+import { presets } from "./settings"
 
 const NavSearchInput = (props) => {
     const dispatch = useDispatch()
@@ -58,7 +59,7 @@ const NavTimeFrameSelector = (props) => {
     const visibleClass = visible ? "is-active" : ""
 
     return (
-        <div className={`navbar-item has-dropdown ${visibleClass}`}>
+        <div className={`navbar-item has-dropdown ${visibleClass}`} onMouseLeave={()=>setVisible(false)}>
             <a className="navbar-link" onClick={toggleVisible}>
                 Timeframe
             </a>
@@ -77,11 +78,38 @@ const NavTimeFrameSelector = (props) => {
 }
 
 const PresetSelector = (props) => {
+    const dispatch = useDispatch()
+    const [visible, setVisible] = useState(false)
+    const toggleVisible = (e) => {
+        setVisible(!visible)
+    }
+
+    const setPreset = (presets) => {
+        dispatch(unselectAllParams())
+        for(let p of presets) {
+            dispatch(toggleParamSelected({id: p}))
+        }
+        setVisible(false)
+    }
+
+    const visibleClass = visible ? "is-active" : ""
+    const presetOptions = Object.entries(presets).map(x => {
+        
+        return (
+            <a className="navbar-item" key={x[0]} onClick={()=>setPreset(x[1])}>
+                <span>{x[0]}</span>
+            </a>
+        )
+    })
+
     return (
-        <div className="navbar-item has-dropdown is-hoverable">
-            <a className="navbar-link">
+        <div className={`navbar-item has-dropdown ${visibleClass}`} onMouseLeave={()=>setVisible(false)}>
+            <a className="navbar-link" onClick={toggleVisible}>
                 Presets
             </a>
+            <div className="navbar-dropdown">
+                {presetOptions}
+            </div>
         </div>
     )
 }
