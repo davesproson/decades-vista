@@ -251,11 +251,11 @@ const ViewConfig = (props) => {
 
                 <div className="panel-block">
                     <div className="columns">
-                        <ViewConfigNumSelector dim="Rows" selector={s => s.view.nCols}
-                            reducers={[addColumn, removeColumn]} />
-
-                        <ViewConfigNumSelector dim="Columns" selector={s => s.view.nRows}
+                        <ViewConfigNumSelector dim="Rows" selector={s => s.view.nRows}
                             reducers={[addRow, removeRow]} />
+
+                        <ViewConfigNumSelector dim="Columns" selector={s => s.view.nCols}
+                            reducers={[addColumn, removeColumn]} />
                     </div>
                 </div>
             </div>
