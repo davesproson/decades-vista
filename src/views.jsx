@@ -31,7 +31,8 @@ const ViewConfigButtons = (props) => {
             plots: [...viewState.plots],
             nRows: viewState.nRows,
             nCols: viewState.nCols,
-            name: "This is a test plot"
+            name: "This is a test plot",
+            id: new Date().getTime()
         }
         dispatch(saveView(savedView))
     }

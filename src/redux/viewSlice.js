@@ -55,12 +55,18 @@ export const viewSlice = createSlice({
             const savedViews = [...state.savedViews];
             savedViews.push(action.payload);
             state.savedViews = savedViews;
+        },
+        loadSavedView: (state, action) => {
+            const savedView = state.savedViews.find(x => x.id === action.payload.id);
+            state.nRows = savedView.nRows;
+            state.nCols = savedView.nCols;
+            state.plots = savedView.plots;
         }
 	},
 });   
 
 export const { 
-    addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView
+    addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, loadSavedView
 } = viewSlice.actions;
 
 export default viewSlice.reducer;

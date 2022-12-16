@@ -7,6 +7,8 @@ import { setOrdinateAxis, setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
 import { usePlotUrl, useDashboardUrl, useTephiAvailable, useTephiUrl } from "./hooks"
 import { Outlet } from "react-router-dom"
+import { loadSavedView } from "./redux/viewSlice"
+import { useNavigate } from "react-router-dom"
 
 const NavSearchInput = (props) => {
     const dispatch = useDispatch()
@@ -85,11 +87,18 @@ const PresetSelector = (props) => {
 }
 
 const ViewsSelector = (props) => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const savedViews = useSelector(state => state.view.savedViews)
+
+    const goto = (id) => {
+        dispatch(loadSavedView({id: id}))
+        navigate("/config-view")
+    }
 
     const viewElements = savedViews.map((x, i) => {
         return (
-            <a className="navbar-item" key={i}>
+            <a className="navbar-item" key={i} onClick={()=>goto(x.id)}>
                 <span>{x.name}</span>
             </a>
         )
