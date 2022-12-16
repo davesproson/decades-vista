@@ -6,6 +6,7 @@ import { unselectAllParams } from "./redux/parametersSlice"
 import { setOrdinateAxis, setTimeframe } from "./redux/optionsSlice"
 import { useSelector } from "react-redux"
 import { usePlotUrl, useDashboardUrl, useTephiAvailable, useTephiUrl } from "./hooks"
+import { Outlet } from "react-router-dom"
 
 const NavSearchInput = (props) => {
     const dispatch = useDispatch()
@@ -236,6 +237,7 @@ const Navbar = (props) => {
     const burgerClass = active ? "navbar-burger is-active" : "navbar-burger"
 
     return (
+        <>
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
                 
@@ -252,6 +254,8 @@ const Navbar = (props) => {
             <NavbarMenu active={active} />
             
         </nav>
+        <Outlet />
+        </>
     )
 }
 
