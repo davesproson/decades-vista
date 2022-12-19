@@ -1,15 +1,44 @@
-import {  usePlot } from './hooks'
+import {  usePlot, usePlotOptions } from './hooks'
+import { Dashboard } from './dashboard'
 
-const Plot = () => {
-    
-    usePlot()
+
+
+const Plot = (props) => {
+
+    const dash = props.parameters
+        ? <Dashboard parameters={props.parameters} />
+        : null
 
     return (
-        <div id="graph" style={
-            {"top": "0px", "bottom": "0px", "left": "0px", "right": "0px", "position": "absolute"}
-        }></div>
+        <div style={{
+            top: "0px",
+            left: "0px",
+            right: "0px",
+            bottom: "0px",  
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+        }}>
+            {dash}
+            <div id="graph" style={{
+                width: "100%",
+                height: "100%",
+            }}></div>
+        </div>
     )
+}
+
+const PlotDispatcher = () => {
+    
+    const options = usePlotOptions();
+    usePlot(options)
+
+    const headerParams = options.header 
+        ? options.params
+        : null
+
+    return <Plot parameters={headerParams}/>
     
 }
 
-export default Plot 
+export default PlotDispatcher

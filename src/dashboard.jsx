@@ -39,13 +39,10 @@ const SmallDashPanel = (props) => {
         }}>
             <div className="is-flex is-flex-direction-row is-flex-grow-1" >
                 <h3 className="is-uppercase is-justify-content-center is-flex-grow-1 is-flex is-size-7" style={{
-                    // background: "#252243",
-                    // color: "#0abbef",
-                    // borderBottom: "1px solid black"
                 }}>
                     {props.param.DisplayText}
                 </h3>
-                <span className="is-flex is-justify-content-center is-size-7 is-flex-grow-1">
+                <span className="ml-1 is-flex is-justify-content-center is-size-7 is-flex-grow-1">
                     {dataVal} {props.param.DisplayUnits}
                 </span>
             </div>
@@ -61,16 +58,13 @@ const DashPanel = (props) => {
     }
 }
 
-
-
-const Dashboard = () => {
+const Dashboard = (props) => {
     
-    const [searchParams, _] = useSearchParams();
     const availableParams = useGetParameters()
-    const parameters = searchParams.get("params").split(",")
-    const isCompact = searchParams.get("compact") == "true"
-    const size = isCompact ? "small" : "large"
     const [data, setData] = useState({})
+
+    const parameters = props.parameters
+    const size = props.size
 
     useEffect(() => {
         const end = Math.floor(new Date().getTime() / 1000) - 1
@@ -80,7 +74,7 @@ const Dashboard = () => {
         const interval = setInterval(() => {
             const end = Math.floor(new Date().getTime() / 1000) - 1
             const start = end - 5
-            getData({params: parameters}, start, end).then(rdata => setData(rdata))
+            getData({params: parameters}, start, end).then(data => setData( data))
         }, 1000)
         return () => clearInterval(interval)
     }, [setData])
@@ -102,4 +96,14 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard
+const DashboardDispatcher = () => {
+    const [searchParams, _] = useSearchParams();
+    const parameters = searchParams.get("params").split(",")
+    const isCompact = searchParams.get("compact") == "true"
+    const size = isCompact ? "small" : "large"
+    
+    return <Dashboard size={size} parameters={parameters} />
+}
+
+export default DashboardDispatcher
+export { Dashboard }
