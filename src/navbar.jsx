@@ -118,10 +118,17 @@ const ViewsSelector = (props) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const savedViews = useSelector(state => state.view.savedViews)
+    const [visible, setVisible] = useState(false)
+
+    const visibleClass = visible ? "is-active" : ""
 
     const goto = (id) => {
         dispatch(loadSavedView({id: id}))
         navigate("/config-view")
+    }
+
+    const toggleVisible = (e) => {
+        setVisible(!visible)
     }
 
     const viewElements = savedViews.map((x, i) => {
@@ -134,11 +141,11 @@ const ViewsSelector = (props) => {
 
 
     return (
-        <div className="navbar-item has-dropdown is-hoverable">
-            <a className="navbar-link">
+        <div className={`navbar-item has-dropdown ${visibleClass}`}>
+            <a className="navbar-link" onClick={toggleVisible}>
                 Views
             </a>
-            <div className="navbar-dropdown">
+            <div className="navbar-dropdown" onClick={()=>setVisible(false)} onMouseLeave={()=>setVisible(false)}>
                 <Link to="/config-view"  className="navbar-item">
                     Config...
                 </Link>
