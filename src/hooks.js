@@ -14,7 +14,7 @@ const useTransform = (name) => {
 
 let parametersDispatched = false;
 const useDispatchParameters = () => {
-
+    
     const dispatch = useDispatch();
     const params = useSelector(state => state.vars.params);
     const [getStatus, setGetStatus] = useState(false);

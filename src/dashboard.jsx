@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getData } from "./plotUtils";
+import { useDispatchParameters, useGetParameters } from "./hooks";
 
 const DashPanel = (props) => {
     let dataVal = props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)
@@ -18,10 +19,10 @@ const DashPanel = (props) => {
                     color: "#0abbef",
                     borderBottom: "1px solid black"
                 }}>
-                    {props.param.name}
+                    {props.param.DisplayText}
                 </h3>
                 <span className="p-3 is-flex is-justify-content-center is-size-1">
-                    {dataVal} {props.param.units}
+                    {dataVal} {props.param.DisplayUnits}
                 </span>
             </div>
         </div>
@@ -31,8 +32,9 @@ const DashPanel = (props) => {
 
 
 const Dashboard = () => {
+    
     const [searchParams, _] = useSearchParams();
-    let availableParams = useSelector(state => state.vars.params)
+    const availableParams = useGetParameters()
     const parameters = searchParams.get("params").split(",")
     const [data, setData] = useState({})
 
@@ -44,18 +46,20 @@ const Dashboard = () => {
         const interval = setInterval(() => {
             const end = Math.floor(new Date().getTime() / 1000) - 1
             const start = end - 5
-            getData({params: parameters}, start, end).then(data => setData(data))
+            getData({params: parameters}, start, end).then(rdata => setData(rdata))
         }, 1000)
         return () => clearInterval(interval)
     }, [setData])
 
     if(!availableParams) return null
 
-    availableParams = availableParams.filter(x=>parameters.includes(x.raw))
+    const filteredParams = availableParams.filter(x=>{
+        return parameters.includes(x.ParameterName)
+    })
 
     return (
         <div className="is-flex is-flex-wrap-wrap is-justify-content-center">
-            {availableParams.map(x => <DashPanel key={x.raw} param={x} value={data[x.raw]}/>)}
+            {filteredParams.map(x => <DashPanel key={x.ParameterName} param={x} value={data[x.ParameterName]}/>)}
         </div>
   
     )
