@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getTimeLims } from "./plotUtils";
-import { serverPrefix, apiEndpoints, apiTransforms } from "./settings";
+import { serverPrefix, apiEndpoints, apiTransforms, badData } from "./settings";
 import { getData } from "./plotUtils";
 
 const useTransform = (name) => {
@@ -37,7 +37,7 @@ const useDispatchParameters = () => {
             const start = end - 5
             getData({params: [param.raw]}, start, end).then(
                 (data) => {
-                    const last = data[param.raw]?.filter(x => x != null)?.filter(x => x != -999.99)
+                    const last = data[param.raw]?.filter(x => x != null)?.filter(x => x != badData)
                     const status = (last?.length && last.length) > 0 ? true : false
                     dispatch(setParamStatus({id: param.id, status: status}))
                 }

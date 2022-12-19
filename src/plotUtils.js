@@ -1,4 +1,4 @@
-import { serverPrefix, apiEndpoints } from './settings'
+import { serverPrefix, apiEndpoints, badData } from './settings'
 
 import Plotly from 'plotly.js-dist'
 
@@ -35,7 +35,7 @@ const updatePlot = (options, data) => {
     }
 
     const badDataMap = (data) => {
-        return data == -999.99 ? null : data
+        return data == badData ? null : data
     }
 
     let yData = []
