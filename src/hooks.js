@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
-import { startData, paramFromRawName, getYAxis, getTimeLims } from "./plotUtils";
+import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims } from "./plotUtils";
 import { serverPrefix, apiEndpoints, apiTransforms, badData } from "./settings";
 import { getData, updatePlot } from "./plotUtils";
 
@@ -245,7 +245,7 @@ const usePlot = (options, ref) => {
                 y: 1
             },
             margin: {
-                t: 10
+                t: 50
             }
         }
 
@@ -315,7 +315,8 @@ const usePlot = (options, ref) => {
                 name: paramFromRawName(options.params[i], params).DisplayText,
                 x: [],
                 y: [],
-                yaxis: getYAxis(options, options.params[i]),
+                yaxis: options.swapxy ? 'y' : getYAxis(options, options.params[i]),
+                xaxis: options.swapxy ? getXAxis(options, options.params[i]) : 'y',
                 line: {}
             }
             

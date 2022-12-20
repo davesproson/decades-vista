@@ -99,6 +99,16 @@ function getYAxis(options, param) {
     }
 }
 
+
+function getXAxis(options, param) {
+    for(let i=0; i<options.axes.length; i++) {
+        const paramsOnAxis = options.axes[i].split(",")
+        if(paramsOnAxis.includes(param)) {
+            return i ? 'x' + (i+1) : 'x'
+        }
+    }
+}
+
 /**
  * Get the data url for a given set of options and start and end times
  * 
@@ -199,4 +209,4 @@ const getData = async (options, start, end) => {
 
 }
 
-export { getData, startData, paramFromRawName, getYAxis, getTimeLims, updatePlot }
+export { getData, startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, updatePlot }
