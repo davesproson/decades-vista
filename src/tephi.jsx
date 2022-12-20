@@ -311,7 +311,7 @@ const getMassMixRatios = () => {
     for(let ml=0; ml<massMixLines.length; ml++) {
 
         const xs = [],
-            ys = [];
+              ys = [];
 
         const tt = massMix(p, massMixLines[ml]);
 
@@ -453,10 +453,10 @@ const getTraces = () => {
 
 const populateTephigram = (nbg, data, ref) => {
     
-    var xs = [],
-        ys = []
+    const xs = [],
+          ys = []
 
-    var range = [];
+    const range = [];
 
     let cnt = 0
     for(var par of Object.keys(data)) {
@@ -464,11 +464,11 @@ const populateTephigram = (nbg, data, ref) => {
             continue;
         }
         
-        var x = [],
-            y = [];
+        const x = [],
+              y = [];
 
-        for(var i=0; i<data.static_pressure.length; i++) {
-            var xy = tphiToXy(data.static_pressure[i], data[par][i]); 
+        for(let i=0; i<data.static_pressure.length; i++) {
+            let xy = tphiToXy(data.static_pressure[i], data[par][i]); 
             x.push(xy[0]);
             y.push(xy[1]);
         }
@@ -552,7 +552,7 @@ const useTephigram = (ref) => {
                 }   
             }, {    
                 displayModeBar:false    
-            }).then(x=>setTephi(x)) 
+            })
         });
 
         
