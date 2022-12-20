@@ -19,12 +19,13 @@ const AddressBar = () => {
 
 const Options = () => {
     return (
-        <div className="section">
-            <AddressBar />
-            <PlotOptionCard />
-            <AxisOptionsCard />
+        <div className="container">
+            <div className="section">
+                <AddressBar />
+                <PlotOptionCard />
+                <AxisOptionsCard />
+            </div>
         </div>
-
     )
 }
 
