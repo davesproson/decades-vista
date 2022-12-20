@@ -215,9 +215,9 @@ const usePlotOptions = () => {
     }
 }
 
-const usePlot = () => {
+const usePlot = (options) => {
     const [plot, setPlot] = useState(null);
-    const options = usePlotOptions();
+    
     const params = useGetParameters();
     const [initDone, setInitDone] = useState(false)
     
