@@ -271,34 +271,38 @@ const NavbarMenu = (props) => {
     )
 }
 
-const Navbar = (props) => {
+const NavbarBurger = (props) => {
+
+    const burgerClass = props.active ? "navbar-burger is-active" : "navbar-burger"
+
+    return (
+        <div className="navbar-brand">
+            <a  role="button" className={burgerClass} 
+                aria-label="menu" aria-expanded="false" 
+                data-target="navbar" onClick={props.toggle}
+            >
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+    )
+}
+
+const Navbar = () => {
     const [active, setActive] = useState(false)
 
     const toggleActive = () => {
         setActive(!active)
     }
 
-    const burgerClass = active ? "navbar-burger is-active" : "navbar-burger"
-
     return (
         <>
-        <nav className="navbar" role="navigation" aria-label="main navigation">
-            <div className="navbar-brand">
-                
-                <a  role="button" className={burgerClass} 
-                    aria-label="menu" aria-expanded="false" 
-                    data-target="navbar" onClick={toggleActive}
-                >
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-
-            <NavbarMenu active={active} />
-            
-        </nav>
-        <Outlet />
+            <nav className="navbar" role="navigation" aria-label="main navigation">  
+                <NavbarBurger active={active} toggle={toggleActive} />
+                <NavbarMenu active={active} />
+            </nav>
+            <Outlet />
         </>
     )
 }
