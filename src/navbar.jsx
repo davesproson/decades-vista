@@ -10,7 +10,18 @@ import { Outlet } from "react-router-dom"
 import { loadSavedView } from "./redux/viewSlice"
 import { useNavigate } from "react-router-dom"
 import { presets } from "./settings"
+import PropTypes from "prop-types"
 
+/**
+ * Provides a text input for filtering the parameters. Dispatches the setFilterText action.
+ * 
+ * @component
+ * @example
+ * const paramName = "paramName"
+ * return (
+ *  <NavSearchInput filterText={paramName} />
+ * )
+ */
 const NavSearchInput = (props) => {
     const dispatch = useDispatch()
 
@@ -28,8 +39,29 @@ const NavSearchInput = (props) => {
         />
     )
 }
+NavSearchInput.propTypes = {
+    filterText: PropTypes.string
+}
 
-const NavTimeFrameSelector = (props) => {
+/**
+ * Provides a navbar dropdown menu which allows the user to select the timeframe
+ * to plot over, and navigate to the custom timeframe page.
+ * 
+ * Uses state from the optionsSlice to determine which timeframes are available 
+ * and which is selected.
+ * 
+ * Dispatches the setTimeframe action.
+ * 
+ * Local state is used to determine whether the dropdown menu is visible.
+ * 
+ * @component
+ * @example
+ * return (
+ *  <NavTimeFrameSelector />
+ * )
+ * 
+ */
+const NavTimeFrameSelector = () => {
 
     const [visible, setVisible] = useState(false)
     const dispatch = useDispatch()
@@ -77,7 +109,21 @@ const NavTimeFrameSelector = (props) => {
     )
 }
 
-const PresetSelector = (props) => {
+/**
+ * Provides a navbar dropdown menu which allows the user to select a preset group of parameters
+ * 
+ * Dispatches the toggleParamSelected and unselectAllParams actions.
+ * 
+ * Local state is used to determine whether the dropdown menu is visible.
+ * 
+ * @component
+ * @example
+ * return (
+ *  <PresetSelector />
+ * )
+ * 
+ */
+const PresetSelector = () => {
     const dispatch = useDispatch()
     const [visible, setVisible] = useState(false)
     const toggleVisible = (e) => {
@@ -114,7 +160,21 @@ const PresetSelector = (props) => {
     )
 }
 
-const ViewsSelector = (props) => {
+/**
+ * Provides a navbar dropdown menu which allows the user to select a saved view
+ * or navigate to the view config page.
+ * 
+ * Uses state from the viewSlice to determine which views are available.
+ * 
+ * Dispatches the loadSavedView action.
+ * 
+ * @component
+ * @example
+ * return (
+ *  <ViewsSelector />
+ * )
+ */
+const ViewsSelector = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const savedViews = useSelector(state => state.view.savedViews)
@@ -156,7 +216,19 @@ const ViewsSelector = (props) => {
     )
 }
 
-const PlotButton = (props) => {
+/**
+ * Provides a navbar button which allows the user to navigate to the plot page, using
+ * a url build from the current parameter selection and options.
+ * 
+ * Uses state from the varsSlice to determine if any parameters are selected.
+ * 
+ * @component
+ * @example
+ * return (
+ * <PlotButton />
+ * )
+ */
+const PlotButton = () => {
     const params = useSelector(state => state.vars.params)
     const disable = params.filter(x => x.selected).length == 0
 
@@ -175,7 +247,18 @@ const PlotButton = (props) => {
     )
 }
 
-const TephiButton = (props) => {
+/**
+ * Provides a navbar button which allows the user to navigate to the tephigram page, assuming
+ * that the tephigram is available, given by useTephiAvailable. The url is built from the current
+ * parameter selection and options.
+ * 
+ * @component
+ * @example
+ * return (
+ * <TephiButton />
+ * )
+ */
+const TephiButton = () => {
 
     const available = useTephiAvailable()
     const url = useTephiUrl()
@@ -193,7 +276,19 @@ const TephiButton = (props) => {
     )
 }
 
-const DashButton = (props) => {
+/**
+ * Provides a navbar button which allows the user to navigate to the dashboard page, using
+ * a url build from the current parameter selection and options.
+ * 
+ * Uses state from the varsSlice to determine if any parameters are selected.
+ * 
+ * @component
+ * @example
+ * return (
+ * <DashButton />
+ * )
+ */
+const DashButton = () => {
     const params = useSelector(state => state.vars.params)
     const disable = params.filter(x => x.selected).length == 0
     const dashUrl = useDashboardUrl()
@@ -212,6 +307,16 @@ const DashButton = (props) => {
     )
 }
 
+/**
+ * Provides a navbar button which allows the user to navigate to the options page, or back to the
+ * home page, depending on the current page.
+ * 
+ * @component
+ * @example
+ * return (
+ * <OptionsButton />
+ * )
+ */
 const OptionsButton = () => {
 
     const location = useLocation()
@@ -226,7 +331,19 @@ const OptionsButton = () => {
     )
 }
 
-const ClearButton = (props) => {
+/**
+ * Provides a navbar button which allows the user to clear the current parameter selection and
+ * filter text.
+ * 
+ * Dispatches the unselectAllParams, setFilterText and setOrdinateAxis actions.
+ * 
+ * @component
+ * @example
+ * return (
+ * <ClearButton />
+ * )
+ */
+const ClearButton = () => {
     const dispatch = useDispatch()
 
     const clear = () => {
@@ -242,6 +359,18 @@ const ClearButton = (props) => {
     )
 }
 
+/**
+ * Provides a navbar menu which contains the search input, time frame selector, preset selector,
+ * views selector, clear button, options button, plot button, tephigram button and dashboard button.
+ * 
+ * Uses state from the paramfilterSlice to determine the current filter text.
+ * 
+ * @component
+ * @example
+ * return (
+ * <NavbarMenu />
+ * )
+ */
 const NavbarMenu = (props) => {
 
     const navbarClass = props.active ? "navbar-menu is-active" : "navbar-menu"
@@ -270,7 +399,25 @@ const NavbarMenu = (props) => {
         </div>
     )
 }
+NavbarMenu.propTypes = {
+    active: PropTypes.bool.isRequired
+}
 
+
+/**
+ * Provides a navbar burger which toggles the navbar menu in mobile view.
+ *
+ * @param {boolean} props.active - Whether the navbar is active or not.
+ * @param {function} props.toggle - The function to toggle the navbar.
+ *  
+ * @component
+ * @example
+ * return (
+ * const active = true
+ * const toggle = () => {}
+ * <NavbarBurger active={active} toggle={toggle} />
+ * )
+ */
 const NavbarBurger = (props) => {
 
     const burgerClass = props.active ? "navbar-burger is-active" : "navbar-burger"
@@ -288,7 +435,21 @@ const NavbarBurger = (props) => {
         </div>
     )
 }
+NavbarBurger.propTypes = {
+    active: PropTypes.bool.isRequired,
+    toggle: PropTypes.func.isRequired
+}
 
+
+/**
+ * Provides the application navbar, including an outlet for the router.
+ * 
+ * @component
+ * @example
+ * return (
+ * <Navbar />
+ * )
+ */
 const Navbar = () => {
     const [active, setActive] = useState(false)
 
