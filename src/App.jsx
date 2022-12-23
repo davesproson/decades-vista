@@ -11,12 +11,21 @@ const DashboardDispatcher = lazy(() => import('./dashboard'))
 const PlotDispatcher = lazy(() => import('./plot'))
 const Options = lazy(() => import('./options'))
 const ParameterTable = lazy(() => import('./params'))
-import  { View } from './views'
+const View = lazy(() => import('./views'))
 
-function App() {
+/**
+ * The main app component. This is the entry point for the application, which
+ * provides the routing for the application.
+ * 
+ * @component
+ * @example
+ * return (
+ *  <App />
+ * )
+ */
+const App = () => {
 
   return (
-    <>
       <Routes>
         <Route path="/" element={<Navbar />} >
           <Route path="/" element={<Suspense><ParameterTable /></Suspense>} />
@@ -24,14 +33,13 @@ function App() {
           <Route path="/timeframe" element={<Suspense><TimeframeSelector /></Suspense>} />
           <Route path="/config-view" element={<Suspense><ViewConfig /></Suspense>} />
         </Route>
-        <Route path="/view" element={<View />} />
+        <Route path="/view" element={<Suspense><View /></Suspense>} />
         <Route path="/plot" element={<Suspense><PlotDispatcher/></Suspense>} />
         <Route path="/dashboard" element={<Suspense><DashboardDispatcher /></Suspense>} />
         <Route path="/tephigram" element={<Suspense><Tephigram /></Suspense>} />
         
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
-    </>
   )
 }
 
