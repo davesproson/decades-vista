@@ -1,9 +1,30 @@
 import { useSearchParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getData } from "./plotUtils";
-import { useDispatchParameters, useGetParameters } from "./hooks";
+import { useGetParameters } from "./hooks";
 
+/**
+ * A DashPanel renders a component that displays a single parameter value.
+ * The LargeDashPanel renders a larger panel with a title and a value, intended
+ * to be used in a dashboard.
+ * 
+ * @param {Object} props
+ * @param {Object} props.param - The parameter to display
+ * @param {Array} props.value - An array of the last n values for the parameter
+ * 
+ * @component
+ * @example
+ * const param = {
+ *      id: 1,
+ *      name: "Temperature",
+ *      DisplayUnits: "C",
+ *      DisplayText: "Temperature",
+ * }
+ * const value = [1, 2, 3, 4, 5]
+ * return (
+ * <LargeDashPanel param={param} value={value} />
+ * )
+ */
 const LargeDashPanel = (props) => {
     let dataVal = props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)
 
@@ -29,6 +50,28 @@ const LargeDashPanel = (props) => {
     )
 }
 
+/**
+ * A DashPanel renders a component that displays a single parameter value.
+ * The SmallDashPanel renders a small, compact panel with a title and a value, 
+ * intended to be used as a header above plots
+ * 
+ * @param {Object} props
+ * @param {Object} props.param - The parameter to display
+ * @param {Array} props.value - An array of the last n values for the parameter
+ * 
+ * @component
+ * @example
+ * const param = {
+ *      id: 1,
+ *      name: "Temperature",
+ *      DisplayUnits: "C",
+ *      DisplayText: "Temperature",
+ * }
+ * const value = [1, 2, 3, 4, 5]
+ * return (
+ * <LargeDashPanel param={param} value={value} />
+ * )
+ */
 const SmallDashPanel = (props) => {
     let dataVal = props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)
 
@@ -50,6 +93,28 @@ const SmallDashPanel = (props) => {
     )
 }
 
+/**
+ * A DashPanel is a dumb component that renders a LargeDashPanel or a SmallDashPanel
+ * depending on the size prop.
+ * 
+ * @param {Object} props
+ * @param {String} props.size - The size of the panel. Either "large" or "small"
+ * @param {Object} props.param - The parameter to display
+ * @param {Array} props.value - An array of the last n values for the parameter
+ * 
+ * @component
+ * @example
+ * const param = {
+ *      id: 1,
+ *      name: "Temperature",
+ *      DisplayUnits: "C",
+ *      DisplayText: "Temperature",
+ * }
+ * const value = [1, 2, 3, 4, 5]
+ * return (
+ * <DashPanel size="large" param={param} value={value} />
+ * )
+ */
 const DashPanel = (props) => {
     if(props.size == "large") {
         return <LargeDashPanel {...props} />
@@ -58,6 +123,22 @@ const DashPanel = (props) => {
     }
 }
 
+/**
+ * A Dashboard renders a collection of DashPanels, each displaying a single parameter value.
+ * 
+ * Uses the custom hook useGetParameters to get the available parameters from the server.
+ * 
+ * @param {Object} props
+ * @param {Array} props.parameters - An array of parameter (raw) names to display
+ * @param {String} props.size - The size of the panels. Either "large" or "small"
+ * 
+ * @component
+ * @example
+ * const parameters = ["Temperature", "Pressure"]
+ * return (
+ * <Dashboard parameters={parameters} size="large" />
+ * )
+ */
 const Dashboard = (props) => {
     
     const availableParams = useGetParameters()
@@ -96,6 +177,15 @@ const Dashboard = (props) => {
     )
 }
 
+/**
+ * A DashboardDispatcher parses the URL search parameters and renders a Dashboard
+ * 
+ * @component
+ * @example
+ * return (
+ * <DashboardDispatcher />
+ * )
+ */
 const DashboardDispatcher = () => {
     const [searchParams, _] = useSearchParams();
     const parameters = searchParams.get("params").split(",")
