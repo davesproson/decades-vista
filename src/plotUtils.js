@@ -28,7 +28,7 @@ const getTimeLims = (tf) => {
     return [start, end]
 }
 
-const updatePlot = (options, data) => {
+const updatePlot = (options, data, ref) => {
 
     const timeMap = (data) => {
         return options.ordvar == 'utc_time' ? data * 1000 : data
@@ -51,7 +51,7 @@ const updatePlot = (options, data) => {
         yData = temp
     }
     
-    Plotly.extendTraces('graph', {
+    Plotly.extendTraces(ref.current, {
         y: yData, x: xData
     }, [...Array(yData.length).keys()])
 }
@@ -86,11 +86,12 @@ const getDataUrl = (options, start, end) => {
     return url
 }
 
-const startData = (options, start, end, callback) => {
+const startData = ({options, start, end, callback, ref}) => {
 
     if(!callback) callback = updatePlot
 
     const url = getDataUrl(options, start, end)
+    const callOpts = {options: options, callback: callback, ref: ref}
 
     let newStart = start;
 
@@ -98,21 +99,21 @@ const startData = (options, start, end, callback) => {
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                callback(options, data)
+                callback(options, data, ref)
                 newStart = data.utc_time[data.utc_time.length-1] + 1
                 
                 setTimeout(() => {
-                    startData(options, newStart, nowSecs(), callback)
+                    startData({...callOpts, start: newStart, end: nowSecs()})
                 }, 1000)      
             }).catch(e => {
                 console.log('Error fetching data', e)
                 setTimeout(() => {
-                    startData(options, newStart, nowSecs(), callback)
+                    startData({...callOpts, start: newStart, end: nowSecs()})
                 }, 1000)   
             })
     } catch(e) {
         setTimeout(() => {
-            startData(options, newStart, nowSecs(), callback)
+            startData({...callOpts, start: newStart, end: nowSecs()})
         }, 1000) 
     }
 }
@@ -128,4 +129,4 @@ const getData = async (options, start, end) => {
 
 }
 
-export { getData, startData, paramFromRawName, getYAxis, getTimeLims }
+export { getData, startData, paramFromRawName, getYAxis, getTimeLims, updatePlot }

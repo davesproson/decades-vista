@@ -1,9 +1,11 @@
+import { useRef } from 'react'
+import { forwardRef } from 'react'
 import {  usePlot, usePlotOptions } from './hooks'
 import { Dashboard } from './dashboard'
 
 
 
-const Plot = (props) => {
+const Plot = forwardRef((props, ref) => {
 
     const dash = props.parameters
         ? <Dashboard parameters={props.parameters} />
@@ -20,24 +22,25 @@ const Plot = (props) => {
             flexDirection: "column",
         }}>
             {dash}
-            <div id="graph" style={{
+            <div ref={ref} style={{
                 width: "100%",
                 height: "100%",
             }}></div>
         </div>
     )
-}
+})
 
 const PlotDispatcher = () => {
     
+    const ref = useRef(null)
     const options = usePlotOptions();
-    usePlot(options)
+    usePlot(options, ref)
 
     const headerParams = options.header 
         ? options.params
         : null
 
-    return <Plot parameters={headerParams}/>
+    return <Plot ref={ref} parameters={headerParams}/>
     
 }
 

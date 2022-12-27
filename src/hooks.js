@@ -5,7 +5,7 @@ import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getTimeLims } from "./plotUtils";
 import { serverPrefix, apiEndpoints, apiTransforms, badData } from "./settings";
-import { getData } from "./plotUtils";
+import { getData, updatePlot } from "./plotUtils";
 
 const useTransform = (name) => {
     if(apiTransforms[name]) return apiTransforms[name];
@@ -215,7 +215,7 @@ const usePlotOptions = () => {
     }
 }
 
-const usePlot = (options) => {
+const usePlot = (options, ref) => {
     const [plot, setPlot] = useState(null);
     
     const params = useGetParameters();
@@ -224,7 +224,8 @@ const usePlot = (options) => {
     useEffect(() => {
         
         if(!initDone) return
-        startData(options, ...getTimeLims(options.timeFrame))
+        const [start, end] = getTimeLims(options.timeFrame)
+        startData({options: options, start: start, end: end, ref: ref})
  
     }, [initDone])
 
@@ -334,7 +335,7 @@ const usePlot = (options) => {
         }
         
         import('plotly.js-dist').then(Plotly => {
-            Plotly.newPlot('graph', traces, layout, {responsive: true})
+            Plotly.newPlot(ref.current, traces, layout, {responsive: true})
                 .then(setInitDone(true))
         })
 
