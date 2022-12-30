@@ -2,14 +2,32 @@ import { serverPrefix, apiEndpoints, badData } from './settings'
 
 import Plotly from 'plotly.js-dist'
 
+/**
+ * Get the parameter object from the parameters list by the raw name
+ * 
+ * @param {string} rawName - The name of the parameter as it appears calculations library
+ * @param {Array} parameters - The list of parameters from the server
+ * @returns {Object} - The parameter object from the parameters list
+ */
 const paramFromRawName = (rawName, parameters) => {
     return parameters.find(x => x.ParameterName === rawName)
 }
 
+/**
+ * Get the current time in seconds
+ * 
+ * @returns {number} - The current time in seconds
+ */
 const nowSecs = () => {
     return Math.floor(new Date().getTime() / 1000)
 }
 
+/**
+ * Get the start and end times for a given time frame
+ * 
+ * @param {string} tf - The time frame to get the start and end times for
+ * @returns {Array} - The start and end times for the time frame
+ */
 const getTimeLims = (tf) => {
     const end = Math.floor(new Date().getTime() / 1000) 
     
@@ -28,6 +46,14 @@ const getTimeLims = (tf) => {
     return [start, end]
 }
 
+/**
+ * Update the plot with new data
+ * 
+ * @param {Object} options - The plot options object
+ * @param {Object} data - The data to plot
+ * @param {Object} ref - The react ref to the plot
+ * @returns {void}
+ */
 const updatePlot = (options, data, ref) => {
 
     const timeMap = (data) => {
@@ -56,6 +82,14 @@ const updatePlot = (options, data, ref) => {
     }, [...Array(yData.length).keys()])
 }
 
+/**
+ * Get the y axis for a given parameter, as referred to by plotly,
+ * i.e. y or y2 etc.
+ * 
+ * @param {Object} options - The plot options object
+ * @param {string} param - The parameter to get the y axis for
+ * @returns {string} - The y axis for the parameter
+ */
 function getYAxis(options, param) {
     for(let i=0; i<options.axes.length; i++) {
         const paramsOnAxis = options.axes[i].split(",")
@@ -65,6 +99,14 @@ function getYAxis(options, param) {
     }
 }
 
+/**
+ * Get the data url for a given set of options and start and end times
+ * 
+ * @param {Object} options - The plot options object
+ * @param {number} start - The start time
+ * @param {number} end - The end time
+ * @returns {string} - The data url
+ */
 const getDataUrl = (options, start, end) => {
     let url = `${serverPrefix}${apiEndpoints.data}`
 
@@ -86,6 +128,19 @@ const getDataUrl = (options, start, end) => {
     return url
 }
 
+/**
+ * Start fetching data from the server. This function will call itself
+ * recursively to fetch data every second. This is done to avoid overloading
+ * the server with requests if it is slow to respond.
+ * 
+ * @param {Object} options - The plot options object
+ * @param {number} start - The start time
+ * @param {number} end - The end time
+ * @param {function} callback - The callback to call when data is fetched
+ * @param {Object} ref - The react ref to the plot
+ * @param {Object} signal - The signal object to abort the data fetch
+ * @returns {void}
+ */
 const startData = ({options, start, end, callback, ref, signal}) => {
 
     if(!callback) callback = updatePlot
@@ -124,6 +179,15 @@ const startData = ({options, start, end, callback, ref, signal}) => {
     }
 }
 
+/**
+ * Get data from the server
+ * 
+ * @param {Object} options - The plot options object
+ * @param {number} start - The start time
+ * @param {number} end - The end time
+ *
+ * @returns {Promise} - A promise that resolves to the data
+ */
 const getData = async (options, start, end) => {
 
     if(!start) start = nowSecs() - 5
