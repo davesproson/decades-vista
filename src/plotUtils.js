@@ -86,12 +86,18 @@ const getDataUrl = (options, start, end) => {
     return url
 }
 
-const startData = ({options, start, end, callback, ref}) => {
+const startData = ({options, start, end, callback, ref, signal}) => {
 
     if(!callback) callback = updatePlot
 
     const url = getDataUrl(options, start, end)
-    const callOpts = {options: options, callback: callback, ref: ref}
+
+    if(signal.abort) {
+        console.log('Aborting data fetch due to signal') 
+        return
+    }
+
+    const callOpts = {options: options, callback: callback, ref: ref, signal: signal}
 
     let newStart = start;
 

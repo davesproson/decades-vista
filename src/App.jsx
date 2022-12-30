@@ -26,6 +26,7 @@ const View = lazy(() => import('./views'))
 const App = () => {
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/" element={<Navbar />} >
           <Route path="/" element={<Suspense><ParameterTable /></Suspense>} />
@@ -34,12 +35,13 @@ const App = () => {
           <Route path="/config-view" element={<Suspense><ViewConfig /></Suspense>} />
         </Route>
         <Route path="/view" element={<Suspense><View /></Suspense>} />
-        <Route path="/plot" element={<Suspense><PlotDispatcher/></Suspense>} />
+        <Route path="/plot" element={<Suspense><PlotDispatcher /></Suspense>} />
         <Route path="/dashboard" element={<Suspense><DashboardDispatcher /></Suspense>} />
         <Route path="/tephigram" element={<Suspense><Tephigram /></Suspense>} />
-        
+
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
+    </Suspense>
   )
 }
 

@@ -223,8 +223,10 @@ const usePlot = (options, ref) => {
     useEffect(() => {
         
         if(!initDone) return
+        const signal = {abort: false}
         const [start, end] = getTimeLims(options.timeFrame)
-        startData({options: options, start: start, end: end, ref: ref})
+        startData({options: options, start: start, end: end, ref: ref, signal: signal})
+        return () => signal.abort = true
  
     }, [initDone])
 
