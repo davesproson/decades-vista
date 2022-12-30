@@ -216,7 +216,6 @@ const usePlotOptions = () => {
 }
 
 const usePlot = (options, ref) => {
-    const [plot, setPlot] = useState(null);
     
     const params = useGetParameters();
     const [initDone, setInitDone] = useState(false)
@@ -340,9 +339,6 @@ const usePlot = (options, ref) => {
         })
 
     }, [params])
-
-    
-    return plot;
 }
 
 export { 
