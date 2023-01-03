@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
-import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims } from "./plotUtils";
+import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, plotIsOngoing } from "./plotUtils";
 import { serverPrefix, serverProtocol, apiEndpoints, apiTransforms, badData } from "./settings";
 import { getData, updatePlot } from "./plotUtils";
 
@@ -98,7 +98,9 @@ const usePlotUrl = () => {
 
     let timeframe = ""
     if(useCustomTimeframe) {
-
+        const start = plotOptions.customTimeframe.start / 1000
+        const end = plotOptions.customTimeframe.end ? plotOptions.customTimeframe.end / 1000 : ""
+        timeframe = `${start},${end}`
     } else {
         timeframe = plotOptions.timeframes.find(x=>x.selected).value;
     }
@@ -205,7 +207,7 @@ const usePlotOptions = () => {
     return {
         params: searchParams.get("params").split(","),
         axes: searchParams.getAll("axis"),
-        timeFrame: searchParams.get("timeframe"),
+        timeframe: searchParams.get("timeframe"),
         swapxy: searchParams.get("swapxy") === "true",
         scrolling: searchParams.get("scrolling") === "true",
         style: searchParams.get("style"),
@@ -224,8 +226,9 @@ const usePlot = (options, ref) => {
         
         if(!initDone) return
         const signal = {abort: false}
-        const [start, end] = getTimeLims(options.timeFrame)
+        const [start, end] = getTimeLims(options.timeframe)
         startData({options: options, start: start, end: end, ref: ref, signal: signal})
+        if(!plotIsOngoing(options)) signal.abort = true
         return () => signal.abort = true
  
     }, [initDone])

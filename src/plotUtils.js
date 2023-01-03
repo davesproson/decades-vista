@@ -29,7 +29,20 @@ const nowSecs = () => {
  * @returns {Array} - The start and end times for the time frame
  */
 const getTimeLims = (tf) => {
-    const end = Math.floor(new Date().getTime() / 1000) 
+
+    if(tf.includes(",")) {
+        const times = tf.split(",")
+        let startTime = parseInt(times[0])
+        let endTime
+        try {
+            endTime = parseInt(times[1])
+        } catch {
+            endTime = nowSecs()
+        }
+        return [startTime, endTime]
+    }
+
+    const end = nowSecs()
     
     let multiplier = 1
     if(tf.includes('h')) {
@@ -44,6 +57,20 @@ const getTimeLims = (tf) => {
     const start = end - tf * multiplier
 
     return [start, end]
+}
+
+/**
+ * Parses plot options to decide if the plot is ongoing (i.e. should be updated)
+ * 
+ * @param {Object} options
+ * @param {string} options.timeframe - The timeframe of the plot 
+ * @returns {boolean} - Whether the plot is ongoing
+ */
+const plotIsOngoing = (options) => {
+    const custom = options.timeframe.includes(',') 
+    const customOngoing = custom && options.timeframe.split(',')[1] === ''
+    const defined = !custom
+    return customOngoing || defined
 }
 
 /**
@@ -120,7 +147,6 @@ function getXAxis(options, param) {
 const getDataUrl = (options, start, end) => {
     const server = options.server ? options.server : serverPrefix
     let url = `${serverProtocol}://${server}${apiEndpoints.data}`
-    console.log(url)
 
     // Allow the endpoint to include a query string
     if(url.includes('?')) {
@@ -211,4 +237,7 @@ const getData = async (options, start, end) => {
 
 }
 
-export { getData, startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, updatePlot }
+export { 
+    getData, startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, updatePlot,
+    plotIsOngoing
+}

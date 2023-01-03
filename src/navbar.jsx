@@ -74,7 +74,7 @@ const NavTimeFrameSelector = () => {
         setVisible(!visible)
     }
 
-    const timeFrameElements = timeframes.map(x => {
+    const timeframeElements = timeframes.map(x => {
         const active = x.selected ? "has-text-success is-underlined" : ""
 
         const onSetTimeframe = (e) => {
@@ -97,7 +97,7 @@ const NavTimeFrameSelector = () => {
             </a>
 
             <div className="navbar-dropdown" >
-                {timeFrameElements}
+                {timeframeElements}
                 <hr className="navbar-divider" />
                 <div  onClick={toggleVisible}>
                 <Link to="/timeframe" className="navbar-item" >

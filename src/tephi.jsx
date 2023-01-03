@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getData, getTimeLims } from "./plotUtils";
+import { getData, getTimeLims, plotIsOngoing } from "./plotUtils";
 
 
 // Required physical constants
@@ -497,7 +497,7 @@ const useTephigram = (ref) => {
     const paramsArray = params.split(',')
 
     const options = {
-        timeFrame: timeframe,
+        timeframe: timeframe,
         params: paramsArray,
         ordvar: 'static_pressure'
     }
@@ -556,14 +556,16 @@ const useTephigram = (ref) => {
         });
 
         
-        getData(options, ...getTimeLims(options.timeFrame))
+        getData(options, ...getTimeLims(options.timeframe))
             .then(data=>populateTephigram(n, data, ref))
             
-        const interval = setInterval(() => {
-            getData(options).then(data=>populateTephigram(n, data, ref))
-        }, 1000);
+        if(plotIsOngoing(options)) {
+            const interval = setInterval(() => {
+                getData(options).then(data=>populateTephigram(n, data, ref))
+            }, 1000);
 
-        return () => clearInterval(interval)
+            return () => clearInterval(interval)
+        }
 
     }, [])
 }
