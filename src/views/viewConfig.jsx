@@ -244,7 +244,7 @@ const ViewConfigNumSelector = (props) => {
 const ViewConfig = (props) => {
 
     return (
-        <div className="container">
+        <div className="container has-navbar-fixed-top">
             <div className="panel mt-2">
                 <p className="panel-heading">
                     View Configuration

@@ -459,7 +459,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="navbar" role="navigation" aria-label="main navigation">  
+            <nav className="navbar is-fixed-top" role="navigation" aria-label="main navigation">  
                 <NavbarBurger active={active} toggle={toggleActive} />
                 <NavbarMenu active={active} />
             </nav>

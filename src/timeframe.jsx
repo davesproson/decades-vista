@@ -183,7 +183,7 @@ const TimeframeSelector = (props) => {
     const endOnGoing = endTime === null
 
     return (
-        <div className="container">
+        <div className="container has-navbar-fixed-top">
             <TimeframeTextBox />
             <nav className="panel mt-4">
                 <p className="panel-heading">

@@ -19,7 +19,7 @@ const AddressBar = () => {
 
 const Options = () => {
     return (
-        <div className="container">
+        <div className="container has-navbar-fixed-top">
             <div className="section">
                 <AddressBar />
                 <PlotOptionCard />

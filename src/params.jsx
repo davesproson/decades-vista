@@ -66,7 +66,7 @@ const ParameterTable = (props) => {
                                      status={param.status} />)
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-4 has-navbar-fixed-top">
             <table className="table is-narrow is-hoverable is-fullwidth is-bordered is-striped" style={{"margin": "auto"}}>
                 <thead>
                     <tr>
