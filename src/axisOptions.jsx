@@ -87,7 +87,7 @@ const AxisSelectorItem = (props) => {
 AxisSelectorItem.propTypes = {
     param: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        axisId: PropTypes.number.optional,
+        axisId: PropTypes.number,
         units: PropTypes.string.isRequired
     })
 }
