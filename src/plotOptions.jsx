@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { 
     toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
@@ -85,13 +85,17 @@ const ParameterSelectorDropdown = (props) => {
     if(!serverParams) return null
 
     const params = [{name: 'Time', id: -1, raw: "utc_time", units: 's'}, ...serverParams]
-    const options = params.filter(x=>x.name.toLowerCase().includes(filterText.toLowerCase()))
-        .map(p=>{
-            return <option key={p.id} value={p.raw}>{p.name} ({p.units})</option>
-        })
+    const filteredParams = params.filter(x=>x.name.toLowerCase().includes(filterText.toLowerCase()))
+    const options = filteredParams.map(p=>
+            <option key={p.id} value={p.raw}>{p.name} ({p.units})</option>
+        )
 
     const onChange = (e) => {
+        const fp = params.filter(x=>x.name.toLowerCase().includes(e.target.value.toLowerCase()))
         setFilterText(e.target.value)
+
+        const dispatchVal = fp.length ? fp[0].raw : 'utc_time'
+        dispatch(setOrdinateAxis(dispatchVal))
     }
 
     const onSelectChange = (e) => {
@@ -105,7 +109,7 @@ const ParameterSelectorDropdown = (props) => {
             </div>
             <div className="control">
                 <div className="select">
-                    <select onChange={onSelectChange} value={ordinateAxis}>
+                    <select onChange={onSelectChange} value={ordinateAxis} style={{minWidth: "400px"}}>
                         {options}
                     </select>
                 </div>
