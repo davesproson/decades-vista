@@ -6,13 +6,13 @@ import { useServers } from './hooks';
 
 const Navbar = lazy(() => import('./navbar'))
 const TimeframeSelector = lazy(() => import('./timeframe'))
-const ViewConfig = lazy(() => import('./views'))
+const ViewConfig = lazy(() => import('./views/viewConfig'))
 const Tephigram = lazy(() => import('./tephi'))
 const DashboardDispatcher = lazy(() => import('./dashboard'))
 const PlotDispatcher = lazy(() => import('./plot'))
 const Options = lazy(() => import('./options'))
 const ParameterTable = lazy(() => import('./params'))
-const View = lazy(() => import('./views'))
+const View = lazy(() => import('./views/view'))
 
 /**
  * The main app component. This is the entry point for the application, which
