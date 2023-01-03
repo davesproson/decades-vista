@@ -1,4 +1,4 @@
-import { serverPrefix, apiEndpoints, badData } from './settings'
+import { serverPrefix, serverProtocol, apiEndpoints, badData } from './settings'
 
 import Plotly from 'plotly.js-dist'
 
@@ -118,7 +118,9 @@ function getXAxis(options, param) {
  * @returns {string} - The data url
  */
 const getDataUrl = (options, start, end) => {
-    let url = `${serverPrefix}${apiEndpoints.data}`
+    const server = options.server ? options.server : serverPrefix
+    let url = `${serverProtocol}://${server}${apiEndpoints.data}`
+    console.log(url)
 
     // Allow the endpoint to include a query string
     if(url.includes('?')) {

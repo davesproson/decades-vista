@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims } from "./plotUtils";
-import { serverPrefix, apiEndpoints, apiTransforms, badData } from "./settings";
+import { serverPrefix, serverProtocol, apiEndpoints, apiTransforms, badData } from "./settings";
 import { getData, updatePlot } from "./plotUtils";
 
 const useTransform = (name) => {
@@ -21,7 +21,7 @@ const useDispatchParameters = () => {
 
     useEffect(() => {
         if(parametersDispatched) return;
-        fetch(`${serverPrefix}${apiEndpoints.parameters}`)
+        fetch(`${serverProtocol}://${serverPrefix}${apiEndpoints.parameters}`)
             .then(response => response.json())
             .then(data => useTransform('parameters')(data))
             .then(data => dispatch(setParams(data)))
@@ -52,7 +52,7 @@ const useGetParameters = () => {
     const [params, setParams] = useState(null);
 
     useEffect(() => {
-        fetch(`${serverPrefix}${apiEndpoints.parameters}`)
+        fetch(`${serverProtocol}://${serverPrefix}${apiEndpoints.parameters}`)
             .then(response => response.json())
             .then(data => useTransform('parameters')(data))
             .then(data => {
@@ -69,20 +69,19 @@ const useServers = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch(`${serverPrefix}tank_status`)
-            .catch(e=>{
-
-            })
+        fetch(`${serverProtocol}://${serverPrefix}${apiEndpoints.tank_status}`)        
             .then(response => response.json())
+            .then(data => useTransform('tank_status')(data))
             .then(data => {
                 const reportedServers = data.topo.secondaries
                 reportedServers.push(data.topo.primary)
                 setServers(reportedServers);
-                if(!serverState) {
+                if(serverState === null) {
                     const serverToSet = reportedServers.sort(() => .5 - Math.random())[0]
                     dispatch(setServer(serverToSet))
                 }
             })
+            
         }, [])
     
     return servers;
@@ -212,6 +211,7 @@ const usePlotOptions = () => {
         style: searchParams.get("style"),
         header: searchParams.get("data_header") === "true",
         ordvar: searchParams.get("ordvar"),
+        server: searchParams.get("server")
     }
 }
 

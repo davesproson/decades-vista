@@ -1,10 +1,12 @@
-export const serverPrefix = "https://www.faam.ac.uk"
+export const serverPrefix = "www.faam.ac.uk"
+export const serverProtocol = "https"
 
 export const badData = -999.99
 
 export const apiEndpoints = {
     'parameters': '/livedata/parano.json',
     'data': '/livedata/livejson?db=1',
+    'tank_status': '/livedata/parano.json',
 }
 
 export const apiTransforms = {
@@ -18,6 +20,14 @@ export const apiTransforms = {
                                                                           .replace('deg', '°')
         }
         return params
+    },
+    'tank_status': (data) => {
+        return {
+            'topo': {
+                'primary': 'www.faam.ac.uk',
+                'secondaries': []
+            }
+        }
     }
 }
 

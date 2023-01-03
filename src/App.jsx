@@ -2,6 +2,7 @@ import 'bulma/css/bulma.min.css';
 
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom'
+import { useServers } from './hooks';
 
 const Navbar = lazy(() => import('./navbar'))
 const TimeframeSelector = lazy(() => import('./timeframe'))
@@ -24,6 +25,8 @@ const View = lazy(() => import('./views'))
  * )
  */
 const App = () => {
+
+  useServers()
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
