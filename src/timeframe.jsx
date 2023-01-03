@@ -106,8 +106,8 @@ const TimePicker = (props) => {
     }
 
     const setAndPad = (setter, element) => {
-        setter(element.target.value)
-        element.target.value = element.target.value.padStart(2, "0")
+        let val = parseInt(element.target.value)
+        setter(val)
     }
 
     const onGoingClass = isOngoing ? "is-primary" : "is-light"
