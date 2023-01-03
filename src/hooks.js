@@ -190,6 +190,9 @@ const useTephiAvailable = () => {
     let has_required_humids = false
 
     for(const param of selectedParams) {
+        if(!required_humids.includes(param) && !required_temps.includes(param)) {
+            return false
+        }
         if(required_temps.includes(param)) {
             has_required_temps = true
         }
