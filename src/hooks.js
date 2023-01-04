@@ -322,7 +322,7 @@ const usePlot = (options, ref) => {
                 x: [],
                 y: [],
                 yaxis: options.swapxy ? 'y' : getYAxis(options, options.params[i]),
-                xaxis: options.swapxy ? getXAxis(options, options.params[i]) : 'y',
+                xaxis: options.swapxy ? getXAxis(options, options.params[i]) : 'x',
                 line: {}
             }
             
