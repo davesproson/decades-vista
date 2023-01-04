@@ -32,7 +32,6 @@ const OptionBlock = (props) => {
             {props.optionComponent}
         </div>
     )
-    return null
 }
 
 const ParameterSelectorDropdown = () => {
