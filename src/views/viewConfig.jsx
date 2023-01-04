@@ -114,6 +114,9 @@ const PlotInputBlock = (props) => {
     const dispatch = useDispatch()
     const url = useSelector(s => s.view.plots)
     const plotUrl = usePlotUrl()
+    const params = useSelector(s => s.vars.params)
+
+    const paramsSelected = params.filter(x => x.selected).length > 0
 
     const onChange = (e) => {
         dispatch(setPlot({ index: props.n, url: e.target.value }))
@@ -131,7 +134,7 @@ const PlotInputBlock = (props) => {
                         onChange={onChange} placeholder="Plot URL..." />
                 </p>
                 <p className="control">
-                    <button className="button is-info" onClick={onUseCurrentConfig}>
+                    <button className="button is-info" onClick={onUseCurrentConfig} disabled={!paramsSelected}>
                         Use current config
                     </button>
                 </p>
