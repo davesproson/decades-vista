@@ -161,7 +161,14 @@ function getYAxis(options, param) {
     }
 }
 
-
+/**
+ * Get the x axis for a given parameter, as referred to by plotly,
+ * i.e. x or x2 etc.
+ * 
+ * @param {Object} options - The plot options object
+ * @param {string} param - The parameter to get the x axis for
+ * @returns {string} - The x axis for the parameter
+ */
 function getXAxis(options, param) {
     for(let i=0; i<options.axes.length; i++) {
         const paramsOnAxis = options.axes[i].split(",")
