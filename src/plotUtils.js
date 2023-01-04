@@ -74,6 +74,39 @@ const plotIsOngoing = (options) => {
 }
 
 /**
+ * Parses plot options to decide if the plot can slide
+ * 
+ * @param {Object} options
+ * @param {string} options.timeframe - The timeframe of the plot
+ * @returns {boolean} - Whether the plot can slide
+ */
+const canSlide = (options) => {
+    return !options.timeframe.includes(',') && options.scrolling
+}
+
+/**
+ * Get the length of the sliding window in seconds
+ * 
+ * @param {Object} options
+ * @param {string} options.timeframe - The timeframe of the plot
+ * @returns {number} - The length of the sliding window in seconds
+ */
+const slideLength = (options) => {
+    let tf = options.timeframe
+    let multiplier = 1
+    if(tf.includes('h')) {
+        multiplier = 60 * 60
+    }
+    if(tf.includes('m')) {
+        multiplier = 60
+    }
+
+    tf = tf.replace(/[a-zA-Z]+/, '')
+
+    return tf * multiplier
+}
+
+/**
  * Update the plot with new data
  * 
  * @param {Object} options - The plot options object
@@ -103,10 +136,12 @@ const updatePlot = (options, data, ref) => {
         xData = yData
         yData = temp
     }
+
+    const maxTraceLength = canSlide(options) ? slideLength(options) : null
     
     Plotly.extendTraces(ref.current, {
         y: yData, x: xData
-    }, [...Array(yData.length).keys()])
+    }, [...Array(yData.length).keys()], maxTraceLength)
 }
 
 /**
