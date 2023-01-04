@@ -1,6 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const getNewAxis = (units, id) => {
+const getNewAxis = (units, axes) => {
+    for(let i=1; i<axes.length+1; i++) {
+        if(!axes.find(axis => axis.id === i)) {
+            return {
+                id: i,
+                units: units,
+            }
+        }
+    }
+    const id = axes.length + 1;
     return {
         id: id,
         units: units,
@@ -60,7 +69,9 @@ export const paramSlice = createSlice({
                 if(param.selected) {
                     const pAxis = state.axes.find(axis => axis.units === param.units)
                     if(!pAxis) {
-                        const newAxis = getNewAxis(param.units, state.axes.length + 1);
+                        const newAxis = getNewAxis(
+                            param.units, state.axes
+                        );
                         state.axes.push(newAxis);
                         param.axisId = newAxis.id;
                     } else {
@@ -92,7 +103,7 @@ export const paramSlice = createSlice({
             const nParamsWithUnit = state.params.filter(p => p.selected && p.units === param.units).length;
 
             if(nParamsWithUnit === 1) return
-            const newAxis = getNewAxis(param.units, Math.max(...state.axes.map(x => x.id))+1);
+            const newAxis = getNewAxis(param.units, state.axes);
             state.axes.push(newAxis);
             param.axisId = newAxis.id;
         },
