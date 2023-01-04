@@ -41,5 +41,5 @@ export const presets = {
     'True air temperatures (C)': [521, 524],
     'Dew points (C)': [529, 550, 931],
     'Tephigram': [529, 521],
-    'Pressure & radar alts (ft)': [],
+    'Pressure & radar alts (ft)': [579, 977],
 }
