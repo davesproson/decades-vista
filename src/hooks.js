@@ -88,13 +88,15 @@ const useServers = () => {
 
 }
 
-const usePlotUrl = () => {
+const usePlotUrl = (override={}) => {
     const [plotUrl, setPlotUrl] = useState("");
 
     const plotOptions = useSelector(state => state.options);
     const vars = useSelector(state => state.vars);
     const server = useSelector(state => state.options.server);
     const useCustomTimeframe = useSelector(state => state.options.useCustomTimeframe);
+
+    const overridden = (key, par) => override[key] ? override[key] : par
 
     let timeframe = ""
     if(useCustomTimeframe) {
@@ -130,15 +132,15 @@ const usePlotUrl = () => {
         setPlotUrl(
             window.location.origin
             + `/plot?`
-            + `timeframe=${timeframe}`
-            + `&params=${selectedParams.join(',')}`
+            + "timeframe=" + overridden("timeframe", timeframe)
+            + "&params=" + selectedParams.join(',')
             + axisArgs
-            + `&swapxy=${plotOptions.swapOrientation}`
-            + `&scrolling=${plotOptions.scrollingWindow}`
-            + `&data_header=${plotOptions.dataHeader}`
-            + `&style=${plotOptions.plotStyle.value}`
-            + `&ordvar=${plotOptions.ordinateAxis}`
-            + `&server=${server}`
+            + "&swapxy=" + overridden("swapxy", plotOptions.swapOrientation)
+            + "&scrolling=" + overridden("scrolling", plotOptions.scrollingWindow)
+            + "&data_header=" + overridden("data_header", plotOptions.dataHeader)
+            + "&style=" + overridden("style", plotOptions.plotStyle.value)
+            + "&ordvar=" + overridden("ordvar", plotOptions.ordinateAxis)
+            + "&server=" + server
         );
     }, [plotOptions, params])
 

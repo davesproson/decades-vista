@@ -216,6 +216,36 @@ const ViewsSelector = () => {
     )
 }
 
+const PlotButtonMenu = (props) => {
+    const style = {
+        boxShadow: "0 0 8px #777",
+        display: props.visible ? "block": "none",
+        left: 0,
+        position: "absolute",
+        top: "100%",
+        zIndex: "1000",
+        backgroundColor: "#fff",
+    }
+
+    const latUrl = usePlotUrl({"ordvar": "gin_latitude", swapxy: true})
+    const lonUrl = usePlotUrl({"ordvar": "gin_longitude"})
+    const heightUrl = usePlotUrl({"ordvar": "pressure_height_kft", swapxy: true})
+
+    return (
+        <div style={style} onMouseLeave={props.hide}>
+            <a className="navbar-item" href={latUrl} target="_blank" rel="noopener noreferrer">
+                <span>vs. Latitude</span>
+            </a>
+            <a className="navbar-item" href={lonUrl} target="_blank" rel="noopener noreferrer">
+                <span>vs. Longitude</span>
+            </a>
+            <a className="navbar-item" href={heightUrl} target="_blank" rel="noopener noreferrer">
+                <span>vs. Height</span>
+            </a>
+        </div>
+    )
+}
+
 /**
  * Provides a navbar button which allows the user to navigate to the plot page, using
  * a url build from the current parameter selection and options.
@@ -231,19 +261,47 @@ const ViewsSelector = () => {
 const PlotButton = () => {
     const params = useSelector(state => state.vars.params)
     const disable = params.filter(x => x.selected).length == 0
+    const [menuVisible, setMenuVisible] = useState(false)
+
+    const toggleMenuVisible = () => {
+        setMenuVisible(!menuVisible)
+    }
 
     const plotUrl = usePlotUrl()
 
+    const leftStyle = {
+        borderTopRightRadius: "0px",
+        borderBottomRightRadius: "0px",
+        marginRight: "0px",
+        borderRight: "1px solid #dbdbdbaa"
+    }
+
+    const rightStyle = {
+        borderTopLeftRadius: "0px",
+        borderBottomLeftRadius: "0px",
+        marginLeft: "0px",
+        padding: "5px"
+    }
+
     if(disable) {
         return (
-            <button className="button is-primary" disabled>Plot</button>
+            <>
+                <button style={leftStyle} className="button is-primary" disabled>Plot</button>
+                <button style={rightStyle} className="button is-primary" disabled>▾</button>
+            </>
         )
     }
     
     return (
-        <a href={plotUrl} target="_blank" rel="noopener noreferrer" className="button is-primary">
-            Plot
-        </a>
+        <>
+            <a style={leftStyle} href={plotUrl} target="_blank" rel="noopener noreferrer" className="button is-primary">
+                Plot
+            </a>
+            <div style={rightStyle} className="button is-primary" onClick={toggleMenuVisible}>
+                ▾
+                <PlotButtonMenu visible={menuVisible} hide={()=>setMenuVisible(false)} />
+            </div>
+        </>
     )
 }
 
