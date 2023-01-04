@@ -216,6 +216,23 @@ const ViewsSelector = () => {
     )
 }
 
+/**
+ * Provides a navbar dropdown menu which allows the user to plot against
+ * latitude, longitude, or height without going through the faff of
+ * configuring the ordinate variable.
+ * 
+ * Uses the usePlotUrl hook to generate the urls.
+ * 
+ * @param {Object} props
+ * @param {boolean} props.visible - Whether the menu should be visible
+ * @param {function} props.hide - A function to hide the menu
+ * 
+ * @component
+ * @example
+ * return (
+ * <PlotButtonMenu visible={true} hide={()=>{}} />
+ * )
+ */
 const PlotButtonMenu = (props) => {
     const style = {
         boxShadow: "0 0 8px #777",
@@ -244,6 +261,10 @@ const PlotButtonMenu = (props) => {
             </a>
         </div>
     )
+}
+PlotButtonMenu.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    hide: PropTypes.func.isRequired,
 }
 
 /**
