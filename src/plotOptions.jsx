@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { 
     toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
@@ -6,50 +6,9 @@ import {
 } from './redux/optionsSlice';
 import { useServers } from './hooks'
 
+import OptionSwitch from './components/optionSwitch';
+import ToggleSwitch from './components/toggleSwitch';
 
-const ToggleSwitch = (props) => {
-
-    const dispatch = useDispatch()
-
-    const onClass = `button ${props.on ? "is-success" : "is-light"}`;
-    const offClass = `button ${props.on ? "is-light" : "is-danger"}`;
-
-    const toggle = () => dispatch(props.toggle())
-
-    return (
-        <div className="field has-addons">
-            <p className="control">
-                <button className={onClass} onClick={toggle}>on</button>
-            </p>
-            <p className="control">
-                <button className={offClass} onClick={toggle}>off</button>
-            </p>
-        </div>
-    )
-}
-
-const OptionSwitch = (props) => {
-    const dispatch = useDispatch()
-
-    const offClass = "button is-light"
-    const onClass = "button is-info"
-
-    const leftClass = props.value === props.options[0] ? onClass : offClass
-    const rightClass = props.value === props.options[1] ? onClass : offClass
-
-    const toggle = () => dispatch(props.toggle())
-
-    return (
-        <div className="field has-addons">
-            <p className="control">
-                <button className={leftClass} onClick={toggle}>{props.options[0]}</button>
-            </p>
-            <p className="control">
-                <button className={rightClass} onClick={toggle}>{props.options[1]}</button>
-            </p>
-        </div>
-    )
-}
 
 const OptionBlock = (props) => {
 
@@ -76,7 +35,7 @@ const OptionBlock = (props) => {
     return null
 }
 
-const ParameterSelectorDropdown = (props) => {
+const ParameterSelectorDropdown = () => {
     const [filterText, setFilterText] = useState('')
     const dispatch = useDispatch()
     const serverParams = useSelector(state => state.vars.params)
@@ -118,7 +77,7 @@ const ParameterSelectorDropdown = (props) => {
     )
 }
 
-const ServerSelectorDropDown = (props) => {
+const ServerSelectorDropDown = () => {
 
     const servers = useServers()
     const server = useSelector(state => state.options.server)
