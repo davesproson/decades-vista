@@ -5,7 +5,7 @@ import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, plotIsOngoing } from "./plotUtils";
 import { serverPrefix, serverProtocol, apiEndpoints, apiTransforms, badData } from "./settings";
-import { getData, updatePlot } from "./plotUtils";
+import { getData } from "./plotUtils";
 
 const useTransform = (name) => {
     if(apiTransforms[name]) return apiTransforms[name];
