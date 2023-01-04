@@ -9,7 +9,7 @@ import { usePlotUrl, useDashboardUrl, useTephiAvailable, useTephiUrl } from "./h
 import { Outlet } from "react-router-dom"
 import { loadSavedView } from "./redux/viewSlice"
 import { useNavigate } from "react-router-dom"
-import { presets } from "./settings"
+import { presets, geoCoords } from "./settings"
 import PropTypes from "prop-types"
 
 /**
@@ -244,9 +244,9 @@ const PlotButtonMenu = (props) => {
         backgroundColor: "#fff",
     }
 
-    const latUrl = usePlotUrl({"ordvar": "gin_latitude", swapxy: true})
-    const lonUrl = usePlotUrl({"ordvar": "gin_longitude"})
-    const heightUrl = usePlotUrl({"ordvar": "pressure_height_kft", swapxy: true})
+    const latUrl = usePlotUrl({"ordvar": geoCoords.latitude, swapxy: true})
+    const lonUrl = usePlotUrl({"ordvar": geoCoords.longitude})
+    const heightUrl = usePlotUrl({"ordvar": geoCoords.altitude, swapxy: true})
 
     return (
         <div style={style} onMouseLeave={props.hide}>

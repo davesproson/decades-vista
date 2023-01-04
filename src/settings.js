@@ -31,6 +31,12 @@ export const apiTransforms = {
     }
 }
 
+export const geoCoords = {
+    'latitude': 'gin_latitude',
+    'longitude': 'gin_longitude',
+    'altitude': 'pressure_height_kft'
+}
+
 export const presets = {
     'True air temperatures (C)': [521, 524],
     'Dew points (C)': [529, 550, 931],
