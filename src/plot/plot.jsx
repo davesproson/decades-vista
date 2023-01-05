@@ -1,14 +1,12 @@
-import { useRef } from 'react'
-import { forwardRef } from 'react'
-import {  usePlot, usePlotOptions } from './hooks'
+import { useRef, forwardRef } from 'react'
+import { usePlot, usePlotOptions } from './hooks'
 import { Dashboard } from '../dashboard/dashboard'
-
-
+import { plotHeaderDefaults } from '../settings'
 
 const Plot = forwardRef((props, ref) => {
 
     const dash = props.parameters
-        ? <Dashboard parameters={props.parameters} />
+        ? <Dashboard parameters={Array(...new Set([...props.parameters, ...plotHeaderDefaults]))} />
         : null
 
     return (

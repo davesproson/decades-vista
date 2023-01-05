@@ -44,3 +44,8 @@ export const presets = {
     'Tephigram': [529, 521],
     'Pressure & radar alts (ft)': [579, 977],
 }
+
+export const plotHeaderDefaults = [
+    'gin_latitude', 'gin_longitude', 'pressure_height_kft', 'deiced_true_air_temp_c',
+    'dew_point'
+]
