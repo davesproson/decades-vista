@@ -4,7 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import { setParams, setParamStatus } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, plotIsOngoing } from "./plotUtils";
-import { serverPrefix, serverProtocol, apiEndpoints, apiTransforms, badData } from "./settings";
+import { 
+    serverPrefix, serverProtocol, apiEndpoints, apiTransforms, badData, base as siteBase
+} from "./settings";
 import { getData } from "./plotUtils";
 
 const useTransform = (name) => {
@@ -131,7 +133,7 @@ const usePlotUrl = (override={}) => {
 
         setPlotUrl(
             window.location.origin
-            + `/plot?`
+            + `${siteBase}plot?`
             + "timeframe=" + overridden("timeframe", timeframe)
             + "&params=" + selectedParams.join(',')
             + axisArgs
@@ -153,7 +155,7 @@ const useDashboardUrl = () => {
     const selectedParams = params.filter(param => param.selected)
                                     .map(param => param.raw)
 
-    return origin + `/dashboard?params=${selectedParams.join(',')}`
+    return origin + `${siteBase}dashboard?params=${selectedParams.join(',')}`
 }
 
 const useTephiUrl = () => {
@@ -172,7 +174,7 @@ const useTephiUrl = () => {
         timeframe = plotOptions.timeframes.find(x=>x.selected).value;
     }
     
-    return origin + `/tephigram?params=${selectedParams.join(',')}&timeframe=${timeframe}`
+    return origin + `${siteBase}tephigram?params=${selectedParams.join(',')}&timeframe=${timeframe}`
 }
 
 const useTephiAvailable = () => {

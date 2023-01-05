@@ -1,5 +1,6 @@
 export const serverPrefix = "www.faam.ac.uk"
 export const serverProtocol = "https"
+export const base = "/decades-demo/"
 
 export const badData = -999.99
 
