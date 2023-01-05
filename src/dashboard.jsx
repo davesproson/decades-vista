@@ -145,17 +145,23 @@ const Dashboard = (props) => {
     const [data, setData] = useState({})
 
     const parameters = props.parameters
+    const server = props.server
     const size = props.size
+
+    const dataOptions = {
+        params: parameters,
+    }
+    if(server) dataOptions.server = server
 
     useEffect(() => {
         const end = Math.floor(new Date().getTime() / 1000) - 1
         const start = end - 5
 
-        getData({params: parameters}, start, end).then(data => setData(data))
+        getData(dataOptions, start, end).then(data => setData(data))
         const interval = setInterval(() => {
             const end = Math.floor(new Date().getTime() / 1000) - 1
             const start = end - 5
-            getData({params: parameters}, start, end).then(data => setData( data))
+            getData(dataOptions, start, end).then(data => setData( data))
         }, 1000)
         return () => clearInterval(interval)
     }, [setData])
@@ -190,9 +196,10 @@ const DashboardDispatcher = () => {
     const [searchParams, _] = useSearchParams();
     const parameters = searchParams.get("params").split(",")
     const isCompact = searchParams.get("compact") == "true"
+    const server = searchParams.get("server")
     const size = isCompact ? "small" : "large"
     
-    return <Dashboard size={size} parameters={parameters} />
+    return <Dashboard size={size} parameters={parameters} server={server} />
 }
 
 export default DashboardDispatcher
