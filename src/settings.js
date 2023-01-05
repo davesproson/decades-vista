@@ -43,6 +43,7 @@ export const presets = {
     'Dew points (C)': [529, 550, 931],
     'Tephigram': [529, 521],
     'Pressure & radar alts (ft)': [579, 977],
+    'Neph. SP (Mm-1)': [622, 623, 624]
 }
 
 export const plotHeaderDefaults = [
