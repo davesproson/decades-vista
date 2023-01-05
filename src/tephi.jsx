@@ -495,11 +495,13 @@ const useTephigram = (ref) => {
     const timeframe = searchParams.get('timeframe') || '30min'
     const params = searchParams.get('params') || 'deiced_true_air_temp_c,dew_point'
     const paramsArray = params.split(',')
+    const server = searchParams.get('server')
 
     const options = {
         timeframe: timeframe,
         params: paramsArray,
-        ordvar: 'static_pressure'
+        ordvar: 'static_pressure',
+        server: server
     }
 
     useEffect(() => {

@@ -167,6 +167,7 @@ const useTephiUrl = () => {
     const origin = window.location.origin
     const selectedParams = params.filter(param => param.selected)
                                     .map(param => param.raw)
+    const server = plotOptions.server
     
     let timeframe = ""
     if(useCustomTimeframe) {
@@ -175,7 +176,7 @@ const useTephiUrl = () => {
         timeframe = plotOptions.timeframes.find(x=>x.selected).value;
     }
     
-    return origin + `${siteBase}tephigram?params=${selectedParams.join(',')}&timeframe=${timeframe}`
+    return origin + `${siteBase}tephigram?params=${selectedParams.join(',')}&timeframe=${timeframe}&server=${server}`
 }
 
 const useTephiAvailable = () => {
