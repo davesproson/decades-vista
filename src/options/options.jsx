@@ -1,5 +1,5 @@
 
-import { usePlotUrl } from './hooks';
+import { usePlotUrl } from '../plot/hooks';
 import { PlotOptionCard } from './plotOptions';
 import { AxisOptionsCard } from './axisOptions';
 

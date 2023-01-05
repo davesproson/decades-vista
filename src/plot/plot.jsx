@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { forwardRef } from 'react'
 import {  usePlot, usePlotOptions } from './hooks'
-import { Dashboard } from './dashboard'
+import { Dashboard } from '../dashboard/dashboard'
 
 
 

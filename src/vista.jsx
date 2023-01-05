@@ -4,14 +4,14 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom'
 import { useServers } from './hooks';
 
-const Navbar = lazy(() => import('./navbar'))
-const TimeframeSelector = lazy(() => import('./timeframe'))
+const Navbar = lazy(() => import('./navbar/navbar'))
+const TimeframeSelector = lazy(() => import('./timeframe/timeframe'))
 const ViewConfig = lazy(() => import('./views/viewConfig'))
-const Tephigram = lazy(() => import('./tephi'))
-const DashboardDispatcher = lazy(() => import('./dashboard'))
-const PlotDispatcher = lazy(() => import('./plot'))
-const Options = lazy(() => import('./options'))
-const ParameterTable = lazy(() => import('./params'))
+const Tephigram = lazy(() => import('./tephigram/tephigram'))
+const DashboardDispatcher = lazy(() => import('./dashboard/dashboard'))
+const PlotDispatcher = lazy(() => import('./plot/plot'))
+const Options = lazy(() => import('./options/options'))
+const ParameterTable = lazy(() => import('./parameters/params'))
 const View = lazy(() => import('./views/view'))
 
 /**
@@ -24,7 +24,7 @@ const View = lazy(() => import('./views/view'))
  *  <App />
  * )
  */
-const App = () => {
+const DecadesVista = () => {
 
   useServers()
 
@@ -48,4 +48,4 @@ const App = () => {
   )
 }
 
-export default App
+export default DecadesVista

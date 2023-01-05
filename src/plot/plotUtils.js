@@ -1,4 +1,4 @@
-import { serverPrefix, serverProtocol, apiEndpoints, badData } from './settings'
+import { serverPrefix, serverProtocol, apiEndpoints, badData } from '../settings'
 
 import Plotly from 'plotly.js-dist'
 

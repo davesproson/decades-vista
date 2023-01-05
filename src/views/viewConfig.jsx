@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { 
     addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, setConfig 
 } from '../redux/viewSlice'
-import { usePlotUrl } from '../hooks'
+import { usePlotUrl } from '../plot/hooks'
 import { useRef, useState } from 'react';
 
 

@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { 
     toggleSwapOrientation, toggleScrollingWindow, toggleDataHeader, togglePlotStyle,
     setServer, setOrdinateAxis
-} from './redux/optionsSlice';
-import { useServers } from './hooks'
+} from '../redux/optionsSlice';
+import { useServers } from '../hooks'
 
-import OptionSwitch from './components/optionSwitch';
-import ToggleSwitch from './components/toggleSwitch';
+import OptionSwitch from '../components/optionSwitch';
+import ToggleSwitch from '../components/toggleSwitch';
 
 
 const OptionBlock = (props) => {

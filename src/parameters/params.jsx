@@ -1,7 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux"
-import { useDispatchParameters } from "./hooks"
-import { toggleParamSelected } from "./redux/parametersSlice"
+import { useDispatchParameters } from "../hooks"
+import { toggleParamSelected } from "../redux/parametersSlice"
 
 
 const ParameterLine = (props) => {

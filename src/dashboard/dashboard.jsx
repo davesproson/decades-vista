@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getData } from "./plotUtils";
-import { useGetParameters } from "./hooks";
+import { getData } from "../plot/plotUtils";
+import { useGetParameters } from "../hooks";
 
 /**
  * A DashPanel renders a component that displays a single parameter value.

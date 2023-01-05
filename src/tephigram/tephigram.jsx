@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getData, getTimeLims, plotIsOngoing } from "./plotUtils";
+import { getData, getTimeLims, plotIsOngoing } from "../plot/plotUtils";
 
 
 // Required physical constants

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setCustomTimeframe } from './redux/optionsSlice'
-import { getTimeLims } from './plotUtils'
+import { setCustomTimeframe } from '../redux/optionsSlice'
+import { getTimeLims } from '../plot/plotUtils'
 import { useEffect } from 'react'
 
 const TimeframeTextBox = (props) => {

@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
 import { PropTypes } from "prop-types"
 import { OptionBlock } from "./plotOptions"
-import { addNewAxis, selectAxis } from "./redux/parametersSlice"
+import { addNewAxis, selectAxis } from "../redux/parametersSlice"
 
 /**
  * A button that adds a new axis to a given parameter. By default, all parameters
