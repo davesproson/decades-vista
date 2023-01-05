@@ -86,13 +86,18 @@ const TimePicker = (props) => {
 
     const toggleOngoing = () => {
         const now = new Date()
-        if (isOngoing) {
+        now.setUTCMilliseconds(0)
+        const og = !isOngoing
+        setIsOngoing(!isOngoing)
+
+        if (!og) {
             setHours(now.getUTCHours())
             setMinutes(now.getUTCMinutes())
             setSeconds(now.getUTCSeconds())
+            const retval = og ? null :  now.getTime()
+            return dispatch(setCustomTimeframe({[props.boundary]: retval}))
         }
-        setIsOngoing(!isOngoing)
-        
+        dispatch(setCustomTimeframe({[props.boundary]: null}))
     }
 
     const onApply = () => {
