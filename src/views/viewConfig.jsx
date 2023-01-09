@@ -56,12 +56,17 @@ const ViewConfigButtons = (props) => {
         }
         const reader = new FileReader()
         reader.onload = (e) => {
-            const text = e.target.result
-            const json = JSON.parse(text)
-            const version = json.version || 1
-            parseMap[version](json)
+            try {
+                const text = e.target.result
+                const json = JSON.parse(text)
+                const version = json.version || 1
+                parseMap[version](json)
+            } catch (e) {
+                alert("Error parsing file - please check it is a valid view config file")
+            }
         }
         reader.readAsText(selectedFile)
+        ref.current.value = ""
     }
 
     const plotEnabled = (()=>{
