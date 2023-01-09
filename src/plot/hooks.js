@@ -84,7 +84,8 @@ const usePlot = (options, ref) => {
     useEffect(() => {
     
         if(!params) return
-        // if(!options) return
+
+        const numAxes = options.axes.length;
 
         const layout = {
             showlegend: true,
@@ -92,13 +93,29 @@ const usePlot = (options, ref) => {
                 font: {
                     size: 8,
                 },
-                x: 0,
-                y: 1
+                bgcolor: "rgba(255,255,255,0.8)",
+                // This is dispicable, sorry future me
+                x: options.swapxy 
+                    ? 0 
+                    : numAxes > 2 
+                        ? 0.05 
+                        : 0,
+                y: options.swapxy 
+                    ? numAxes > 2 
+                        ? .95 
+                        : 1 
+                    : 1
             },
             margin: {
                 t: 50
+            },
+            modebar: {
+                remove: ["sendDataToCloud", "lasso", "lasso2d", "select", "select2d"]
             }
         }
+
+        const offsetStart = numAxes > 2 ? 0.05 : 0;
+        const offsetEnd = numAxes > 3 ? 0.05 : 0;
 
         var _ordAxis = options.swapxy ? "yaxis" : "xaxis";
 
@@ -106,6 +123,7 @@ const usePlot = (options, ref) => {
         layout[_ordAxis] = {
             linecolor: "black",
             mirror: true,
+            domain: [offsetStart, 1-offsetEnd],
         }
 
         // Set the title of the ordinate axis, and set the date attribute if 
@@ -117,9 +135,6 @@ const usePlot = (options, ref) => {
             const ordParam = paramFromRawName(options.ordvar, params)
             layout[_ordAxis].title = `${ordParam.DisplayText} (${ordParam.DisplayUnits})`;
         }
-
-        const numAxes = options.axes.length;
-        console.log(options)
 
         for(let i=0; i<numAxes; i++) {
             let _axisTitle;
@@ -141,10 +156,18 @@ const usePlot = (options, ref) => {
             let _side = i % 2 ? (options.swapxy ? "top" : "right") : (options.swapxy ? "bottom" : "left");
             let _overlaying = null;
 
+            let anchor = i > 1 
+                ? "free" 
+                : options.swapxy ? "y" : "x";
+
             if(i) {
                 _axisName += (i+1);
                 _overlaying = options.swapxy ? "x" : "y"
             }
+
+            let position = anchor == "free"
+                ? (i == 2 ? 0 : 1)
+                : null;
     
             // Add the current axis to the layout.
             layout[_axisName] = {
@@ -154,6 +177,8 @@ const usePlot = (options, ref) => {
                 },
                 side: _side,
                 overlaying: _overlaying,
+                anchor: anchor,
+                position: position,
                 linecolor: "black",
                 mirror: true
             }
@@ -186,9 +211,11 @@ const usePlot = (options, ref) => {
 
             traces.push(opts);
         }
+
+        console.log(layout)
         
         import('plotly.js-dist').then(Plotly => {
-            Plotly.newPlot(ref.current, traces, layout, {responsive: true})
+            Plotly.newPlot(ref.current, traces, layout, {responsive: true, displaylogo: false})
                 .then(setInitDone(true))
         })
 
