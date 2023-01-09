@@ -1,4 +1,4 @@
-import { encode } from 'base-64';
+
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { 
@@ -6,21 +6,7 @@ import {
 } from '../redux/viewSlice'
 import { usePlotUrl } from '../plot/hooks'
 import { useRef, useState } from 'react';
-
-
-const useViewUrl = () => {
-    const ViewConfig = useSelector(s => s.view)
-    const nRows = ViewConfig.nRows
-    const nCols = ViewConfig.nCols
-    const plots = ViewConfig.plots
-    const encodedPlots = plots.map(x => encode(x))
-    let url = `/view?nRows=${nRows}&nCols=${nCols}`
-    for (let eurl of encodedPlots) {
-        url += `&plot=${eurl}`
-    }
-
-    return url
-}
+import { useViewUrl } from './hooks';
 
 const ViewConfigButtons = (props) => {
     const dispatch = useDispatch()
@@ -78,10 +64,24 @@ const ViewConfigButtons = (props) => {
         reader.readAsText(selectedFile)
     }
 
+    const plotEnabled = (()=>{
+        let enabled = true
+        for(let plot of viewState.plots){
+            if(!plot){
+                enabled = false
+            }
+        }
+        return enabled
+    })()
+
+    const plotButton = plotEnabled 
+        ? <Link to={viewUrl} className="button is-info is-fullwidth" target="_blank">Plot</Link>
+        : <button className="button is-info is-fullwidth" disabled>Plot</button>
+
     return (
         <>
             <div className="field is-grouped is-expanded">
-                <Link to={viewUrl} className="button is-info is-fullwidth" target="_blank">Plot</Link>
+                {plotButton}
             </div>
             <div className="field is-grouped is-expanded">
                 <p className="control is-expanded">
@@ -95,7 +95,7 @@ const ViewConfigButtons = (props) => {
                     </span>
                 </p>
                 <p className="control is-expanded">
-                    <button className="button  is-outlined is-primary is-fullwidth" onClick={download}>
+                    <button className="button  is-outlined is-primary is-fullwidth" onClick={download} disabled={!plotEnabled}>
                         Export
                     </button>
                 </p>
