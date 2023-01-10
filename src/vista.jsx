@@ -14,6 +14,7 @@ const Options = lazy(() => import('./options/options'))
 const ParameterTable = lazy(() => import('./parameters/params'))
 const View = lazy(() => import('./views/view'))
 const ViewLibrary = lazy(() => import('./views/viewLibrary'))
+const Tutorial = lazy(() => import('./tutorial/tutorial'))
 
 /**
  * The main app component. This is the entry point for the application, which
@@ -32,7 +33,7 @@ const DecadesVista = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/" element={<Navbar />} >
+        <Route path="/" element={<><Navbar /><Tutorial /></>} >
           <Route path="/" element={<Suspense><ParameterTable /></Suspense>} />
           <Route path="/options" element={<Suspense><Options /></Suspense>} />
           <Route path="/timeframe" element={<Suspense><TimeframeSelector /></Suspense>} />
