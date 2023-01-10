@@ -94,7 +94,7 @@ const NavTimeFrameSelector = () => {
 
     return (
         <div className={`navbar-item has-dropdown ${visibleClass}`} onMouseLeave={()=>setVisible(false)}>
-            <a className="navbar-link" onClick={toggleVisible}>
+            <a id="timeframe-navbar-item" className="navbar-link" onClick={toggleVisible}>
                 Timeframe
             </a>
 
