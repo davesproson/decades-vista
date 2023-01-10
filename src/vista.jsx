@@ -13,6 +13,7 @@ const PlotDispatcher = lazy(() => import('./plot/plot'))
 const Options = lazy(() => import('./options/options'))
 const ParameterTable = lazy(() => import('./parameters/params'))
 const View = lazy(() => import('./views/view'))
+const ViewLibrary = lazy(() => import('./views/viewLibrary'))
 
 /**
  * The main app component. This is the entry point for the application, which
@@ -36,6 +37,7 @@ const DecadesVista = () => {
           <Route path="/options" element={<Suspense><Options /></Suspense>} />
           <Route path="/timeframe" element={<Suspense><TimeframeSelector /></Suspense>} />
           <Route path="/config-view" element={<Suspense><ViewConfig /></Suspense>} />
+          <Route path="/view-library" element={<Suspense><ViewLibrary /></Suspense>} />
         </Route>
         <Route path="/view" element={<Suspense><View /></Suspense>} />
         <Route path="/plot" element={<Suspense><PlotDispatcher /></Suspense>} />

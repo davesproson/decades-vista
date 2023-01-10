@@ -176,6 +176,7 @@ const PresetSelector = () => {
  *  <ViewsSelector />
  * )
  */
+
 const ViewsSelector = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -210,6 +211,9 @@ const ViewsSelector = () => {
             <div className="navbar-dropdown" onClick={()=>setVisible(false)} onMouseLeave={()=>setVisible(false)}>
                 <Link to="/config-view"  className="navbar-item">
                     Config...
+                </Link>
+                <Link to="/view-library"  className="navbar-item">
+                    Library...
                 </Link>
                 <hr className="navbar-divider" />
                 {viewElements}

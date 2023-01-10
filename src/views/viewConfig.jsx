@@ -180,7 +180,7 @@ const SaveModal = (props) => {
             nRows: viewState.nRows,
             nCols: viewState.nCols,
             name: viewName,
-            id: new Date().getTime()
+            id: crypto.randomUUID()
         }
         dispatch(saveView(savedView))
         setViewName("")

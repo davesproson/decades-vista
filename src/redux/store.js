@@ -5,7 +5,6 @@ import paramFilterReducer from './filterSlice'
 import optionsReducer from './optionsSlice'
 import viewReducer from './viewSlice'
 
-
 const store = configureStore({
   reducer: {
     vars: paramReducer,
