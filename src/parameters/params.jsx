@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useDispatchParameters } from "../hooks"
 import { toggleParamSelected } from "../redux/parametersSlice"
-
+import { Loader } from "../components/loader"
 
 const ParameterLine = (props) => {
     const dispatch = useDispatch()
@@ -49,7 +49,12 @@ const ParameterTable = (props) => {
     const filterText = useSelector(state => state.paramfilter)
     useDispatchParameters()
 
-    if(!vars.params) return (<div></div>);
+    const paramsChecked = vars.params.length && vars.params.every(x => x.status !== null)
+    const nParamsChecked = vars.params.filter(x => x.status !== null).length
+
+    if(!paramsChecked) return <Loader value={nParamsChecked} max={vars.params.length} />
+    
+    if(!vars.params) return <Loader />;
 
     const params = [...vars.params];
 
