@@ -93,7 +93,7 @@ const NavTimeFrameSelector = () => {
     const visibleClass = visible ? "is-active" : ""
 
     return (
-        <div className={`navbar-item has-dropdown ${visibleClass}`} onMouseLeave={()=>setVisible(false)}>
+        <div id="timeframe-navbar" className={`navbar-item has-dropdown ${visibleClass}`} onMouseLeave={()=>setVisible(false)}>
             <a id="timeframe-navbar-item" className="navbar-link" onClick={toggleVisible}>
                 Timeframe
             </a>
@@ -204,8 +204,8 @@ const ViewsSelector = () => {
 
 
     return (
-        <div className={`navbar-item has-dropdown ${visibleClass}`}>
-            <a className="navbar-link" onClick={toggleVisible}>
+        <div id="views-navbar" className={`navbar-item has-dropdown ${visibleClass}`}>
+            <a id="views-navbar-item" className="navbar-link" onClick={toggleVisible}>
                 Views
             </a>
             <div className="navbar-dropdown" onClick={()=>setVisible(false)} onMouseLeave={()=>setVisible(false)}>

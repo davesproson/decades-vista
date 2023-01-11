@@ -1,6 +1,10 @@
 
 import { setFilterText } from "../redux/filterSlice"
 import { unselectAllParams, toggleParamSelected } from "../redux/parametersSlice"
+import { setTimeframe } from "../redux/optionsSlice"
+import { saveView, clearSavedViews } from "../redux/viewSlice"
+
+import { libraryViews } from "../views/libraryEntries"
 
 const panels = [
     {
@@ -56,12 +60,116 @@ const panels = [
         text: `You can either select a preset timeframe, or enter a custom timeframe.
                Let's see how to do that. Click on the "Custom..." menu item, and/or click 
                Continue.`,
+        nextRoute: "/timeframe",
     },
     {
-        title: "To be continued...",
-        text: `More to be written`,
-        continueText: "Finish",
-        abortText: "Finish, but red",
+        title: "Selecting a timeframe",
+        text: `Here you can select a custom timeframe. Be sure to click "Apply" when you've 
+               changed the time. If the end time is "ongoing", the plot will update as new
+               data become available. Give it a try now.`,
+        action: () => {
+            const tf = document.getElementById("timeframe-navbar")
+            const tfItem = document.getElementById("timeframe-navbar-item")
+            if(tf.classList.contains("is-active")) tfItem.click()
+        },
+        nextRoute: "/options"
+    },
+    {
+        title: "Customising the Plot",
+        text: `This is the options page, reached by clicking the "Options" button at the top
+                of the page (it will currently read "Home"). Here you can change the plot
+                orientation, style, add a data header, change the ordinate variable, and
+                select which server to use.`,
+        dispatch: [
+            () => unselectAllParams(),
+            () => toggleParamSelected({id: "521"}),
+            () => toggleParamSelected({id: "529"}),
+            () => setTimeframe({value: "5min"}),
+        ],
+    },
+    {
+        title: "Customising the Plot",
+        text: `You can also select which axis to place parameters on. By default, parameters
+               with the same units will be placed on the same axis. You can change this by
+                clicking the "+" button. Try it now. The plots work well with up to 4 axes,
+                depending on the width of your device, but you can add more if you like.`,
+        nextRoute: "/",
+    },
+    {
+        title: "Tephigrams",
+        text: `The tephigram button is available when at least one true air temperature (C)
+               and one dewpoint (C) parameter are selected. Click it to open a tephigram plot.
+               Timeframe and server options apply to tephigrams, but other options do not.
+               The Tephigram button should currently be enabled - try it now.`,
+        dispatch: [
+            () => unselectAllParams(),
+            () => toggleParamSelected({id: "521"}),
+            () => toggleParamSelected({id: "529"}),
+            () => setTimeframe({value: "30min"}),
+        ]
+    },
+    {
+        title: "Dashboard",
+        text: `The dashboard button is available when at least one parameter is selected.
+               The dashboard is a quick way to view the most recent values of selected
+               parameters. Click the dashboard button to open the dashboard. Try it now.`,
+        dispatch: [
+            () => unselectAllParams(),
+            () => toggleParamSelected({id: "521"}),
+            () => toggleParamSelected({id: "529"}),
+            () => toggleParamSelected({id: "517"}),
+            () => toggleParamSelected({id: "551"}),
+            () => toggleParamSelected({id: "570"}),
+            () => toggleParamSelected({id: "571"}),
+            () => toggleParamSelected({id: "662"}),
+            () => toggleParamSelected({id: "663"}),
+        ]
+    },
+    {
+        title: "Views",
+        text: `Views provide a way to composite multiple plots or dashboards (for example)
+               into a single page. The views menu should now be open. Let's look at the
+               views library first. Click "Library..." and/or Continue...`,
+        action: () => {
+            const views = document.getElementById("views-navbar")
+            const viewsItem = document.getElementById("views-navbar-item")
+            if(!views.classList.contains("is-active")) viewsItem.click()
+        },
+        nextRoute: "/view-library"
+    },
+    {
+        title: "The View Library",
+        text: `The view library is a collection of views that have been created for you.
+               You can make a view available by clicking the "Load" button next to the
+               view description. The first view is called "${libraryViews[0].title}", 
+               try loading it now.`,
+        action: () => {
+            const views = document.getElementById("views-navbar")
+            const viewsItem = document.getElementById("views-navbar-item")
+            if(views.classList.contains("is-active")) viewsItem.click()
+        }
+    },
+    {
+        title: "The View Library",
+        text: `Once loaded, the view will be avaiable in the "Views" menu. Click it
+               and/or Continue... to go to the view configuration page.`,
+        action: () => {
+            const views = document.getElementById("views-navbar")
+            const viewsItem = document.getElementById("views-navbar-item")
+            if(!views.classList.contains("is-active")) viewsItem.click()
+        },
+        dispatch: [
+            () => clearSavedViews(),
+            () => saveView({name: libraryViews[0].title, id: crypto.randomUUID(), ...libraryViews[0].config})
+        ],
+        nextRoute: "/config-view"
+    },
+    {
+        title: "View Configuration",
+        text: `This is the view configuration page, which is where you can build your own views.
+               We've got here by selecting a loaded view, so it's already configured. You can
+               launch the view by clicking the blue "Plot" button under the "Plot Configurations"
+               panel. Try it now.`,
     }
 ]
 

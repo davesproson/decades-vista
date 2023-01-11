@@ -2,9 +2,19 @@ import { useSelector, useDispatch } from "react-redux"
 import { panels } from "./panels"
 import { useTutorialAction } from "./hooks"
 import { setShowTutorial, incrementPosition } from "../redux/tutorialSlice"
+import { useNavigate } from "react-router-dom"
 
 const TutorialPanel = (props) => {
     useTutorialAction(props.action, props.dispatch, props.clear)
+    console.log(props)
+    const navigate = useNavigate()
+    
+    const onContinue = () => {
+        if(props.nextRoute) {
+            navigate(props.nextRoute)
+        }
+        props.next()
+    }
 
     return (
         <div style={{
@@ -23,7 +33,7 @@ const TutorialPanel = (props) => {
                     <h6 className="title has-text-white">{props.title}</h6>
                     {props.text}
                     <div className="mt-4">
-                    <button className="button mr-1 is-success" onClick={props.next}>{props.continueText || "Continue"}</button>
+                    <button className="button mr-1 is-success" onClick={onContinue}>{props.continueText || "Continue"}</button>
                     <button className="button is-danger" onClick={props.abort}>{props.abortText || "Close"}</button>
                     </div>
                 </div>
