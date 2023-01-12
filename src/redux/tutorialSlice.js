@@ -18,6 +18,9 @@ export const tutorialSlice = createSlice({
         },
         setShowTutorial: (state, action) => {
             state.show = action.payload;
+            if(!action.payload) {
+                window.sessionStorage.setItem('showTutorial', 'false');
+            }
         }
 	},
 });   

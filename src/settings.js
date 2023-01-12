@@ -10,6 +10,8 @@ export const apiEndpoints = {
     'tank_status': '/livedata/parano.json',
 }
 
+export const enableTutorial = true
+
 export const apiTransforms = {
     'parameters': (data) => {
         const params = []

@@ -170,6 +170,11 @@ const panels = [
                We've got here by selecting a loaded view, so it's already configured. You can
                launch the view by clicking the blue "Plot" button under the "Plot Configurations"
                panel. Try it now.`,
+        action: () => {
+            const views = document.getElementById("views-navbar")
+            const viewsItem = document.getElementById("views-navbar-item")
+            if(views.classList.contains("is-active")) viewsItem.click()
+        },
     },
     {
         title: "View Configuration",
