@@ -5,7 +5,6 @@ import { useSearchParams } from "react-router-dom";
 import { getData, getTimeLims, plotIsOngoing } from "../plot/plotUtils";
 import { getTraces, populateTephigram } from "./utils";
 
-
 const useTephiUrl = () => {
     const params = useSelector(state => state.vars.params);
     const plotOptions = useSelector(state => state.options);
