@@ -2,7 +2,7 @@
 import { setFilterText } from "../redux/filterSlice"
 import { unselectAllParams, toggleParamSelected } from "../redux/parametersSlice"
 import { setTimeframe } from "../redux/optionsSlice"
-import { saveView, clearSavedViews } from "../redux/viewSlice"
+import { saveView, clearSavedViews, reset } from "../redux/viewSlice"
 
 import { libraryViews } from "../views/libraryEntries"
 
@@ -170,6 +170,35 @@ const panels = [
                We've got here by selecting a loaded view, so it's already configured. You can
                launch the view by clicking the blue "Plot" button under the "Plot Configurations"
                panel. Try it now.`,
+    },
+    {
+        title: "View Configuration",
+        text : `To build your own view, simlply select the number of rows and columns you want
+                in the view, and then add the URLs of the visualisations you want to include to
+                the address bars. Clicking "Use current config" will add the currently configured
+                plot to the view. Give it a try now.`,
+        dispatch: [() => reset()],
+    }, 
+    {
+        title: "Persisting View Configurations",
+        text: `Once configured, you can save your view by clicking the "Save" button. This
+               will save the view in the view menu for the rest of your session. You can
+               also "Export" the view to a file, which you can then "Import" later to reuse 
+               or share with others.`,
+        nextRoute: "/"
+    }, 
+    {
+        title: "That's all folks!",
+        text: `Thanks for taking the time to try out DECADES visualisation. If you have
+                any questions or feedback, please contact FAAM, or see the full 
+                documentation on the FAAM website.`,
+        hideContinue: true,
+        abortText: "Finish",
+        dispatch: [
+            () => clearSavedViews(),
+            () => reset(),
+            () => unselectAllParams()
+        ]
     }
 ]
 

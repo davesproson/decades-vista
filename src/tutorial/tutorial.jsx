@@ -16,6 +16,10 @@ const TutorialPanel = (props) => {
         props.next()
     }
 
+    const continueButton = props.hideContinue
+        ? null
+        : <button className="button mr-1 is-success" onClick={onContinue}>{props.continueText || "Continue"}</button>
+
     return (
         <div style={{
             position: "fixed",
@@ -33,7 +37,7 @@ const TutorialPanel = (props) => {
                     <h6 className="title has-text-white">{props.title}</h6>
                     {props.text}
                     <div className="mt-4">
-                    <button className="button mr-1 is-success" onClick={onContinue}>{props.continueText || "Continue"}</button>
+                    {continueButton}
                     <button className="button is-danger" onClick={props.abort}>{props.abortText || "Close"}</button>
                     </div>
                 </div>
