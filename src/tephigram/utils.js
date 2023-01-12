@@ -1,5 +1,65 @@
-import { useRef } from "react";
-import { useTephigram } from "./hooks";
+/*===================================================================
+ * Returns the set of plotly traces that makes up the 'background'
+ * of the tephigram.
+ *
+ * Returns:
+ *  traces - an array of traces containing lines of constant temp,
+ *           theta, pressure, mass mixing ratio and sat. adiabats.
+ *===================================================================*/
+const getTraces = () => {
+    const traces = getIsotherms(isoThermMin, isoThermMax, dIsoTherm);
+    let _traces = getThetas(thetaMin, thetaMax, dTheta);
+    traces.push.apply(traces, _traces);
+
+    _traces = getIsobars(pressMin, pressMax, dPress);
+    traces.push.apply(traces, _traces);
+
+    _traces = getMassMixRatios();
+    traces.push.apply(traces, _traces);
+
+    _traces = getSatAdiabats();
+    traces.push.apply(traces, _traces);
+
+
+    return traces
+}
+
+const populateTephigram = (nbg, data, ref) => {
+    
+    const xs = [],
+          ys = []
+
+    const range = [];
+
+    let cnt = 0
+    for(var par of Object.keys(data)) {
+        if(par == 'static_pressure' || par == 'utc_time') {
+            continue;
+        }
+        
+        const x = [],
+              y = [];
+
+        for(let i=0; i<data.static_pressure.length; i++) {
+            let xy = tphiToXy(data.static_pressure[i], data[par][i]); 
+            x.push(xy[0]);
+            y.push(xy[1]);
+        }
+
+        xs.push(x);
+        ys.push(y);
+        range.push(nbg+cnt);
+        cnt++;
+    }
+
+    import('plotly.js-dist').then((Plotly) => {
+        Plotly.extendTraces(ref.current, {
+            x: xs,
+            y: ys
+        }, range);
+    });
+
+}
 
 // Required physical constants
 const MA = 300,
@@ -422,80 +482,7 @@ const getSatAdiabats = () => {
     return traces;
 }
 
-/*===================================================================
- * Returns the set of plotly traces that makes up the 'background'
- * of the tephigram.
- *
- * Returns:
- *  traces - an array of traces containing lines of constant temp,
- *           theta, pressure, mass mixing ratio and sat. adiabats.
- *===================================================================*/
-const getTraces = () => {
-    const traces = getIsotherms(isoThermMin, isoThermMax, dIsoTherm);
-    let _traces = getThetas(thetaMin, thetaMax, dTheta);
-    traces.push.apply(traces, _traces);
 
-    _traces = getIsobars(pressMin, pressMax, dPress);
-    traces.push.apply(traces, _traces);
-
-    _traces = getMassMixRatios();
-    traces.push.apply(traces, _traces);
-
-    _traces = getSatAdiabats();
-    traces.push.apply(traces, _traces);
-
-
-    return traces
+export {
+    getTraces, populateTephigram
 }
-
-
-const populateTephigram = (nbg, data, ref) => {
-    
-    const xs = [],
-          ys = []
-
-    const range = [];
-
-    let cnt = 0
-    for(var par of Object.keys(data)) {
-        if(par == 'static_pressure' || par == 'utc_time') {
-            continue;
-        }
-        
-        const x = [],
-              y = [];
-
-        for(let i=0; i<data.static_pressure.length; i++) {
-            let xy = tphiToXy(data.static_pressure[i], data[par][i]); 
-            x.push(xy[0]);
-            y.push(xy[1]);
-        }
-
-        xs.push(x);
-        ys.push(y);
-        range.push(nbg+cnt);
-        cnt++;
-    }
-
-    import('plotly.js-dist').then((Plotly) => {
-        Plotly.extendTraces(ref.current, {
-            x: xs,
-            y: ys
-        }, range);
-    });
-
-}
-
-const Tephigram = (props) => {
-    
-    const ref = useRef(null)
-    useTephigram(ref)
-
-    const style = props.style || {top: 0, left: 0, right: 0, bottom: 0, position: 'absolute'}
-
-    return (
-        <div className={props.class} ref={ref} style={style}></div>
-    )
-}
-
-export default Tephigram
