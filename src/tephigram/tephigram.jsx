@@ -554,7 +554,7 @@ const useTephigram = (ref) => {
                 }   
             }, {    
                 displayModeBar:false    
-            })
+            }, {responsive: true, displaylogo: false})
         });
 
         
