@@ -131,8 +131,10 @@ const useTephigram = (ref) => {
                     showticklabels: false   
                 }   
             }, {    
-                displayModeBar:false    
-            }, {responsive: true, displaylogo: false})
+                displayModeBar:false,   
+                responsive: true,
+                displaylogo: false
+            })
         });
 
         
