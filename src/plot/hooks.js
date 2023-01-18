@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { useGetParameters } from '../hooks';
+import { useGetParameters, useServers } from '../hooks';
 import { base as siteBase } from '../settings';
 import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, plotIsOngoing } from './plotUtils';
 
@@ -68,22 +68,34 @@ const usePlotUrl = (override={}) => {
 const usePlot = (options, ref) => {
     
     const params = useGetParameters();
+    const servers = useServers()
+    const [server, setServer] = useState(options.server)
     const [initDone, setInitDone] = useState(false)
     
     useEffect(() => {
         
         if(!initDone) return
         const signal = {abort: false}
+
         const [start, end] = getTimeLims(options.timeframe)
+
         startData({options: options, start: start, end: end, ref: ref, signal: signal})
+
         if(!plotIsOngoing(options)) signal.abort = true
         return () => signal.abort = true
  
     }, [initDone])
 
     useEffect(() => {
+        if(server) return
+        const rServer = servers.sort(() => .5 - Math.random())[0]
+        setServer(rServer)
+    }, [setServer, server, servers])
+
+    useEffect(() => {
     
         if(!params) return
+        if(!server) return
 
         const numAxes = options.axes.length;
 
@@ -219,7 +231,7 @@ const usePlot = (options, ref) => {
                 .then(setInitDone(true))
         })
 
-    }, [params])
+    }, [params, server])
 }
 
 const usePlotOptions = () => {

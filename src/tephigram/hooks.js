@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux"
 import { base as siteBase } from "../settings"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getData, getTimeLims, plotIsOngoing } from "../plot/plotUtils";
 import { getTraces, populateTephigram } from "./utils";
+import { useServers } from "../hooks";
 
 const useTephiUrl = () => {
     const params = useSelector(state => state.vars.params);
@@ -63,16 +64,25 @@ const useTephigram = (ref) => {
     const timeframe = searchParams.get('timeframe') || '30min'
     const params = searchParams.get('params') || 'deiced_true_air_temp_c,dew_point'
     const paramsArray = params.split(',')
-    const server = searchParams.get('server')
-
-    const options = {
-        timeframe: timeframe,
-        params: paramsArray,
-        ordvar: 'static_pressure',
-        server: server
-    }
+    const servers = useServers()
+    const [server, setServer] = useState(null)
 
     useEffect(() => {
+        if(server) return
+        const rServer = servers.sort(() => .5 - Math.random())[0]
+        setServer(rServer)
+    }, [setServer, server, servers])
+
+    useEffect(() => {
+        if(!server) return
+
+        const options = {
+            timeframe: timeframe,
+            params: paramsArray,
+            ordvar: 'static_pressure',
+            server: server
+        }
+
         let plotTraces = getTraces()
         const n = plotTraces.length;
         const colors = [
@@ -137,7 +147,7 @@ const useTephigram = (ref) => {
             return () => clearInterval(interval)
         }
 
-    }, [])
+    }, [server])
 }
 
 export {
