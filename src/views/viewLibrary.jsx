@@ -64,29 +64,40 @@ const LibraryCard = (props) => {
 
     const loadButtonText = viewIsLoaded ? "Loaded" : "Load"
 
+    const button = (
+        viewIsLoaded ? null :
+        <button className="button is-primary is-outlined is-fullwidth mt-1" onClick={load} disabled={viewIsLoaded}>
+            {loadButtonText}
+        </button>
+    )
+
     return (
         <div className="card mt-2">
             <div className="card-content">
 
                 <div className="content">
 
-                    <div className="columns">
-                        <div className="column is-2">
+                    {/* <div className="columns"> */}
+                        {/* <div className="column is-2">
                             <div className="is-flex is-flex-direction-column">
                                 <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image" />
                                 <button className="button is-primary is-fullwidth mt-1" onClick={load} disabled={viewIsLoaded}>
                                     {loadButtonText}
                                 </button>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="column is-10">
-                            <LoadedInfo loaded={viewIsLoaded} title={props.title} />
+                        {/* <div className="column is-10"> */}
+                            
                             <h4 className="title is-4">{props.title}</h4>
-                            {props.description}
-                        </div>
+                            <LoadedInfo loaded={viewIsLoaded} title={props.title} />
+                            {viewIsLoaded ? null : props.description}
+                            
+                            {button}
+                            
+                        {/* </div> */}
 
-                    </div>
+                    {/* </div> */}
 
                 </div>
             </div>
