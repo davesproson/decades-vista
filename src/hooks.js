@@ -41,7 +41,9 @@ const useDispatchParameters = () => {
                     const status = (last?.length && last.length) > 0 ? true : false
                     dispatch(setParamStatus({id: param.id, status: status}))
                 }
-            )
+            ).catch(() => {
+                dispatch(setParamStatus({id: param.id, status: false}))
+            })
         }
         parametersDispatched = true;
     }, [getStatus])
