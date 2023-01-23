@@ -231,10 +231,10 @@ const ViewConfigNumSelector = (props) => {
         <div className="column is-6">
             <div className="field is-grouped">
                 <div className="control">
-                    <label className="label mt-2">{props.dim}</label>
+                    <label className="label mt-2">{props.dim}:</label>
                 </div>
                 <div className="control">
-                    <input className="input" type="text" value={value} readOnly />
+                    <label className="label mt-2">{value}</label>
                 </div>
                 <div className="field has-addons">
                     <div className="control">
