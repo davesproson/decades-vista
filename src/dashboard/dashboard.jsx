@@ -1,7 +1,65 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getData } from "../plot/plotUtils";
 import { useGetParameters } from "../hooks";
+
+
+const LimitSetter = (props) => {
+
+    const minRef = useRef(null)
+    const maxRef = useRef(null)
+
+    if (!props.show) return null
+
+    const setMax = () => {
+        let max = parseFloat(maxRef.current.value)
+        if (isNaN(max)) max = undefined
+        props.setMax(max)
+    }
+
+    const setMin = () => {
+        let min = parseFloat(minRef.current.value)
+        if (isNaN(min)) min = undefined
+        props.setMin(min)
+    }
+
+    return (
+        <div className="is-flex is-justify-space-around">
+            <div className="field has-addons is-flex-grow-1 ">
+                <div className="control">
+                    <input className="input"
+                        type="number"
+                        ref={minRef}
+                        defaultValue={props.minVal}
+                        placeholder="Valid Minimum" />
+                </div>
+                <div className="control">
+                    <button className="button is-info" onClick={setMin}>
+                        Set
+                    </button>
+                </div>
+            </div>
+            <div className="field has-addons is-flex-grow-1">
+                <div className="control">
+                    <input className="input"
+                        type="text"
+                        ref={maxRef}
+                        defaultValue={props.maxVal}
+                        placeholder="Valid Maximum" />
+                </div>
+                <div className="control">
+                    <button className="button is-info" onClick={setMax}>
+                        Set
+                    </button>
+                </div>
+            </div>
+            <div className="field is-flex-grow-1">
+                <button className="button is-danger is-fullwidth" onClick={props.onHide}>Hide</button>
+            </div>
+        </div>
+    )
+}
+
 
 /**
  * A DashPanel renders a component that displays a single parameter value.
@@ -11,6 +69,8 @@ import { useGetParameters } from "../hooks";
  * @param {Object} props
  * @param {Object} props.param - The parameter to display
  * @param {Array} props.value - An array of the last n values for the parameter
+ * @param {Number} props.validMin - The minimum valid value for the parameter
+ * @param {Number} props.validMax - The maximum valid value for the parameter
  * 
  * @component
  * @example
@@ -26,22 +86,42 @@ import { useGetParameters } from "../hooks";
  * )
  */
 const LargeDashPanel = (props) => {
-    let dataVal = props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)
+    let dataVal = props?.value?.filter(x => x != null)?.reverse()[0]?.toFixed(2)
 
+    const [validMin, setValidMin] = useState(props.validMin)
+    const [validMax, setValidMax] = useState(props.validMax)
+    const [showSetter, setShowSetter] = useState(false)
+
+    const inAlarm = (parseFloat(dataVal) < validMin) || (parseFloat(dataVal) > validMax)
+
+    const alarmClass = inAlarm ? "has-background-danger" : ""
 
     return (
         <div className="m-4 is-flex is-justify-content-center is-flex-grow-1" style={{
             border: "1px solid black",
             borderRadius: "5px"
         }}>
-            <div className="is-flex is-flex-direction-column is-flex-grow-1" >
-                <h3 className="p-3 is-uppercase is-justify-content-center is-flex-grow-1 is-flex" style={{
-                    background: "#252243",
-                    color: "#0abbef",
-                    borderBottom: "1px solid black"
-                }}>
-                    {props.param.DisplayText}
-                </h3>
+            <div className={`is-flex is-flex-direction-column is-flex-grow-1 ${alarmClass}`} >
+                <div className={`is-flex is-flex-direction-row `} style={{
+                        background: "#252243",
+                        color: "#0abbef",
+                        borderBottom: "1px solid black"
+                    }}>
+                    <h3 className="p-3 is-uppercase is-justify-content-center is-flex-grow-1 is-flex">
+                        <div className="is-flex is-justify-content-space-between">
+                            <span>{props.param.DisplayText}</span>
+                        </div>
+                    </h3>
+
+                    <button className="button is-small is-info" style={{
+                        background: "#252243",
+                        color: "#0abbef",
+                    }} onClick={()=>setShowSetter(!showSetter)}>!</button>
+                </div>
+
+                <LimitSetter minVal={validMin} maxVal={validMax} setMin={setValidMin}
+                    setMax={setValidMax} onHide={() => setShowSetter(false)}
+                    show={showSetter} />
                 <span className="p-3 is-flex is-justify-content-center is-size-1">
                     {dataVal} {props.param.DisplayUnits}
                 </span>
@@ -58,6 +138,8 @@ const LargeDashPanel = (props) => {
  * @param {Object} props
  * @param {Object} props.param - The parameter to display
  * @param {Array} props.value - An array of the last n values for the parameter
+ * @param {Number} props.valid_min - The minimum valid value for the parameter
+ * @param {Number} props.valid_max - The maximum valid value for the parameter
  * 
  * @component
  * @example
@@ -73,7 +155,7 @@ const LargeDashPanel = (props) => {
  * )
  */
 const SmallDashPanel = (props) => {
-    let dataVal = props?.value?.filter(x=>x != null)?.reverse()[0]?.toFixed(2)
+    let dataVal = props?.value?.filter(x => x != null)?.reverse()[0]?.toFixed(2)
 
     return (
         <div className="m-1 is-flex is-justify-content-center is-flex-grow-1" style={{
@@ -116,7 +198,7 @@ const SmallDashPanel = (props) => {
  * )
  */
 const DashPanel = (props) => {
-    if(props.size == "large") {
+    if (props.size == "large") {
         return <LargeDashPanel {...props} />
     } else {
         return <SmallDashPanel {...props} />
@@ -140,7 +222,7 @@ const DashPanel = (props) => {
  * )
  */
 const Dashboard = (props) => {
-    
+
     const availableParams = useGetParameters()
     const [data, setData] = useState({})
 
@@ -151,7 +233,7 @@ const Dashboard = (props) => {
     const dataOptions = {
         params: parameters,
     }
-    if(server) dataOptions.server = server
+    if (server) dataOptions.server = server
 
     useEffect(() => {
         const end = Math.floor(new Date().getTime() / 1000) - 1
@@ -161,25 +243,25 @@ const Dashboard = (props) => {
         const interval = setInterval(() => {
             const end = Math.floor(new Date().getTime() / 1000) - 1
             const start = end - 5
-            getData(dataOptions, start, end).then(data => setData( data))
+            getData(dataOptions, start, end).then(data => setData(data))
         }, 1000)
         return () => clearInterval(interval)
     }, [setData])
 
-    if(!availableParams) return null
+    if (!availableParams) return null
 
-    const filteredParams = availableParams.filter(x=>{
+    const filteredParams = availableParams.filter(x => {
         return parameters.includes(x.ParameterName)
     })
 
     return (
         <div className="is-flex is-flex-wrap-wrap is-justify-content-center">
-            {filteredParams.map(x => <DashPanel size={size} 
-                                                key={x.ParameterName}
-                                                param={x}
-                                                value={data[x.ParameterName]}/>)}
+            {filteredParams.map(x => <DashPanel size={size}
+                key={x.ParameterName}
+                param={x}
+                value={data[x.ParameterName]} />)}
         </div>
-  
+
     )
 }
 
@@ -198,7 +280,7 @@ const DashboardDispatcher = () => {
     const isCompact = searchParams.get("compact") == "true"
     const server = searchParams.get("server")
     const size = isCompact ? "small" : "large"
-    
+
     return <Dashboard size={size} parameters={parameters} server={server} />
 }
 
