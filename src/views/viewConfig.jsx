@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { 
     addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, setConfig 
 } from '../redux/viewSlice'
-import { usePlotUrl } from '../plot/hooks'
+import { usePlotUrl, getUrl } from '../plot/hooks'
 import { useRef, useState } from 'react';
 import { useViewUrl } from './hooks';
 
@@ -45,9 +45,32 @@ const ViewConfigButtons = (props) => {
         dispatch(setConfig({ nRows, nCols, plots }))
     }
 
+    const parseV1 = (json) => {
+        
+        const nRows = json.config.nx
+        const nCols = json.config.ny
+        const plots = []
+        for(const plot of json.plots) {
+            const options = {
+                timeframe: plot.timeframe,
+                params: plot.params,
+                ordinateAxis: plot.ordvar === 'javascript_time' ? 'utc_time' : plot.ordvar,
+                plotStyle: plot.style,
+                swapOrientation: plot.swapxy,
+                scrollingWindow: plot.scrolling,
+                server: plot.server,
+                dataHeader: plot.data_header,
+                axes: plot.axis
+            }
+            plots.push(getUrl(options))
+        }
+        dispatch(setConfig({ nRows, nCols, plots }))
+        
+    }
+
     const importView = (e) => {
         const parseMap = {
-            1: () => alert("Version 1 not supported"),
+            1: parseV1,
             2: parseV2
         }
         const selectedFile = e.target.files[0]

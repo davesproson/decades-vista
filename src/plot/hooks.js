@@ -6,6 +6,29 @@ import { base as siteBase } from '../settings';
 import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, plotIsOngoing } from './plotUtils';
 
 
+const getUrl = (options) => {
+    
+    const axisStrings = options.axes.map(x=>[].concat(x).join(','))
+
+    let axisArgs = ""
+    for(const axStr of axisStrings) {
+        axisArgs += `&axis=${axStr}`
+    }
+
+    const url = window.location.origin
+                + `${siteBase}plot?`
+                + "timeframe=" + options.timeframe
+                + "&params=" + options.params.join(',')
+                + axisArgs
+                + "&swapxy=" + options.swapOrientation
+                + "&scrolling=" + options.scrollingWindow
+                + "&data_header=" + options.dataHeader
+                + "&style=" + options.plotStyle
+                + "&ordvar=" + options.ordinateAxis
+                + "&server=" + options.server
+    return url
+}
+
 const usePlotUrl = (override={}) => {
     const [plotUrl, setPlotUrl] = useState("");
 
@@ -26,7 +49,7 @@ const usePlotUrl = (override={}) => {
     }
 
     const params = vars.params
-    const axes = {}
+    let axes = {}
     for(const ax of vars.axes) {
         axes[ax.id] = []
     }
@@ -35,31 +58,28 @@ const usePlotUrl = (override={}) => {
         axes[param.axisId].push(param.raw)
     }
 
-    const axisStrings = Object.values(axes).filter(x=>x.length).map(x=>x.join(','))
+    axes = Object.values(axes).map(x=>x.join(','))
+
 
     const selectedParams = params.filter(param => param.selected)
                                  .map(param => param.raw)
 
 
     useEffect(() => {
-        let axisArgs = ""
-        for(const axStr of axisStrings) {
-            axisArgs += `&axis=${axStr}`
+        const optionSet = {
+            timeframe: overridden("timeframe", timeframe),
+            params: overridden("selectedParams", selectedParams),
+            swapOrientation: overridden("swapxy", plotOptions.swapOrientation),
+            scrollingWindow: overridden("scrolling", plotOptions.scrollingWindow),
+            dataHeader: overridden("data_header", plotOptions.dataHeader),
+            plotStyle: overridden("style", plotOptions.plotStyle.value),
+            ordinateAxis: overridden("ordvar", plotOptions.ordinateAxis),
+            server: overridden("server", server),
+            axes: overridden("axes", axes)
         }
 
-        setPlotUrl(
-            window.location.origin
-            + `${siteBase}plot?`
-            + "timeframe=" + overridden("timeframe", timeframe)
-            + "&params=" + selectedParams.join(',')
-            + axisArgs
-            + "&swapxy=" + overridden("swapxy", plotOptions.swapOrientation)
-            + "&scrolling=" + overridden("scrolling", plotOptions.scrollingWindow)
-            + "&data_header=" + overridden("data_header", plotOptions.dataHeader)
-            + "&style=" + overridden("style", plotOptions.plotStyle.value)
-            + "&ordvar=" + overridden("ordvar", plotOptions.ordinateAxis)
-            + "&server=" + server
-        );
+        setPlotUrl(getUrl(optionSet))
+
     }, [plotOptions, params])
 
     return plotUrl;
@@ -250,4 +270,4 @@ const usePlotOptions = () => {
     }
 }
 
-export { usePlot, usePlotUrl, usePlotOptions }
+export { usePlot, usePlotUrl, usePlotOptions, getUrl }
