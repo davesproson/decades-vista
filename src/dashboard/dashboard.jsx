@@ -3,24 +3,59 @@ import { useEffect, useState, useRef } from "react";
 import { getData } from "../plot/plotUtils";
 import { useGetParameters } from "../hooks";
 
-
+/**
+ * A LimitSetter renders a component that allows the user to set the valid limits
+ * for a parameter. The component is intended to be used in a dashboard.
+ * 
+ * @param {Object} props
+ * @param {string} props.name - The name of the parameter
+ * @param {number} props.minVal - The minimum value of the parameter
+ * @param {number} props.maxVal - The maximum value of the parameter
+ * @param {boolean} props.show - Whether to show the component
+ * 
+ * @component
+ * @example
+ * const props = {
+ *    name: 'temperature',
+ *    minVal: 0,
+ *    maxVal: 100,
+ *    show: true
+ * }
+ * return (
+ *  <LimitSetter {...props} />
+ * )
+ */
 const LimitSetter = (props) => {
 
     const minRef = useRef(null)
     const maxRef = useRef(null)
-
+    const [searchParams, setSearchParams] = useSearchParams()
+    
     if (!props.show) return null
 
-    const setMax = () => {
-        let max = parseFloat(maxRef.current.value)
-        if (isNaN(max)) max = undefined
-        props.setMax(max)
+    const setUrlLimits = ({name, min, max}) => {
+
+        const urlLimits = searchParams.getAll('limits').filter(x=>x.split(',')[0] !== props.name)
+
+        min = isNaN(min) ? '' : min
+        max = isNaN(max) ? '' : max
+        urlLimits.push(`${name},${min},${max}`)
+
+        searchParams.delete('limits')
+        for(const lim of urlLimits) {
+            searchParams.append('limits', lim)
+
+        }
+
+        setSearchParams(searchParams)
+    }
+
+    const setMax = () => {     
+        setUrlLimits({name: props.name, min: props.minVal, max: maxRef.current.value})
     }
 
     const setMin = () => {
-        let min = parseFloat(minRef.current.value)
-        if (isNaN(min)) min = undefined
-        props.setMin(min)
+        setUrlLimits({name: props.name, min: minRef.current.value, max: props.maxVal})
     }
 
     return (
@@ -30,7 +65,7 @@ const LimitSetter = (props) => {
                     <input className="input"
                         type="number"
                         ref={minRef}
-                        defaultValue={props.minVal}
+                        defaultValue={isNaN(props.minVal) ? '' : props.minVal}
                         placeholder="Valid Minimum" />
                 </div>
                 <div className="control">
@@ -44,7 +79,7 @@ const LimitSetter = (props) => {
                     <input className="input"
                         type="text"
                         ref={maxRef}
-                        defaultValue={props.maxVal}
+                        defaultValue={isNaN(props.maxVal) ? '' : props.maxVal}
                         placeholder="Valid Maximum" />
                 </div>
                 <div className="control">
@@ -69,8 +104,9 @@ const LimitSetter = (props) => {
  * @param {Object} props
  * @param {Object} props.param - The parameter to display
  * @param {Array} props.value - An array of the last n values for the parameter
- * @param {Number} props.validMin - The minimum valid value for the parameter
- * @param {Number} props.validMax - The maximum valid value for the parameter
+ * @param {Object} props.limits - An array of valid limits for the parameter
+ * @param {Number} props.limits.min - The minimum valid value for the parameter
+ * @param {Number} props.limits.max - The maximum valid value for the parameter
  * 
  * @component
  * @example
@@ -88,11 +124,14 @@ const LimitSetter = (props) => {
 const LargeDashPanel = (props) => {
     let dataVal = props?.value?.filter(x => x != null)?.reverse()[0]?.toFixed(2)
 
-    const [validMin, setValidMin] = useState(props.validMin)
-    const [validMax, setValidMax] = useState(props.validMax)
     const [showSetter, setShowSetter] = useState(false)
 
-    const inAlarm = (parseFloat(dataVal) < validMin) || (parseFloat(dataVal) > validMax)
+    const validLimit = props.limits.find(x=>x.param === props.param.ParameterName)
+    const [minValid, maxValid] = validLimit
+        ? [parseFloat(validLimit.min), parseFloat(validLimit.max)]
+        : [NaN, NaN]
+
+    const inAlarm = (parseFloat(dataVal) < minValid) || (parseFloat(dataVal) > maxValid)
 
     const alarmClass = inAlarm ? "has-background-danger" : ""
 
@@ -119,9 +158,9 @@ const LargeDashPanel = (props) => {
                     }} onClick={()=>setShowSetter(!showSetter)}>!</button>
                 </div>
 
-                <LimitSetter minVal={validMin} maxVal={validMax} setMin={setValidMin}
-                    setMax={setValidMax} onHide={() => setShowSetter(false)}
-                    show={showSetter} />
+                <LimitSetter minVal={minValid} maxVal={maxValid} 
+                    onHide={() => setShowSetter(false)}
+                    show={showSetter} name={props.param.ParameterName} />
                 <span className="p-3 is-flex is-justify-content-center is-size-1">
                     {dataVal} {props.param.DisplayUnits}
                 </span>
@@ -226,6 +265,15 @@ const Dashboard = (props) => {
     const availableParams = useGetParameters()
     const [data, setData] = useState({})
 
+    const [searchParams, _] = useSearchParams()
+
+    const limits = searchParams.getAll('limits').map(x=>{
+        const [param, min, max] = x.split(',')
+        return {param: param, min: min, max: max}
+    })
+
+
+
     const parameters = props.parameters
     const server = props.server
     const size = props.size
@@ -259,7 +307,8 @@ const Dashboard = (props) => {
             {filteredParams.map(x => <DashPanel size={size}
                 key={x.ParameterName}
                 param={x}
-                value={data[x.ParameterName]} />)}
+                value={data[x.ParameterName]} 
+                limits={limits.filter(y=>y.param===x.ParameterName)} />)}
         </div>
 
     )
