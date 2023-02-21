@@ -177,8 +177,9 @@ const LargeDashPanel = (props) => {
  * @param {Object} props
  * @param {Object} props.param - The parameter to display
  * @param {Array} props.value - An array of the last n values for the parameter
- * @param {Number} props.valid_min - The minimum valid value for the parameter
- * @param {Number} props.valid_max - The maximum valid value for the parameter
+ * @param {Object} props.limits - An array of valid limits for the parameter
+ * @param {Number} props.limits.min - The minimum valid value for the parameter
+ * @param {Number} props.limits.max - The maximum valid value for the parameter
  * 
  * @component
  * @example
@@ -196,8 +197,16 @@ const LargeDashPanel = (props) => {
 const SmallDashPanel = (props) => {
     let dataVal = props?.value?.filter(x => x != null)?.reverse()[0]?.toFixed(2)
 
+    const validLimit = props.limits.find(x=>x.param === props.param.ParameterName)
+    const [minValid, maxValid] = validLimit
+        ? [parseFloat(validLimit.min), parseFloat(validLimit.max)]
+        : [NaN, NaN]
+
+    const inAlarm = (parseFloat(dataVal) < minValid) || (parseFloat(dataVal) > maxValid)
+    const alarmClass = inAlarm ? "has-background-danger" : ""
+
     return (
-        <div className="m-1 is-flex is-justify-content-center is-flex-grow-1" style={{
+        <div className={`m-1 is-flex is-justify-content-center is-flex-grow-1 ${alarmClass}`} style={{
             border: "1px solid black",
             borderRadius: "5px"
         }}>
