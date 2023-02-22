@@ -244,10 +244,41 @@ const usePlot = (options, ref) => {
             traces.push(opts);
         }
 
-        console.log(layout)
+        const config = {
+            responsive: true,
+            displaylogo: false,
+            modeBarButtonsToAdd: [
+                {
+                    name: "Download data",
+                    icon: null,
+                    click: () => {
+                        const _data = traces.map(t => {
+                            return {
+                                x: t.x,
+                                y: t.y,
+                                name: t.name
+                            }
+                        })
+                        const data = {
+                            ordinate: layout[_ordAxis].title.text,
+                            ordinateAxis: options.swapxy ? "y" : "x",
+                            traces: _data
+                        }
+                        const element = document.createElement("a");
+                        element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)));
+                        element.setAttribute('download', "plot-data.json");
+                        element.style.display = 'none';
+                        document.body.appendChild(element);
+                        element.click();
+                        document.body.removeChild(element);
+                    }
+                }
+            ]
+        }
         
         import('plotly.js-dist').then(Plotly => {
-            Plotly.newPlot(ref.current, traces, layout, {responsive: true, displaylogo: false})
+            config.modeBarButtonsToAdd[0].icon = Plotly.Icons.disk;
+            Plotly.newPlot(ref.current, traces, layout, config)
                 .then(setInitDone(true))
         })
 
