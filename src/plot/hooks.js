@@ -297,7 +297,7 @@ const usePlotOptions = () => {
         style: searchParams.get("style"),
         header: searchParams.get("data_header") === "true",
         ordvar: searchParams.get("ordvar"),
-        server: searchParams.get("server")
+        server: searchParams.get("server") || location.host
     }
 }
 

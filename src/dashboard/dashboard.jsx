@@ -336,7 +336,7 @@ const DashboardDispatcher = () => {
     const [searchParams, _] = useSearchParams();
     const parameters = searchParams.get("params").split(",")
     const isCompact = searchParams.get("compact") == "true"
-    const server = searchParams.get("server")
+    const server = searchParams.get("server") || location.host
     const size = isCompact ? "small" : "large"
 
     return <Dashboard size={size} parameters={parameters} server={server} />
