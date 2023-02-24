@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { PropTypes } from "prop-types"
 import { saveView } from "../redux/viewSlice"
 import { libraryViews } from "./libraryEntries"
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * Provides an info box for a view that has been loaded, describing how to access it.
@@ -59,7 +60,7 @@ const LibraryCard = (props) => {
     const viewIsLoaded = savedViews.some(v => v.name === props.title)
 
     const load = () => {
-        dispatch(saveView({ name: props.title, id: crypto.randomUUID(), ...props.config }))
+        dispatch(saveView({ name: props.title, id: uuidv4(), ...props.config }))
     }
 
     const loadButtonText = viewIsLoaded ? "Loaded" : "Load"
