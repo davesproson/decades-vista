@@ -114,7 +114,7 @@ const PlotOptionCard = () => {
     const serverSelector = <ServerSelectorDropDown />
 
     return (
-        <nav className="panel mt-4">
+        <nav className="panel mt-4 is-dark">
             <p className="panel-heading">
                 
                 Plot options

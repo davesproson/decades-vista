@@ -125,7 +125,7 @@ const AxisSelectorGroup = () => {
  */
 const AxisOptionsCard = () => {
     return (
-        <nav className="panel mt-4">
+        <nav className="panel mt-4 is-dark">
             <p className="panel-heading">
                 Axis selection
             </p>

@@ -39,7 +39,7 @@ const TimeframeTextBox = (props) => {
     }
 
     return (
-        <article className="message is-primary mt-2">
+        <article className="message is-dark mt-2">
             <div className="message-body is-size-5">
                 {text}
             </div>
@@ -150,7 +150,7 @@ const TimePicker = (props) => {
     return (
         <>
 
-        <div className="card m-2">
+        <div className="card m-2 ">
             <header className="card-header is-flex-grow-1">
                 <p className="card-header-title">
                     {props.title}
@@ -190,7 +190,7 @@ const TimeframeSelector = (props) => {
     return (
         <div className="container has-navbar-fixed-top">
             <TimeframeTextBox />
-            <nav className="panel mt-4">
+            <nav className="panel mt-4 is-dark">
                 <p className="panel-heading">
                     Select a timeframe
                 </p>

@@ -103,8 +103,8 @@ const ViewConfigButtons = (props) => {
     })()
 
     const plotButton = plotEnabled 
-        ? <Link to={viewUrl} className="button is-info is-fullwidth" target="_blank">Plot</Link>
-        : <button className="button is-info is-fullwidth" disabled>Plot</button>
+        ? <Link to={viewUrl} className="button is-primary is-fullwidth" target="_blank">Plot</Link>
+        : <button className="button is-primary is-fullwidth" disabled>Plot</button>
 
     return (
         <>
@@ -128,7 +128,7 @@ const ViewConfigButtons = (props) => {
                     </button>
                 </p>
                 <p className="control is-expanded">
-                    <button className="button is-outlined is-secondary is-fullwidth" onClick={() => dispatch(reset())}>
+                    <button className="button is-outlined is-danger is-fullwidth" onClick={() => dispatch(reset())}>
                         Reset
                     </button>
                 </p>
@@ -162,7 +162,7 @@ const PlotInputBlock = (props) => {
                         onChange={onChange} placeholder="Plot URL..." />
                 </p>
                 <p className="control">
-                    <button className="button is-info" onClick={onUseCurrentConfig} disabled={!paramsSelected}>
+                    <button className="button is-dark" onClick={onUseCurrentConfig} disabled={!paramsSelected}>
                         Use current config
                     </button>
                 </p>
@@ -176,7 +176,7 @@ const ViewConfigPlotSelector = (props) => {
 
     return (
 
-        <div className="panel mt-2">
+        <div className="panel is-dark mt-2">
             <p className="panel-heading">
                 Plot Configurations
             </p>
@@ -276,7 +276,7 @@ const ViewConfig = (props) => {
 
     return (
         <div className="container has-navbar-fixed-top">
-            <div className="panel mt-2">
+            <div className="panel is-dark mt-2">
                 <p className="panel-heading">
                     View Configuration
                 </p>
