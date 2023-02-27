@@ -15,6 +15,7 @@ const ParameterTable = lazy(() => import('./parameters/params'))
 const View = lazy(() => import('./views/view'))
 const ViewLibrary = lazy(() => import('./views/viewLibrary'))
 const Tutorial = lazy(() => import('./tutorial/tutorial'))
+const AlarmList = lazy(() => import('./alarms/alarm'))
 
 /**
  * The main app component. This is the entry point for the application, which
@@ -44,6 +45,7 @@ const DecadesVista = () => {
         <Route path="/plot" element={<Suspense><PlotDispatcher /></Suspense>} />
         <Route path="/dashboard" element={<Suspense><DashboardDispatcher /></Suspense>} />
         <Route path="/tephigram" element={<Suspense><Tephigram /></Suspense>} />
+        <Route path="/alarms" element={<Suspense><AlarmList /></Suspense>} />
 
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
