@@ -187,7 +187,7 @@ function getXAxis(options, param) {
  * @returns {string} - The data url
  */
 const getDataUrl = (options, start, end) => {
-    const server = options.server ? options.server : serverPrefix
+    const server = options.server ? options.server : location.host
     let url = `${serverProtocol}://${server}${apiEndpoints.data}`
 
     // Allow the endpoint to include a query string

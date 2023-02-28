@@ -21,7 +21,7 @@ const useDispatchParameters = () => {
 
     useEffect(() => {
         if(parametersDispatched) return;
-        fetch(`${serverProtocol}://${serverPrefix}${apiEndpoints.parameters}`)
+        fetch(`${apiEndpoints.parameters}`)
             .then(response => response.json())
             .then(data => useTransform('parameters')(data))
             .then(data => dispatch(setParams(data)))
@@ -37,7 +37,7 @@ const useDispatchParameters = () => {
             const start = end - 5
             getData({params: [param.raw]}, start, end).then(
                 (data) => {
-                    const last = data[param.raw]?.filter(x => x != null)?.filter(x => x != badData)
+                    const last = data[param.raw]?.filter(x => x != null).filter(x => x != badData)
                     const status = (last?.length && last.length) > 0 ? true : false
                     dispatch(setParamStatus({id: param.id, status: status}))
                 }
@@ -53,7 +53,7 @@ const useGetParameters = () => {
     const [params, setParams] = useState(null);
 
     useEffect(() => {
-        fetch(`${serverProtocol}://${serverPrefix}${apiEndpoints.parameters}`)
+        fetch(`${apiEndpoints.parameters}`)
             .then(response => response.json())
             .then(data => useTransform('parameters')(data))
             .then(data => {
@@ -70,7 +70,7 @@ const useServers = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch(`${serverProtocol}://${serverPrefix}${apiEndpoints.tank_status}`)        
+        fetch(`${apiEndpoints.tank_status}`)        
             .then(response => response.json())
             .then(data => useTransform('tank_status')(data))
             .then(data => {
@@ -81,6 +81,9 @@ const useServers = () => {
                     const serverToSet = reportedServers.sort(() => .5 - Math.random())[0]
                     dispatch(setServer(serverToSet))
                 }
+            }).catch((e) => {
+                console.log(e)
+                alert('Unable to retreive DECADES parameters. Please try again later.')
             })
             
         }, [])

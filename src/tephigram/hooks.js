@@ -36,7 +36,7 @@ const useTephiAvailable = () => {
     ]
 
     const required_humids = [
-        'dew_point'
+        'dew_point', 'buck_mirror_temp'
     ]
 
     let has_required_temps = false

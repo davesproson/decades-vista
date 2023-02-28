@@ -1,38 +1,35 @@
-export const serverPrefix = "www.faam.ac.uk"
-export const serverProtocol = "https"
-export const base = "/decades-demo/"
+const deployment = 'dev'
+
+export const serverPrefix = ""
+export const serverProtocol = {
+    'demo': "https",
+    'dev': "http",
+    'prod': "http"
+}[deployment]
+
+export const base = {
+    "demo": "/decades-demo/",
+    "dev": "/decades-dev/",
+    "prod": "/decades-vista/"
+}[deployment]
 
 export const badData = -999.99
 
+const apiBase = {
+    "demo": "/live",
+    "dev": "",
+    "prod": ""
+}[deployment]
+
 export const apiEndpoints = {
-    'parameters': '/livedata/parano.json',
-    'data': '/livedata/livejson?db=1',
-    'tank_status': '/livedata/parano.json',
+    'parameters': `${apiBase}/parano.json`,
+    'data': `${apiBase}/livedata`,
+    'tank_status': `${apiBase}/tank_status`,
 }
 
 export const enableTutorial = true
 
-export const apiTransforms = {
-    'parameters': (data) => {
-        const params = []
-        for(let [k, v] of Object.entries(data)) {
-            params.push({ParameterName: k, ...v})
-            params[params.length-1].DisplayUnits = params[params.length-1].DisplayUnits
-                                                                          .replace('(','')
-                                                                          .replace(')', '')
-                                                                          .replace('deg', '°')
-        }
-        return params
-    },
-    'tank_status': (data) => {
-        return {
-            'topo': {
-                'primary': 'www.faam.ac.uk',
-                'secondaries': []
-            }
-        }
-    }
-}
+export const apiTransforms = {}
 
 export const geoCoords = {
     'latitude': 'gin_latitude',
