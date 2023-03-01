@@ -3,9 +3,69 @@ import { useSearchParams } from 'react-router-dom'
 import { useAlarm, useAlarmUrl } from './hooks'
 import { encode } from 'base-64'
 
+const AlarmEditor = (props) => {
+
+    if (!props.display) return null
+
+    const checkValid = (json) => {
+        try {
+            JSON.parse(json)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
+    const jsonChanged = (e) => {
+        const json = e.target.value
+        props.onEdit(json)
+    }
+
+    const onLaunch = () => {
+        if (!checkValid(props.text)) return null
+        const urlPars = new URLSearchParams()
+            for (let alarm of JSON.parse(props.text)) {
+                urlPars.append("alarm", encode(JSON.stringify(alarm)))
+            }
+        return `alarms/?${urlPars.toString()}`
+    }
+
+    const bgClass = checkValid(props.text) ? "has-background-success-light" : "has-background-danger-light"
+
+    return (
+        <article className="message is-dark">
+            <div className="message-header">
+                <p>Alarm Editor</p>
+            </div>
+            <div className="message-body">
+                <div className="block">
+                    <div className="field">
+                        <div className="control">
+                            <textarea className={`textarea ${bgClass}`}
+                                      type="text"
+                                      placeholder="Type your json here..."
+                                      rows={20}
+                                      value={props.text} 
+                                      style={{fontFamily: "monospace"}}
+                                      onChange={jsonChanged} />
+                        </div>
+                    </div>
+                </div>
+                <div className="block">
+                    <a className="button is-primary is-fullwidth" 
+                            href={onLaunch()}
+                            disabled={!checkValid(props.text)}
+                            target="_blank">
+                        Launch
+                    </a>
+                </div>  
+            </div>
+        </article>
+    )
+}
+
 const AlarmInfo = (props) => {
     
-
     if (!props.display) return null
 
     return (
@@ -67,6 +127,9 @@ const Unloaded = () => {
     const [_, setSearchParams] = useSearchParams()
     const [showInfo, setShowInfo] = useState(true)
 
+    const [alarmJson, setAlarmJson] = useState("")
+    const [showEditor, setShowEditor] = useState(false)
+
     const showFileSelect = () => {
         ref.current.click()
     }
@@ -79,12 +142,15 @@ const Unloaded = () => {
             try {
                 const text = e.target.result
                 const json = JSON.parse(text)
-
-                const urlPars = new URLSearchParams()
-                for (let alarm of json) {
-                    urlPars.append("alarm", encode(JSON.stringify(alarm)))
-                }
-                setSearchParams(urlPars)
+                const newText = JSON.stringify(json, null, 2)
+                setShowInfo(false)
+                setShowEditor(true)
+                setAlarmJson(newText)
+            //     const urlPars = new URLSearchParams()
+            //     for (let alarm of json) {
+            //         urlPars.append("alarm", encode(JSON.stringify(alarm)))
+            //     }
+            //     setSearchParams(urlPars)
 
             } catch (e) {
                 console.error(e)
@@ -95,11 +161,19 @@ const Unloaded = () => {
         ref.current.value = ""
     }
 
+    const newJson = () => {
+        setShowInfo(false)
+        setAlarmJson("")
+        setShowEditor(true)
+    }
+
     return (
-        <div className="container">
+        <div className="container mt-2">
 
             <div className="section">
+                <AlarmEditor display={showEditor} text={alarmJson} onEdit={setAlarmJson} />
                 <AlarmInfo display={showInfo} hide={()=>setShowInfo(false)} />
+                <button className="button  is-outlined is-secondary is-fullwidth mb-1" onClick={newJson}>New </button>
                 <span className="button  is-outlined is-secondary is-fullwidth" onClick={showFileSelect}>
                     Load <input ref={ref} type="file" style={{ display: "none" }} onChange={load} />
                 </span>

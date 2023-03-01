@@ -468,7 +468,7 @@ const NavbarMenu = (props) => {
                 <NavTimeFrameSelector />
                 <PresetSelector />  
                 <ViewsSelector />
-                <Link to="/alarms" target="_blank" id="views-navbar-item" className="navbar-item"  >
+                <Link to="/alarm-config" id="views-navbar-item" className="navbar-item"  >
                     Alarms
                 </Link>
             </div>
