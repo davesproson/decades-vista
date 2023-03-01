@@ -48,43 +48,44 @@ const useAlarm = (props) => {
     const [passing, setPassing] = useState(props.passing)
 
     useEffect(() => {
-        let interval
-        interval = setInterval(() => {
-            (async function() {
+        const runAlarms = async () => {
                 
-                const end = Math.floor(new Date().getTime() / 1000)
-                const start = end - (props.interval || 5)
+            const end = Math.floor(new Date().getTime() / 1000)
+            const start = end - (props.interval || 5)
 
-                let data
+            let data
+            try {
+                data = await getData({params: props.parameters, start: start, end: end})
+            } catch (e) {
+                setPassing(undefined)
+                return
+            }
+            
+            for(let param of Object.keys(data)) {
                 try {
-                    data = await getData({params: props.parameters, start: start, end: end})
+                    data[param] = data[param].filter((d) => d !== null)
+                                             .filter((d) => d !== badData)
+                                             .reverse()[0]
                 } catch (e) {
+                    data[param] = null
                     setPassing(undefined)
                     return
                 }
-                
-                for(let param of Object.keys(data)) {
-                    try {
-                        data[param] = data[param].filter((d) => d !== null)
-                                                 .filter((d) => d !== badData)
-                                                 .reverse()[0]
-                    } catch (e) {
-                        data[param] = null
-                        setPassing(undefined)
-                        return
-                    }
-                }
-                
-                try {
-                    const passing = evaluate(props.rule, {...data})
-                    setPassing(passing)
-                } catch (e) {
-                    console.log("Error evaluating alarm rule")
-                    setPassing(undefined)
-                }
-                
-            })()
-        }, props.interval ? props.interval * 1000 : 5000)
+            }
+            
+            try {
+                const passing = evaluate(props.rule, {...data})
+                setPassing(passing)
+            } catch (e) {
+                console.log("Error evaluating alarm rule")
+                setPassing(undefined)
+            }
+            
+        }
+
+        runAlarms()
+        
+        const interval = setInterval(runAlarms, props.interval ? props.interval * 1000 : 5000)
         return () => clearInterval(interval)
     }, [setPassing])
 
