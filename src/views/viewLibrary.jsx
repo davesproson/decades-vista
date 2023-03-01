@@ -24,7 +24,7 @@ const LoadedInfo = (props) => {
     }
 
     return (
-        <article className="message is-dark mb-2">
+        <article className="message is-success mb-2">
             <div className="message-body">
                 This view has been made available. To access it, select
                 <strong> {props.title}</strong> from the <strong>Views</strong> menu.
