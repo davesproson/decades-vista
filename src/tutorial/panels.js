@@ -3,6 +3,7 @@ import { setFilterText } from "../redux/filterSlice"
 import { unselectAllParams, toggleParamSelected } from "../redux/parametersSlice"
 import { setTimeframe } from "../redux/optionsSlice"
 import { saveView, clearSavedViews, reset } from "../redux/viewSlice"
+import { v4 as uuidv4 } from 'uuid'
 
 import { libraryViews } from "../views/libraryEntries"
 
@@ -126,6 +127,13 @@ const panels = [
         ]
     },
     {
+        title: "Dashboard",
+        text: `Each panel on the dashboard shows the most recent value of a parameter. You can
+               set maximum and minimum values for each parameter, and the panel will turn
+               red if the value is outside the range. To do this, click the exclamation mark
+               in the top right of the panel. Try it now.`,
+    },
+    {
         title: "Views",
         text: `Views provide a way to composite multiple plots or dashboards (for example)
                into a single page. The views menu should now be open. Let's look at the
@@ -160,7 +168,7 @@ const panels = [
         },
         dispatch: [
             () => clearSavedViews(),
-            () => saveView({name: libraryViews[0].title, id: crypto.randomUUID(), ...libraryViews[0].config})
+            () => saveView({name: libraryViews[0].title, id: uuidv4(), ...libraryViews[0].config})
         ],
         nextRoute: "/config-view"
     },
