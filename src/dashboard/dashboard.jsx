@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { getData } from "../plot/plotUtils";
 import { useGetParameters } from "../hooks";
+import { badData } from "../settings";
 
 /**
  * A LimitSetter renders a component that allows the user to set the valid limits
@@ -122,7 +123,15 @@ const LimitSetter = (props) => {
  * )
  */
 const LargeDashPanel = (props) => {
-    let dataVal = props?.value?.filter(x => x != null)?.reverse()[0]?.toFixed(2)
+    let dataVal = props?.value?.filter(x => x != null)
+                              ?.filter(x => x != badData)
+                              ?.reverse()
+
+    if(dataVal?.length) {
+        dataVal = dataVal[0]?.toFixed(2)
+    } else {
+        dataVal = 'No Data'
+    }
 
     const [showSetter, setShowSetter] = useState(false)
 
@@ -162,7 +171,7 @@ const LargeDashPanel = (props) => {
                     onHide={() => setShowSetter(false)}
                     show={showSetter} name={props.param.ParameterName} />
                 <span className="p-3 is-flex is-justify-content-center is-size-1">
-                    {dataVal} {props.param.DisplayUnits}
+                    {dataVal} {props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits}
                 </span>
             </div>
         </div>
@@ -195,7 +204,15 @@ const LargeDashPanel = (props) => {
  * )
  */
 const SmallDashPanel = (props) => {
-    let dataVal = props?.value?.filter(x => x != null)?.reverse()[0]?.toFixed(2)
+    let dataVal = props?.value?.filter(x => x != null)
+                              ?.filter(x => x != badData)
+                              ?.reverse()
+
+    if(dataVal?.length) {
+        dataVal = dataVal[0]?.toFixed(2)
+    } else {
+        dataVal = 'No Data'
+    }
 
     const validLimit = props.limits.find(x=>x.param === props.param.ParameterName)
     const [minValid, maxValid] = validLimit
@@ -216,7 +233,7 @@ const SmallDashPanel = (props) => {
                     {props.param.DisplayText}
                 </h3>
                 <span className="ml-1 is-flex is-justify-content-center is-size-7 is-flex-grow-1">
-                    {dataVal} {props.param.DisplayUnits}
+                    {dataVal} {props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits}
                 </span>
             </div>
         </div>
