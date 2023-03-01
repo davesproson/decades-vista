@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { getData } from '../plot/plotUtils'
 import { badData } from '../settings'
 import { decode, encode } from 'base-64'
+import { evaluate } from 'mathjs'
 
 const useAlarmUrl = (setAlarms) => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -74,8 +75,14 @@ const useAlarm = (props) => {
                     }
                 }
                 
-                const passing = eval(props.rule)
-                setPassing(passing)
+                try {
+                    const passing = evaluate(props.rule, {...data})
+                    setPassing(passing)
+                } catch (e) {
+                    console.log("Error evaluating alarm rule")
+                    setPassing(undefined)
+                }
+                
             })()
         }, props.interval ? props.interval * 1000 : 5000)
         return () => clearInterval(interval)
