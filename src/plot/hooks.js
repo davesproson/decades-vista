@@ -15,8 +15,7 @@ const getUrl = (options) => {
         axisArgs += `&axis=${axStr}`
     }
 
-    const url = window.location.origin
-                + `${siteBase}plot?`
+    const url = `${siteBase}plot?`
                 + "timeframe=" + options.timeframe
                 + "&params=" + options.params.join(',')
                 + axisArgs
