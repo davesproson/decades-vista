@@ -173,11 +173,11 @@ const usePlot = (options, ref) => {
             // If there's more than one variable on a axis, label axis, axis2 etc.
             // Otherwise we can label with the DisplayName / DisplayUnits
             if(options.axes[i].split(",").length > 1) {
-                let _unit = paramFromRawName(options.axes[i].split(",")[0], params).DisplayUnits
+                let _unit = paramFromRawName(options.axes[i].split(",")[0], params)?.DisplayUnits || "Unknown units"
                 _axisTitle = options.swapxy ? `X-axis ${i+1} (${_unit})` : `Y-axis ${i+1} (${_unit})`;
             } else {
                 const _param = paramFromRawName(options.axes[i], params)
-                _axisTitle = `${_param.DisplayText} (${_param.DisplayUnits})`;
+                _axisTitle = `${_param?.DisplayText || 'y-axis'} (${_param?.DisplayUnits || 'Unknown units'})`;
             }
     
             let _axisName = options.swapxy ? "xaxis" : "yaxis";
@@ -219,7 +219,7 @@ const usePlot = (options, ref) => {
         for(var i=0; i<options.params.length; i++) {
             var opts = {
                 type: options.style,
-                name: paramFromRawName(options.params[i], params).DisplayText,
+                name: paramFromRawName(options.params[i], params)?.DisplayText || options.params[i],
                 x: [],
                 y: [],
                 yaxis: options.swapxy ? 'y' : getYAxis(options, options.params[i]),
