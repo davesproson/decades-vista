@@ -32,19 +32,19 @@ const LimitSetter = (props) => {
     const minRef = useRef(null)
     const maxRef = useRef(null)
     const [searchParams, setSearchParams] = useSearchParams()
-    
+
     if (!props.show) return null
 
-    const setUrlLimits = ({name, min, max}) => {
+    const setUrlLimits = ({ name, min, max }) => {
 
-        const urlLimits = searchParams.getAll('limits').filter(x=>x.split(',')[0] !== props.name)
+        const urlLimits = searchParams.getAll('limits').filter(x => x.split(',')[0] !== props.name)
 
         min = isNaN(min) ? '' : min
         max = isNaN(max) ? '' : max
         urlLimits.push(`${name},${min},${max}`)
 
         searchParams.delete('limits')
-        for(const lim of urlLimits) {
+        for (const lim of urlLimits) {
             searchParams.append('limits', lim)
 
         }
@@ -52,12 +52,12 @@ const LimitSetter = (props) => {
         setSearchParams(searchParams)
     }
 
-    const setMax = () => {     
-        setUrlLimits({name: props.name, min: props.minVal, max: maxRef.current.value})
+    const setMax = () => {
+        setUrlLimits({ name: props.name, min: props.minVal, max: maxRef.current.value })
     }
 
     const setMin = () => {
-        setUrlLimits({name: props.name, min: minRef.current.value, max: props.maxVal})
+        setUrlLimits({ name: props.name, min: minRef.current.value, max: props.maxVal })
     }
 
     return (
@@ -129,19 +129,22 @@ const LargeDashPanel = (props) => {
     const [showPlot, setShowPlot] = useState(false)
 
     let dataVal = props?.value?.filter(x => x != null)
-                              ?.filter(x => x != badData)
-                              ?.reverse()
+        ?.filter(x => x != badData)
+        ?.reverse()
 
-    if(dataVal?.length) {
+    let units = props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits
+
+    if (dataVal?.length) {
         dataVal = dataVal[0]?.toFixed(2)
     } else {
         dataVal = 'No Data'
+        units = ''
     }
 
     const [showSetter, setShowSetter] = useState(false)
 
     const togglePlot = () => {
-        if(showPlot) {
+        if (showPlot) {
             setShowPlot(false)
             props.setMaximized(null)
             return
@@ -150,7 +153,7 @@ const LargeDashPanel = (props) => {
         props.setMaximized(props.param.ParameterName)
     }
 
-    const validLimit = props.limits.find(x=>x.param === props.param.ParameterName)
+    const validLimit = props.limits.find(x => x.param === props.param.ParameterName)
     const [minValid, maxValid] = validLimit
         ? [parseFloat(validLimit.min), parseFloat(validLimit.max)]
         : [NaN, NaN]
@@ -159,9 +162,9 @@ const LargeDashPanel = (props) => {
 
     const alarmClass = inAlarm ? "has-background-danger" : ""
 
-    const content = showPlot 
+    const content = showPlot
         ? <SimplePlot params={[props.param.ParameterName]} />
-        : `${dataVal} ${props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits}`
+        : `${dataVal} ${units}`
 
     const btnStyle = {
         background: "#252243",
@@ -173,17 +176,17 @@ const LargeDashPanel = (props) => {
     const panelStyle = {
         border: "1px solid black",
         borderRadius: "5px",
-    } 
+    }
 
     return (
-        <div className="m-4 is-flex is-justify-content-center is-flex-grow-1" style={panelStyle}>     
-            
+        <div className="m-4 is-flex is-justify-content-center is-flex-grow-1" style={panelStyle}>
+
             <div className={`is-flex is-flex-direction-column is-flex-grow-1 ${alarmClass}`} >
                 <div className={`is-flex is-flex-direction-row `} style={{
-                        background: "#252243",
-                        color: "#0abbef",
-                        borderBottom: "1px solid black",
-                    }}>
+                    background: "#252243",
+                    color: "#0abbef",
+                    borderBottom: "1px solid black",
+                }}>
                     <h3 className="p-3 is-uppercase is-justify-content-center is-flex-grow-1 is-flex">
                         <div className="is-flex is-justify-content-space-between">
                             <button style={btnStyle} onClick={togglePlot}>{props.param.DisplayText}</button>
@@ -193,14 +196,14 @@ const LargeDashPanel = (props) => {
                     <button className="button is-small is-info" style={{
                         background: "#252243",
                         color: "#0abbef",
-                    }} onClick={()=>setShowSetter(!showSetter)}>!</button>
+                    }} onClick={() => setShowSetter(!showSetter)}>!</button>
                 </div>
 
-                <LimitSetter minVal={minValid} maxVal={maxValid} 
+                <LimitSetter minVal={minValid} maxVal={maxValid}
                     onHide={() => setShowSetter(false)}
                     show={showSetter} name={props.param.ParameterName} />
                 <span className="p-3 is-flex is-justify-content-center  is-size-1 is-flex-grow-1">
-                    {content}              
+                    {content}
                 </span>
             </div>
         </div>
@@ -234,16 +237,19 @@ const LargeDashPanel = (props) => {
  */
 const SmallDashPanel = (props) => {
     let dataVal = props?.value?.filter(x => x != null)
-                              ?.filter(x => x != badData)
-                              ?.reverse()
+        ?.filter(x => x != badData)
+        ?.reverse()
 
-    if(dataVal?.length) {
+    let units = props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits
+
+    if (dataVal?.length) {
         dataVal = dataVal[0]?.toFixed(2)
     } else {
         dataVal = 'No Data'
+        units = ''
     }
 
-    const validLimit = props.limits.find(x=>x.param === props.param.ParameterName)
+    const validLimit = props.limits.find(x => x.param === props.param.ParameterName)
     const [minValid, maxValid] = validLimit
         ? [parseFloat(validLimit.min), parseFloat(validLimit.max)]
         : [NaN, NaN]
@@ -264,7 +270,7 @@ const SmallDashPanel = (props) => {
                     {props.param.DisplayText}
                 </h3>
                 <span className="ml-1 is-flex is-justify-content-center is-size-7 is-flex-grow-1">
-                    {dataVal} {props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits}
+                    {dataVal} {units}
                 </span>
             </div>
         </div>
@@ -325,12 +331,10 @@ const Dashboard = (props) => {
 
     const [searchParams, _] = useSearchParams()
 
-    const limits = searchParams.getAll('limits').map(x=>{
+    const limits = searchParams.getAll('limits').map(x => {
         const [param, min, max] = x.split(',')
-        return {param: param, min: min, max: max}
+        return { param: param, min: min, max: max }
     })
-
-
 
     const parameters = props.parameters
     const server = props.server
@@ -360,11 +364,11 @@ const Dashboard = (props) => {
         return parameters.includes(x.ParameterName)
     })
 
-    let className =  "is-flex is-flex-wrap-wrap is-justify-content-center"
+    let className = "is-flex is-flex-wrap-wrap is-justify-content-center"
     let style = {}
-    if(maximized) {
-        filteredParams = filteredParams.filter(x=>x.ParameterName === maximized)
-        style = {position: "absolute", top: "0px", bottom: "0px", left: "0px", right: "0px"}
+    if (maximized) {
+        filteredParams = filteredParams.filter(x => x.ParameterName === maximized)
+        style = { position: "absolute", top: "0px", bottom: "0px", left: "0px", right: "0px" }
     }
 
     return (
@@ -372,8 +376,8 @@ const Dashboard = (props) => {
             {filteredParams.map(x => <DashPanel size={size}
                 key={x.ParameterName}
                 param={x}
-                value={data[x.ParameterName]} 
-                limits={limits.filter(y=>y.param===x.ParameterName)} 
+                value={data[x.ParameterName]}
+                limits={limits.filter(y => y.param === x.ParameterName)}
                 setMaximized={setMaximized} />)}
         </div>
 
