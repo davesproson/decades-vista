@@ -223,6 +223,51 @@ const ViewsSelector = () => {
 }
 
 /**
+ * Provides a navbar dropdown menu which allows the user to select a saved view
+ * or navigate to the view config page.
+ * 
+ * Uses state from the viewSlice to determine which views are available.
+ * 
+ * Dispatches the loadSavedView action.
+ * 
+ * @component
+ * @example
+ * return (
+ *  <ViewsSelector />
+ * )
+ */
+
+const MoreSelector = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [visible, setVisible] = useState(false)
+
+    const visibleClass = visible ? "is-active" : ""
+
+    const goto = (id) => {
+        dispatch(loadSavedView({id: id}))
+        navigate("/config-view")
+    }
+
+    const toggleVisible = (e) => {
+        setVisible(!visible)
+    }
+
+    return (
+        <div id="views-navbar" className={`navbar-item has-dropdown ${visibleClass}`}>
+            <a id="views-navbar-item" className="navbar-link" onClick={toggleVisible}>
+                More
+            </a>
+            <div className="navbar-dropdown" onClick={()=>setVisible(false)} onMouseLeave={()=>setVisible(false)}>
+                <Link to="/alarm-config"  className="navbar-item">
+                    Alarms...
+                </Link>
+            </div>
+        </div>
+    )
+}
+
+/**
  * Provides a navbar dropdown menu which allows the user to plot against
  * latitude, longitude, or height without going through the faff of
  * configuring the ordinate variable.
@@ -468,9 +513,7 @@ const NavbarMenu = (props) => {
                 <NavTimeFrameSelector />
                 <PresetSelector />  
                 <ViewsSelector />
-                <Link to="/alarm-config" id="views-navbar-item" className="navbar-item"  >
-                    Alarms
-                </Link>
+                <MoreSelector />
             </div>
 
             <div className="navbar-end">
