@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { getData } from "../plot/plotUtils";
 import { useGetParameters } from "../hooks";
 import { badData } from "../settings";
+import { SimplePlot } from "../plot/plot";
 
 /**
  * A LimitSetter renders a component that allows the user to set the valid limits
@@ -108,6 +109,7 @@ const LimitSetter = (props) => {
  * @param {Object} props.limits - An array of valid limits for the parameter
  * @param {Number} props.limits.min - The minimum valid value for the parameter
  * @param {Number} props.limits.max - The maximum valid value for the parameter
+ * @param {Function} props.setMaximized - A function to set the maximized parameter
  * 
  * @component
  * @example
@@ -123,6 +125,9 @@ const LimitSetter = (props) => {
  * )
  */
 const LargeDashPanel = (props) => {
+
+    const [showPlot, setShowPlot] = useState(false)
+
     let dataVal = props?.value?.filter(x => x != null)
                               ?.filter(x => x != badData)
                               ?.reverse()
@@ -135,6 +140,16 @@ const LargeDashPanel = (props) => {
 
     const [showSetter, setShowSetter] = useState(false)
 
+    const togglePlot = () => {
+        if(showPlot) {
+            setShowPlot(false)
+            props.setMaximized(null)
+            return
+        }
+        setShowPlot(true)
+        props.setMaximized(props.param.ParameterName)
+    }
+
     const validLimit = props.limits.find(x=>x.param === props.param.ParameterName)
     const [minValid, maxValid] = validLimit
         ? [parseFloat(validLimit.min), parseFloat(validLimit.max)]
@@ -144,20 +159,34 @@ const LargeDashPanel = (props) => {
 
     const alarmClass = inAlarm ? "has-background-danger" : ""
 
+    const content = showPlot 
+        ? <SimplePlot params={[props.param.ParameterName]} />
+        : `${dataVal} ${props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits}`
+
+    const btnStyle = {
+        background: "#252243",
+        color: "#0abbef",
+        border: 0,
+        cursor: "pointer",
+    }
+
+    const panelStyle = {
+        border: "1px solid black",
+        borderRadius: "5px",
+    } 
+
     return (
-        <div className="m-4 is-flex is-justify-content-center is-flex-grow-1" style={{
-            border: "1px solid black",
-            borderRadius: "5px"
-        }}>
+        <div className="m-4 is-flex is-justify-content-center is-flex-grow-1" style={panelStyle}>     
+            
             <div className={`is-flex is-flex-direction-column is-flex-grow-1 ${alarmClass}`} >
                 <div className={`is-flex is-flex-direction-row `} style={{
                         background: "#252243",
                         color: "#0abbef",
-                        borderBottom: "1px solid black"
+                        borderBottom: "1px solid black",
                     }}>
                     <h3 className="p-3 is-uppercase is-justify-content-center is-flex-grow-1 is-flex">
                         <div className="is-flex is-justify-content-space-between">
-                            <span>{props.param.DisplayText}</span>
+                            <button style={btnStyle} onClick={togglePlot}>{props.param.DisplayText}</button>
                         </div>
                     </h3>
 
@@ -170,8 +199,8 @@ const LargeDashPanel = (props) => {
                 <LimitSetter minVal={minValid} maxVal={maxValid} 
                     onHide={() => setShowSetter(false)}
                     show={showSetter} name={props.param.ParameterName} />
-                <span className="p-3 is-flex is-justify-content-center is-size-1">
-                    {dataVal} {props.param.DisplayUnits === "1" ? "" : props.param.DisplayUnits}
+                <span className="p-3 is-flex is-justify-content-center  is-size-1 is-flex-grow-1">
+                    {content}              
                 </span>
             </div>
         </div>
@@ -222,11 +251,13 @@ const SmallDashPanel = (props) => {
     const inAlarm = (parseFloat(dataVal) < minValid) || (parseFloat(dataVal) > maxValid)
     const alarmClass = inAlarm ? "has-background-danger" : ""
 
+    const panelStyle = {
+        border: "1px solid black",
+        borderRadius: "5px"
+    }
+
     return (
-        <div className={`m-1 is-flex is-justify-content-center is-flex-grow-1 ${alarmClass}`} style={{
-            border: "1px solid black",
-            borderRadius: "5px"
-        }}>
+        <div className={`m-1 is-flex is-justify-content-center is-flex-grow-1 ${alarmClass}`} style={panelStyle}>
             <div className="is-flex is-flex-direction-row is-flex-grow-1" >
                 <h3 className="is-uppercase is-justify-content-center is-flex-grow-1 is-flex is-size-7" style={{
                 }}>
@@ -290,6 +321,7 @@ const Dashboard = (props) => {
 
     const availableParams = useGetParameters()
     const [data, setData] = useState({})
+    const [maximized, setMaximized] = useState(null)
 
     const [searchParams, _] = useSearchParams()
 
@@ -324,17 +356,25 @@ const Dashboard = (props) => {
 
     if (!availableParams) return null
 
-    const filteredParams = availableParams.filter(x => {
+    let filteredParams = availableParams.filter(x => {
         return parameters.includes(x.ParameterName)
     })
 
+    let className =  "is-flex is-flex-wrap-wrap is-justify-content-center"
+    let style = {}
+    if(maximized) {
+        filteredParams = filteredParams.filter(x=>x.ParameterName === maximized)
+        style = {position: "absolute", top: "0px", bottom: "0px", left: "0px", right: "0px"}
+    }
+
     return (
-        <div className="is-flex is-flex-wrap-wrap is-justify-content-center">
+        <div className={className} style={style}>
             {filteredParams.map(x => <DashPanel size={size}
                 key={x.ParameterName}
                 param={x}
                 value={data[x.ParameterName]} 
-                limits={limits.filter(y=>y.param===x.ParameterName)} />)}
+                limits={limits.filter(y=>y.param===x.ParameterName)} 
+                setMaximized={setMaximized} />)}
         </div>
 
     )
@@ -358,6 +398,7 @@ const DashboardDispatcher = () => {
 
     return <Dashboard size={size} parameters={parameters} server={server} />
 }
+
 
 export default DashboardDispatcher
 export { Dashboard }

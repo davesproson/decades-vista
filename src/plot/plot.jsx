@@ -28,6 +28,27 @@ const Plot = forwardRef((props, ref) => {
     )
 })
 
+const SimplePlot = (props) => {
+    const ref = useRef(null)
+    const options = {
+        params: props.params,
+        axes: props.params,
+        swapxy: false,
+        ordvar: "utc_time",
+        timeframe: "5min",
+        scrolling: true,
+    }
+
+    usePlot(options, ref)
+    return (
+        <div ref={ref} style={{
+            height: "100%",
+            width: "100%",
+            position: "relative",
+        }}></div>
+    )
+}
+
 const PlotDispatcher = () => {
     
     const ref = useRef(null)
@@ -43,3 +64,4 @@ const PlotDispatcher = () => {
 }
 
 export default PlotDispatcher
+export { SimplePlot }
