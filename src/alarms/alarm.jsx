@@ -46,7 +46,7 @@ const AlarmEditor = (props) => {
                                       placeholder="Type your json here..."
                                       rows={20}
                                       value={props.text} 
-                                      style={{fontFamily: "monospace"}}
+                                      style={{fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New"}}
                                       onChange={jsonChanged} />
                         </div>
                     </div>
