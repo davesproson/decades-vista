@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { useAlarm, useAlarmUrl } from './hooks'
 import { encode } from 'base-64'
+import { base as siteBase } from '../settings'
 
 const AlarmEditor = (props) => {
 
@@ -35,7 +35,8 @@ const AlarmEditor = (props) => {
             for (let alarm of JSON.parse(props.text)) {
                 urlPars.append("alarm", encode(JSON.stringify(alarm)))
             }
-        return `alarms/?${urlPars.toString()}`
+
+        return `${siteBase}alarms/?${urlPars.toString()}`
     }
 
     const bgClass = checkValid(props.text) ? "has-background-success-light" : "has-background-danger-light"
@@ -63,7 +64,7 @@ const AlarmEditor = (props) => {
                     <a className="button is-primary is-fullwidth" 
                             href={onLaunch()}
                             disabled={!checkValid(props.text)}
-                            target="_blank">
+                            target={props.openExternal ? "_blank" : null}>
                         Launch
                     </a>
                 </div>  
@@ -124,15 +125,19 @@ const AlarmInfo = (props) => {
  * it provides a button to load a file. When the file is loaded it parses the file and
  * sets the search params to the alarms in the file
  * 
+ * @param {object} props
+ * @param {boolean} props.openExternal - if true, the launch button will open the alarms in a new tab
+ * 
+ * 
  * @component
  * @example
  * return (
  * <Unloaded />
  * )
  */
-const Unloaded = () => {
+const Unloaded = (props) => {
     const ref = useRef(null)
-    const [_, setSearchParams] = useSearchParams()
+    
     const [showInfo, setShowInfo] = useState(true)
 
     const [alarmJson, setAlarmJson] = useState("")
@@ -154,11 +159,6 @@ const Unloaded = () => {
                 setShowInfo(false)
                 setShowEditor(true)
                 setAlarmJson(newText)
-            //     const urlPars = new URLSearchParams()
-            //     for (let alarm of json) {
-            //         urlPars.append("alarm", encode(JSON.stringify(alarm)))
-            //     }
-            //     setSearchParams(urlPars)
 
             } catch (e) {
                 console.error(e)
@@ -179,7 +179,7 @@ const Unloaded = () => {
         <div className="container mt-2">
 
             <div className="section">
-                <AlarmEditor display={showEditor} text={alarmJson} onEdit={setAlarmJson} />
+                <AlarmEditor display={showEditor} text={alarmJson} onEdit={setAlarmJson} openExternal={props.openExternal} />
                 <AlarmInfo display={showInfo} hide={()=>setShowInfo(false)} />
                 <button className="button  is-outlined is-secondary is-fullwidth mb-1" onClick={newJson}>New </button>
                 <span className="button  is-outlined is-secondary is-fullwidth" onClick={showFileSelect}>
@@ -202,11 +202,11 @@ const Unloaded = () => {
  * <AlarmList />
  * )
  */
-const AlarmList = () => {
+const AlarmList = (props) => {
     const [alarms, setAlarms] = useState([])
     const [removeAlarm, alarmParams] = useAlarmUrl(setAlarms)
 
-    if (!alarms.length) return <Unloaded setAlarms={setAlarms} />
+    if (!alarms.length) return <Unloaded setAlarms={setAlarms} openExternal={props.openExternal} />
 
     return (
         <div className="container mt-2">
@@ -219,6 +219,7 @@ const AlarmList = () => {
 const Alarm = (props) => {
 
     const passing = useAlarm(props)
+    const [showRule, setShowRule] = useState(false)
 
     const messageClass = passing
         ? "is-success"
@@ -232,6 +233,10 @@ const Alarm = (props) => {
             ? "UNKNOWN"
             : "FAIL"
 
+    const rule = showRule
+        ? <div className="block"><code>{props.rule}</code></div>
+        : null
+
     if (props.display === "compact") {
         return (
             <span className={`tag ${messageClass} mr-1`}>{props.name}</span>
@@ -241,12 +246,12 @@ const Alarm = (props) => {
     return (
         <article className={`message mb-1 mt-1 is-small ${messageClass}`}>
             <div className="message-body">
-                <span><strong>{props.name}</strong> - {props.description}</span>
+                <span><strong><button style={{all: "unset", cursor: "pointer"}} onClick={()=>setShowRule(x=>!x)}>{props.name}</button></strong> - {props.description}</span>
                 <span className="is-pulled-right">
                     <span className="mr-2">{messageText}</span>
                     <button className="delete" aria-label="delete" onClick={props.remove}></button>
                 </span>
-
+                {rule}
 
             </div>
 

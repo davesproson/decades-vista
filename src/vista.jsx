@@ -40,7 +40,7 @@ const DecadesVista = () => {
           <Route path="/timeframe" element={<Suspense><TimeframeSelector /></Suspense>} />
           <Route path="/config-view" element={<Suspense><ViewConfig /></Suspense>} />
           <Route path="/view-library" element={<Suspense><ViewLibrary /></Suspense>} />
-          <Route path="/alarm-config" element={<Suspense><AlarmList /></Suspense>} />
+          <Route path="/alarm-config" element={<Suspense><AlarmList openExternal={true}/></Suspense>} />
         </Route>
         <Route path="/view" element={<Suspense><View /></Suspense>} />
         <Route path="/plot" element={<Suspense><PlotDispatcher /></Suspense>} />
