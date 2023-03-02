@@ -12,9 +12,23 @@ const Loader = (props) => {
             alignItems: "center",
             justifyContent: "center",
         }}>
+            <div style={{
+                backgroundColor: "#252243",
+                width: "200px",
+                height: "200px",
+                borderRadius: "200px",
+                border: "20px solid #0abbef",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                fontSize: "2em",
+            }}>F A A M</div>
             <div className="is-size-4">Checking Parameter Availability...</div>
  
-            <progress className="progress is-primary" style={{width:"50%"}} value={props.value} max={props.max}>{props.value}</progress>
+            <progress className="progress" style={{
+                width:"50%"
+            }} value={props.value} max={props.max}>{props.value}</progress>
         
         </div>
     )
