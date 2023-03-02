@@ -9,7 +9,15 @@ const AlarmEditor = (props) => {
 
     const checkValid = (json) => {
         try {
-            JSON.parse(json)
+            const parsed = JSON.parse(json)
+            
+            if (!Array.isArray(parsed)) return false
+            for (let alarm of parsed) {
+                if (!alarm.name) return false
+                if (!alarm.description) return false
+                if (!alarm.rule) return false
+                if (!alarm.parameters) return false
+            }
             return true
         } catch (e) {
             return false
