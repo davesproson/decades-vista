@@ -1,6 +1,8 @@
 import React from "react"
 
 const VistaError = (props) => {
+    const featuresColor = "#0abbef"
+
     return (
         <div style={{
             display: "flex",
@@ -17,10 +19,10 @@ const VistaError = (props) => {
                 width: "300px",
                 height: "300px",
             }} viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" stroke="#0abbef" strokeWidth="8" fill="#252243"/>
-            <circle cx="35" cy="40" r="5" fill="#0abbef"/>
-            <circle cx="65" cy="40" r="5" fill="#0abbef"/>
-            <path d="M 30 70 Q 50 55 70 70" stroke="#0abbef" strokeWidth="6" fill="none"/>
+            <circle cx="50" cy="50" r="45" stroke="#0abbef" strokeWidth="8" fill={"#252243"}/>
+            <circle cx="35" cy="40" r="5" fill={featuresColor}/>
+            <circle cx="65" cy="40" r="5" fill={featuresColor}/>
+            <path d="M 30 70 Q 50 55 70 70" stroke={featuresColor} strokeWidth="6" fill="none"/>
         </svg>
         <div className="block">
             <div className="is-size-2">Something went wrong!</div>

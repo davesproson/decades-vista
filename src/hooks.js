@@ -81,9 +81,9 @@ const useServers = () => {
                     const serverToSet = reportedServers.sort(() => .5 - Math.random())[0]
                     dispatch(setServer(serverToSet))
                 }
-            }).catch((e) => {
-                console.error(e)
-                setServer(null)
+            }).catch((e) => {   
+                console.log("Error fetching servers")
+                dispatch(setServer(null))
             })
             
         }, [])
