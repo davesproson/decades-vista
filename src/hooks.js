@@ -58,7 +58,10 @@ const useGetParameters = () => {
             .then(data => useTransform('parameters')(data))
             .then(data => {
                 setParams(data);
-            });
+            })
+            .catch((e) => {
+                console.log("Error fetching parameters")
+            })
     }, [setParams])
 
     return params
@@ -70,7 +73,7 @@ const useServers = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch(`${apiEndpoints.tank_status}`)        
+        fetch(`${apiEndpoints.tank_status}`)
             .then(response => response.json())
             .then(data => useTransform('tank_status')(data))
             .then(data => {
@@ -81,10 +84,11 @@ const useServers = () => {
                     const serverToSet = reportedServers.sort(() => .5 - Math.random())[0]
                     dispatch(setServer(serverToSet))
                 }
-            }).catch((e) => {   
+            })
+            .catch((e) => {   
                 console.log("Error fetching servers")
                 dispatch(setServer(null))
-            })
+            })   
             
         }, [])
     
