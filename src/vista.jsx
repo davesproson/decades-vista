@@ -17,6 +17,8 @@ const ViewLibrary = lazy(() => import('./views/viewLibrary'))
 const Tutorial = lazy(() => import('./tutorial/tutorial'))
 const AlarmList = lazy(() => import('./alarms/alarm'))
 
+import { VistaErrorBoundary } from './components/error';
+
 /**
  * The main app component. This is the entry point for the application, which
  * provides the routing for the application.
@@ -32,6 +34,7 @@ const DecadesVista = () => {
   useServers()
 
   return (
+    <VistaErrorBoundary >
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/" element={<><Navbar /><Tutorial /></>} >
@@ -52,6 +55,7 @@ const DecadesVista = () => {
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </Suspense>
+    </VistaErrorBoundary>
   )
 }
 

@@ -82,8 +82,8 @@ const useServers = () => {
                     dispatch(setServer(serverToSet))
                 }
             }).catch((e) => {
-                console.log(e)
-                alert('Unable to retreive DECADES parameters. Please try again later.')
+                console.error(e)
+                setServer(null)
             })
             
         }, [])

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useDispatchParameters } from "../hooks"
 import { toggleParamSelected } from "../redux/parametersSlice"
 import { Loader } from "../components/loader"
+import { VistaErrorBoundary } from "../components/error"
 
 const ParameterLine = (props) => {
     const dispatch = useDispatch()
@@ -47,10 +48,15 @@ const ParameterTable = (props) => {
 
     const vars = useSelector(state => state.vars)
     const filterText = useSelector(state => state.paramfilter)
+    const server = useSelector(state => state.options.server)
     useDispatchParameters()
 
     const paramsChecked = vars.params.length && vars.params.every(x => x.status !== null)
     const nParamsChecked = vars.params.filter(x => x.status !== null).length
+
+    if(server===null) {
+        throw("Unable to connect to server.")
+    }
 
     if(!paramsChecked) return <Loader value={nParamsChecked} max={vars.params.length} />
     
