@@ -24,7 +24,7 @@ const paramFromDecadesParam = (param) => {
         units: param.DisplayUnits,
         selected: false,
         axisId: null,
-        status: null
+        status: param.available
     }
 }
 

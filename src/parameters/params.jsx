@@ -52,13 +52,12 @@ const ParameterTable = (props) => {
     useDispatchParameters()
 
     const paramsChecked = vars.params.length && vars.params.every(x => x.status !== null)
-    const nParamsChecked = vars.params.filter(x => x.status !== null).length
 
     if(server===null) {
         throw("Unable to connect to server.")
     }
 
-    if(!paramsChecked) return <Loader value={nParamsChecked} max={vars.params.length} />
+    if(!paramsChecked) return <Loader />
     
     if(!vars.params) return <Loader />;
 

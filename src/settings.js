@@ -17,12 +17,13 @@ export const badData = -999.99
 
 const apiBase = {
     "demo": "/live",
-    "dev": "",
-    "prod": ""
+    "dev": "/decades",
+    "prod": "/decades"
 }[deployment]
 
 export const apiEndpoints = {
     'parameters': `${apiBase}/parano.json`,
+    'parameter_availability': `${apiBase}/params/availability`,
     'data': `${apiBase}/livedata`,
     'tank_status': `${apiBase}/tank_status`,
 }

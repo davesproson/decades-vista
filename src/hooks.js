@@ -16,37 +16,17 @@ let parametersDispatched = false;
 const useDispatchParameters = () => {
     
     const dispatch = useDispatch();
-    const params = useSelector(state => state.vars.params);
-    const [getStatus, setGetStatus] = useState(false);
 
     useEffect(() => {
         if(parametersDispatched) return;
-        fetch(`${apiEndpoints.parameters}`)
+        fetch(`${apiEndpoints.parameter_availability}`)
             .then(response => response.json())
-            .then(data => useTransform('parameters')(data))
-            .then(data => dispatch(setParams(data)))
-            .then(()=>setGetStatus(true))
-        }, [])
-    
-    useEffect(() => {
-        if(parametersDispatched) return;
-        if(!getStatus) return;
-        
-        for(let param of params) {
-            const end = Math.floor(new Date().getTime() / 1000) - 1
-            const start = end - 5
-            getData({params: [param.raw]}, start, end).then(
-                (data) => {
-                    const last = data[param.raw]?.filter(x => x != null).filter(x => x != badData)
-                    const status = (last?.length && last.length) > 0 ? true : false
-                    dispatch(setParamStatus({id: param.id, status: status}))
-                }
-            ).catch(() => {
-                dispatch(setParamStatus({id: param.id, status: false}))
+            .then(data => {
+                data = useTransform('parameters')(data)
+                dispatch(setParams(data))
+                parametersDispatched = true
             })
-        }
-        parametersDispatched = true;
-    }, [getStatus])
+        }, [])
 }
 
 const useGetParameters = () => {
