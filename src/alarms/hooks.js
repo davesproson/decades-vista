@@ -68,6 +68,7 @@ const useAlarm = (props) => {
                     data[param] = data[param].filter((d) => d !== null)
                                              .filter((d) => d !== badData)
                                              .reverse()[0]
+                    if(data[param] === undefined) throw("No data")
                 } catch (e) {
                     data[param] = null
                     const alarmValue = props.failOnNoData ? false : undefined
@@ -75,6 +76,8 @@ const useAlarm = (props) => {
                     return
                 }
             }
+
+            console.log(data)
             
             try {
                 const passing = evaluate(props.rule, {...data})
