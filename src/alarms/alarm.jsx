@@ -238,9 +238,10 @@ const Alarm = (props) => {
         ? <div className="block"><code>{props.rule}</code></div>
         : null
 
-    if (props.display === "compact") {
+    if (props.display) {
+        const tagSize = props.display === "compact" ? null : "is-large"
         return (
-            <span className={`tag ${messageClass} mr-1`}>{props.name}</span>
+            <span className={`tag ${tagSize} ${messageClass} mr-1`}>{props.name}</span>
         )
     }
 
