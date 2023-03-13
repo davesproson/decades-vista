@@ -116,19 +116,25 @@ const slideLength = (options) => {
  */
 const updatePlot = (options, data, ref) => {
 
+    // Map utc_time to milliseconds
     const timeMap = (data) => {
         return options.ordvar == 'utc_time' ? data * 1000 : data
     }
 
+    // Map bad data to null
     const badDataMap = (data) => {
         return data == badData ? null : data
     }
 
     let yData = []
     let xData = []
+    // Filter out bad data. It's not totally clear that this is the best option,
+    // but leaving missing data in the plot causes issues with data < 1 Hz, or
+    // data with regular gaps, e.g. the GIN data reformatted by the prtaft DLU.
     for(const param of options.params) {
-        yData.push(data[param].map(badDataMap))
-        xData.push(data[options.ordvar].map(badDataMap).map(timeMap))
+        const isBad = data[param].map(x => x === badData)
+        yData.push(data[param].filter((x, i) => !isBad[i]))
+        xData.push(data[options.ordvar].filter((x, i) => !isBad[i]).map(timeMap))
     }
 
     if(options.swapxy) {
