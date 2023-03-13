@@ -46,6 +46,7 @@ const useAlarmUrl = (setAlarms) => {
 const useAlarm = (props) => {
 
     const [passing, setPassing] = useState(props.passing)
+    console.log(props)
 
     useEffect(() => {
         const runAlarms = async () => {
@@ -57,7 +58,8 @@ const useAlarm = (props) => {
             try {
                 data = await getData({params: props.parameters, start: start})
             } catch (e) {
-                setPassing(undefined)
+                const alarmValue = props.failOnNoData ? false : undefined
+                setPassing(alarmValue)
                 return
             }
             
@@ -68,7 +70,8 @@ const useAlarm = (props) => {
                                              .reverse()[0]
                 } catch (e) {
                     data[param] = null
-                    setPassing(undefined)
+                    const alarmValue = props.failOnNoData ? false : undefined
+                    setPassing(alarmValue)
                     return
                 }
             }
@@ -78,7 +81,10 @@ const useAlarm = (props) => {
                 setPassing(passing)
             } catch (e) {
                 console.log("Error evaluating alarm rule")
-                setPassing(undefined)
+                console.log(e)
+
+                const alarmValue = props.failOnNoData ? false : undefined
+                setPassing(alarmValue)
             }
             
         }

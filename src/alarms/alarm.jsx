@@ -103,7 +103,8 @@ const AlarmInfo = (props) => {
         "description": "An alarm that fails when the temperature is below 0",
         "interval": 10,
         "parameters": ["deiced_true_air_temp_c"],
-        "rule": "deiced_true_air_temp_c > 0"
+        "rule": "deiced_true_air_temp_c > 0",
+        "failOnNoData": true
     },
     {
         "name": "Temperature above 30 when airborne",
