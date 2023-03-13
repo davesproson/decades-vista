@@ -55,7 +55,7 @@ const useAlarm = (props) => {
 
             let data
             try {
-                data = await getData({params: props.parameters, start: start, end: end})
+                data = await getData({params: props.parameters, start: start})
             } catch (e) {
                 setPassing(undefined)
                 return

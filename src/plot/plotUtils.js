@@ -192,9 +192,14 @@ const getDataUrl = (options, start, end) => {
 
     // Allow the endpoint to include a query string
     if(url.includes('?')) {
-        url += `&frm=${start}&to=${end}`
+        url += `&frm=${start}`
     } else {
-        url += `?frm=${start}&to=${end}`
+        url += `?frm=${start}`
+    }
+
+    // If the end time is defined, add it to the url
+    if(end) {
+        url += `&to=${end}`
     }
 
     for (const para of options.params) {
@@ -244,17 +249,17 @@ const startData = ({options, start, end, callback, ref, signal}) => {
                 newStart = data.utc_time[data.utc_time.length-1] + 1
                 
                 setTimeout(() => {
-                    startData({...callOpts, start: newStart, end: nowSecs()})
+                    startData({...callOpts, start: newStart})
                 }, 1000)      
             }).catch(e => {
                 console.log('Error fetching data', e)
                 setTimeout(() => {
-                    startData({...callOpts, start: newStart, end: nowSecs()})
+                    startData({...callOpts, start: newStart})
                 }, 1000)   
             })
     } catch(e) {
         setTimeout(() => {
-            startData({...callOpts, start: newStart, end: nowSecs()})
+            startData({...callOpts, start: newStart})
         }, 1000) 
     }
 }
@@ -271,7 +276,6 @@ const startData = ({options, start, end, callback, ref, signal}) => {
 const getData = async (options, start, end) => {
 
     if(!start) start = nowSecs() - 5
-    if(!end) end = nowSecs() - 5
 
     const url = getDataUrl(options, start, end)
 

@@ -17,16 +17,14 @@ const useDashboardData = (dataOptions) => {
     const [data, setData] = useState({})
 
     useEffect(() => {
-        const end = Math.floor(new Date().getTime() / 1000) - 1
-            const start = end - 5
-
-            getData(dataOptions, start, end).then(data => setData(data))
-            const interval = setInterval(() => {
-                const end = Math.floor(new Date().getTime() / 1000) - 1
-                const start = end - 5
-                getData(dataOptions, start, end).then(data => setData(data))
-            }, 1000)
-            return () => clearInterval(interval)
+        getData(dataOptions).then(data => setData(data))
+                            .catch(() => setData([]))
+                            
+        const interval = setInterval(() => {
+            getData(dataOptions).then(data => setData(data))
+                                .catch(() => setData([]))
+        }, 1000)
+        return () => clearInterval(interval)
     }, [setData])
 
     return data
