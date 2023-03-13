@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
-import { getData } from "../plot/plotUtils";
+import { useState, useRef } from "react";
 import { useGetParameters } from "../hooks";
+import { useDashboardData } from "./hooks";
 import { badData } from "../settings";
 import { SimplePlot } from "../plot/plot";
 
@@ -326,7 +326,7 @@ const DashPanel = (props) => {
 const Dashboard = (props) => {
 
     const availableParams = useGetParameters()
-    const [data, setData] = useState({})
+    // const [data, setData] = useState({})
     const [maximized, setMaximized] = useState(null)
 
     const [searchParams, _] = useSearchParams()
@@ -345,24 +345,19 @@ const Dashboard = (props) => {
     }
     if (server) dataOptions.server = server
 
-    useEffect(() => {
-        const end = Math.floor(new Date().getTime() / 1000) - 1
-        const start = end - 5
-
-        getData(dataOptions, start, end).then(data => setData(data))
-        const interval = setInterval(() => {
-            const end = Math.floor(new Date().getTime() / 1000) - 1
-            const start = end - 5
-            getData(dataOptions, start, end).then(data => setData(data))
-        }, 1000)
-        return () => clearInterval(interval)
-    }, [setData])
+    const data = useDashboardData(dataOptions)
 
     if (!availableParams) return null
 
     let filteredParams = availableParams.filter(x => {
-        return parameters.includes(x.ParameterName)
+         return parameters.includes(x.ParameterName)
     })
+
+    for(let p of parameters) {
+        if(!filteredParams.find(x => x.ParameterName === p)) {
+            filteredParams.push({ParameterName: p, DisplayText: p, DisplayUnits: ""})
+        }
+    }
 
     let className = "is-flex is-flex-wrap-wrap is-justify-content-center"
     let style = {}
