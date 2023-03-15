@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy-faam": "vite build && rsync -avz --delete dist/ faam-webserver:/var/www/html/additional/decades-vista"
+    "deploy-demo": "vite build && rsync -avz --delete dist/ faam-webserver:/var/www/html/additional/decades-vista",
+    "deploy-tanks": "vite build && rsync -avz --delete dist/ fltman@192.168.101.110:/home/fltman/web/decades-vista && rsync -avz --delete dist/ fltman@192.168.101.108:/home/fltman/web/decades-vista"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
