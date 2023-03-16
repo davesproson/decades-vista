@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { useAlarm, useAlarmUrl } from './hooks'
 import { encode } from 'base-64'
 import { base as siteBase } from '../settings'
+import { useEffect } from 'react'
 
 const AlarmEditor = (props) => {
 
@@ -207,6 +208,14 @@ const AlarmList = (props) => {
 
     const [alarms, setAlarms] = useState(props.alarms)
     const [removeAlarm, alarmParams] = useAlarmUrl(setAlarms, props)
+    const [flashActive, setFlashActive] = useState(false)
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setFlashActive(x => !x)
+        }, 600)
+        return () => clearInterval(interval)
+    }, [])
     
     if (!alarms?.length) {
         if (props.alarms) {
@@ -225,7 +234,7 @@ const AlarmList = (props) => {
 
     return (
         <div className="container mt-2">
-            {alarms.map(a => <Alarm key={a.id} {...a} {...alarmParams} 
+            {alarms.map(a => <Alarm key={a.id} {...a} {...alarmParams} flashActive={flashActive}
                                             remove={()=>tryToRemove(a.id)} />)}
         </div>
     )
@@ -241,7 +250,11 @@ const Alarm = (props) => {
         ? "is-success"
         : passing === undefined
             ? "is-secondary"
-            : "is-danger"
+            : props.flashActive
+                ? props.disableFlash
+                    ? "is-danger"
+                    : "has-background-danger"
+                : "is-danger"
 
     const messageText = passing
         ? "PASS"
