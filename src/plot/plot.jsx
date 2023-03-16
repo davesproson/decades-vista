@@ -2,8 +2,11 @@ import { useRef, forwardRef } from 'react'
 import { usePlot, usePlotOptions } from './hooks'
 import { Dashboard } from '../dashboard/dashboard'
 import { plotHeaderDefaults } from '../settings'
+import { Loader } from '../components/loader'
 
 const Plot = forwardRef((props, ref) => {
+
+    const load = props.loadDone ? null : <Loader text="Loading plot..." />
 
     const dash = props.parameters
         ? <Dashboard parameters={Array(...new Set([...props.parameters, ...plotHeaderDefaults]))} />
@@ -23,7 +26,7 @@ const Plot = forwardRef((props, ref) => {
             <div ref={ref} style={{
                 width: "100%",
                 height: "100%",
-            }}></div>
+            }}>{load}</div>
         </div>
     )
 })
@@ -53,13 +56,13 @@ const PlotDispatcher = () => {
     
     const ref = useRef(null)
     const options = usePlotOptions();
-    usePlot(options, ref)
+    const loadDone = usePlot(options, ref)
 
     const headerParams = options.header 
         ? options.params
         : null
 
-    return <Plot ref={ref} parameters={headerParams}/>
+    return <Plot ref={ref} parameters={headerParams} loadDone={loadDone} />
     
 }
 

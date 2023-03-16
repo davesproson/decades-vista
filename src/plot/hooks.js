@@ -90,6 +90,7 @@ const usePlot = (options, ref) => {
     const servers = useServers()
     const [server, setServer] = useState(options.server)
     const [initDone, setInitDone] = useState(false)
+    const [loadDone, setLoadDone] = useState(false)
     
     useEffect(() => {
         
@@ -276,12 +277,15 @@ const usePlot = (options, ref) => {
         }
         
         import('plotly.js-dist').then(Plotly => {
+            setLoadDone(true);
             config.modeBarButtonsToAdd[0].icon = Plotly.Icons.disk;
             Plotly.newPlot(ref.current, traces, layout, config)
                 .then(setInitDone(true))
         })
 
-    }, [params, server])
+    }, [params, server, setInitDone, setLoadDone])
+
+    return loadDone
 }
 
 const usePlotOptions = () => {

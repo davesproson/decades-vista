@@ -24,7 +24,7 @@ const Loader = (props) => {
                 color: "white",
                 fontSize: "2em",
             }}>F A A M</div>
-            <div className="is-size-4">Checking Parameter Availability...</div>
+            <div className="is-size-4">{props.text}</div>
  
             <progress className="progress" style={{
                 width:"50%"

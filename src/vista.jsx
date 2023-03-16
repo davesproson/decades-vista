@@ -3,6 +3,7 @@ import 'bulma/css/bulma.min.css';
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom'
 import { useServers } from './hooks';
+import { Loader } from './components/loader';
 
 const Navbar = lazy(() => import('./navbar/navbar'))
 const TimeframeSelector = lazy(() => import('./timeframe/timeframe'))
@@ -35,7 +36,7 @@ const DecadesVista = () => {
 
   return (
     <VistaErrorBoundary >
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loader text="Initializing..."/>}>
       <Routes>
         <Route path="/" element={<><Navbar /><Tutorial /></>} >
           <Route path="/" element={<Suspense><ParameterTable /></Suspense>} />

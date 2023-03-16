@@ -1,6 +1,5 @@
-import { serverPrefix, serverProtocol, apiEndpoints, badData } from '../settings'
+import { serverProtocol, apiEndpoints, badData } from '../settings'
 
-import Plotly from 'plotly.js-dist'
 
 /**
  * Get the parameter object from the parameters list by the raw name
@@ -145,9 +144,11 @@ const updatePlot = (options, data, ref) => {
 
     const maxTraceLength = canSlide(options) ? slideLength(options) : null
     
-    Plotly.extendTraces(ref.current, {
-        y: yData, x: xData
-    }, [...Array(yData.length).keys()], maxTraceLength)
+    import('plotly.js-dist').then(Plotly => {
+        Plotly.extendTraces(ref.current, {
+            y: yData, x: xData
+        }, [...Array(yData.length).keys()], maxTraceLength)
+    })
 }
 
 /**

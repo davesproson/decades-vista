@@ -56,10 +56,10 @@ const ParameterTable = (props) => {
     if(server===null) {
         throw("Unable to connect to server.")
     }
-
-    if(!paramsChecked) return <Loader />
     
-    if(!vars.params) return <Loader />;
+    if(!paramsChecked) return <Loader text="Checking Parameter Availability..." />
+    
+    if(!vars.params) return <Loader text="Getting parameters..." />;
 
     const params = [...vars.params];
 
