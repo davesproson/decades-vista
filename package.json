@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy-demo": "vite build && rsync -avz --delete dist/ faam-webserver:/var/www/html/additional/decades-vista",
-    "deploy-tanks": "vite build && rsync -avz --delete dist/ fltman@192.168.101.110:/home/fltman/web/decades-vista && rsync -avz --delete dist/ fltman@192.168.101.108:/home/fltman/web/decades-vista"
+    "deploy-tanks": "vite build && rsync -avz --delete dist/ fltman@192.168.101.110:/home/fltman/web/decades-vista && rsync -avz --delete dist/ fltman@192.168.101.108:/home/fltman/web/decades-vista",
+    "deploy-ground": "vite build && rsync -avz --delete dist/ faam-dataserver:/home/ubuntu/web/decades-vista"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
