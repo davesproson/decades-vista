@@ -204,14 +204,29 @@ const Unloaded = (props) => {
  * )
  */
 const AlarmList = (props) => {
-    const [alarms, setAlarms] = useState([])
-    const [removeAlarm, alarmParams] = useAlarmUrl(setAlarms)
 
-    if (!alarms.length) return <Unloaded setAlarms={setAlarms} openExternal={props.openExternal} />
+    const [alarms, setAlarms] = useState(props.alarms)
+    const [removeAlarm, alarmParams] = useAlarmUrl(setAlarms, props)
+    
+    if (!alarms?.length) {
+        if (props.alarms) {
+            setAlarms(props.alarms.map(a => ({ ...a, id: a.name })))
+        }
+        return <Unloaded setAlarms={setAlarms} openExternal={props.openExternal} />
+    }
+
+    const tryToRemove = (id) => {
+        try {
+            removeAlarm(id)
+        } catch (e) {
+            setAlarms(alarms.filter(alarm => alarm.id !== id))
+        }
+    }
 
     return (
         <div className="container mt-2">
-            {alarms.map((a) => <Alarm key={a.id} {...a} {...alarmParams} remove={() => removeAlarm(a.id)} />)}
+            {alarms.map(a => <Alarm key={a.id} {...a} {...alarmParams} 
+                                            remove={()=>tryToRemove(a.id)} />)}
         </div>
     )
 

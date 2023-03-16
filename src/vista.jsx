@@ -17,6 +17,7 @@ const View = lazy(() => import('./views/view'))
 const ViewLibrary = lazy(() => import('./views/viewLibrary'))
 const Tutorial = lazy(() => import('./tutorial/tutorial'))
 const AlarmList = lazy(() => import('./alarms/alarm'))
+const JsonView = lazy(() => import('./views/jsonView'))
 
 import { VistaErrorBoundary } from './components/error';
 
@@ -47,6 +48,7 @@ const DecadesVista = () => {
           <Route path="/alarm-config" element={<Suspense><AlarmList openExternal={true}/></Suspense>} />
         </Route>
         <Route path="/view" element={<Suspense><View /></Suspense>} />
+        <Route path="/jsonview" element={<Suspense><JsonView /></Suspense>} />
         <Route path="/plot" element={<Suspense><PlotDispatcher /></Suspense>} />
         <Route path="/dashboard" element={<Suspense><DashboardDispatcher /></Suspense>} />
         <Route path="/tephigram" element={<Suspense><Tephigram /></Suspense>} />

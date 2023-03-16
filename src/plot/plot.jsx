@@ -12,16 +12,18 @@ const Plot = forwardRef((props, ref) => {
         ? <Dashboard parameters={Array(...new Set([...props.parameters, ...plotHeaderDefaults]))} />
         : null
 
+    const style = props.style || {     
+        top: "0px",
+        left: "0px",
+        right: "0px",
+        bottom: "0px",  
+        position: "absolute",
+        display: "flex",
+        flexDirection: "column",  
+    }
+
     return (
-        <div style={{
-            top: "0px",
-            left: "0px",
-            right: "0px",
-            bottom: "0px",  
-            position: "absolute",
-            display: "flex",
-            flexDirection: "column",
-        }}>
+        <div style={style}>
             {dash}
             <div ref={ref} style={{
                 width: "100%",
@@ -43,28 +45,31 @@ const SimplePlot = (props) => {
     }
 
     usePlot(options, ref)
+
+    const style = props.style ? props.style : {
+        height: "100%",
+        width: "100%",
+        position: "relative",
+    }
+
     return (
-        <div ref={ref} style={{
-            height: "100%",
-            width: "100%",
-            position: "relative",
-        }}></div>
+        <div ref={ref} style={style}></div>
     )
 }
 
-const PlotDispatcher = () => {
+const PlotDispatcher = (props) => {
     
     const ref = useRef(null)
-    const options = usePlotOptions();
+    const options = usePlotOptions(props);
     const loadDone = usePlot(options, ref)
 
     const headerParams = options.header 
         ? options.params
         : null
 
-    return <Plot ref={ref} parameters={headerParams} loadDone={loadDone} />
+    return <Plot ref={ref} parameters={headerParams} loadDone={loadDone} style={props.style}/>
     
 }
 
 export default PlotDispatcher
-export { SimplePlot }
+export { SimplePlot, Plot }

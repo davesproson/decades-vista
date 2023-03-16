@@ -288,19 +288,19 @@ const usePlot = (options, ref) => {
     return loadDone
 }
 
-const usePlotOptions = () => {
+const usePlotOptions = (props) => {
     const [searchParams, _] = useSearchParams();
 
     return {
-        params: searchParams.get("params").split(","),
-        axes: searchParams.getAll("axis"),
-        timeframe: searchParams.get("timeframe"),
-        swapxy: searchParams.get("swapxy") === "true",
-        scrolling: searchParams.get("scrolling") === "true",
-        style: searchParams.get("style"),
-        header: searchParams.get("data_header") === "true",
-        ordvar: searchParams.get("ordvar"),
-        server: searchParams.get("server") || location.host
+        params: props.params || searchParams.get("params").split(","),
+        axes: props.axis || searchParams.getAll("axis"),
+        timeframe: props.timeframe || searchParams.get("timeframe"),
+        swapxy: props.swapxy || searchParams.get("swapxy") === "true",
+        scrolling: props.scrolling || searchParams.get("scrolling") === "true",
+        style: props.style || searchParams.get("style"),
+        header: props.data_header || searchParams.get("data_header") === "true",
+        ordvar: props.ordvar || searchParams.get("ordvar"),
+        server: props.server || searchParams.get("server") || location.host
     }
 }
 

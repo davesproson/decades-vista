@@ -5,12 +5,14 @@ import { badData } from '../settings'
 import { decode, encode } from 'base-64'
 import { evaluate } from 'mathjs'
 
-const useAlarmUrl = (setAlarms) => {
+
+const useAlarmUrl = (setAlarms, props) => {
+
     const [searchParams, setSearchParams] = useSearchParams()
 
     const removeAlarm = (id) => {
         const alarms = searchParams.getAll("alarm").map(x=>JSON.parse(decode(x)))
-        alarms.splice(id, 1)
+                                                   .filter(x=>x.name !== id)
         
         const newSearchParams = new URLSearchParams()
         for(let alarm of alarms) {
@@ -31,7 +33,7 @@ const useAlarmUrl = (setAlarms) => {
     useEffect(() => {
         try {
             const urlAlarms = searchParams.getAll("alarm").map(x=>JSON.parse(decode(x)))
-            setAlarms(urlAlarms.map((a, i) => ({...a, id: i})))
+            setAlarms(urlAlarms.map((a, i) => ({...a, id: a.name})))
         } catch (e) {
             alert("Error parsing alarms specified in URL")
             setSearchParams(new URLSearchParams())
@@ -40,13 +42,17 @@ const useAlarmUrl = (setAlarms) => {
         }
     }, [searchParams, setSearchParams])
 
+    
+    if(props.alarms) {
+        return [null, {}]
+    }
+
     return [removeAlarm, alarmParams]
 }
 
 const useAlarm = (props) => {
 
     const [passing, setPassing] = useState(props.passing)
-    console.log(props)
 
     useEffect(() => {
         const runAlarms = async () => {
@@ -76,8 +82,6 @@ const useAlarm = (props) => {
                     return
                 }
             }
-
-            console.log(data)
             
             try {
                 const passing = evaluate(props.rule, {...data})

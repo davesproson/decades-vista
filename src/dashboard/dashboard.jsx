@@ -162,8 +162,17 @@ const LargeDashPanel = (props) => {
 
     const alarmClass = inAlarm ? "has-background-danger" : ""
 
+    const simplePlotStyle = {
+        "zIndex": 99999,
+        "position": "relative",
+        "top": "0",
+        "left": "0",
+        "width": "100%",
+        "height": "100%"
+    }
+
     const content = showPlot
-        ? <SimplePlot params={[props.param.ParameterName]} />
+        ? <SimplePlot params={[props.param.ParameterName]} style={simplePlotStyle} />
         : `${dataVal} ${units}`
 
     const btnStyle = {
@@ -176,7 +185,16 @@ const LargeDashPanel = (props) => {
     const panelStyle = {
         border: "1px solid black",
         borderRadius: "5px",
+        zIndex: showPlot ? 99999 : 999,
+        background: inAlarm ? "" : "white",
     }
+
+    const editLimitsButton = props.useURL
+        ? <button className="button is-small is-info" style={{
+                background: "#252243",
+                color: "#0abbef",
+            }} onClick={() => setShowSetter(!showSetter)}>!</button>
+        : null
 
     return (
         <div className="m-4 is-flex is-justify-content-center is-flex-grow-1" style={panelStyle}>
@@ -193,15 +211,14 @@ const LargeDashPanel = (props) => {
                         </div>
                     </h3>
 
-                    <button className="button is-small is-info" style={{
-                        background: "#252243",
-                        color: "#0abbef",
-                    }} onClick={() => setShowSetter(!showSetter)}>!</button>
+                    {editLimitsButton}
                 </div>
 
                 <LimitSetter minVal={minValid} maxVal={maxValid}
                     onHide={() => setShowSetter(false)}
-                    show={showSetter} name={props.param.ParameterName} />
+                    show={showSetter} name={props.param.ParameterName} 
+                    useURL={props.useURL} />
+
                 <span className="p-3 is-flex is-justify-content-center  is-size-1 is-flex-grow-1">
                     {content}
                 </span>
@@ -259,7 +276,8 @@ const SmallDashPanel = (props) => {
 
     const panelStyle = {
         border: "1px solid black",
-        borderRadius: "5px"
+        borderRadius: "5px",
+        zIndex: 9999,
     }
 
     return (
@@ -331,10 +349,14 @@ const Dashboard = (props) => {
 
     const [searchParams, _] = useSearchParams()
 
-    const limits = searchParams.getAll('limits').map(x => {
+    let limits = searchParams.getAll('limits').map(x => {
         const [param, min, max] = x.split(',')
         return { param: param, min: min, max: max }
     })
+
+    if(props.limits) {
+        limits = [...limits, ...props.limits]
+    }
 
     const parameters = props.parameters
     const server = props.server
@@ -360,6 +382,7 @@ const Dashboard = (props) => {
     }
 
     let className = "is-flex is-flex-wrap-wrap is-justify-content-center"
+    
     let style = {}
     if (maximized) {
         filteredParams = filteredParams.filter(x => x.ParameterName === maximized)
@@ -367,15 +390,17 @@ const Dashboard = (props) => {
     }
 
     return (
+        <div>
         <div className={className} style={style}>
             {filteredParams.map(x => <DashPanel size={size}
                 key={x.ParameterName}
                 param={x}
                 value={data[x.ParameterName]}
                 limits={limits.filter(y => y.param === x.ParameterName)}
+                useURL={props.useURL}
                 setMaximized={setMaximized} />)}
         </div>
-
+        </div>
     )
 }
 
@@ -388,14 +413,17 @@ const Dashboard = (props) => {
  * <DashboardDispatcher />
  * )
  */
-const DashboardDispatcher = () => {
+const DashboardDispatcher = (props) => {
     const [searchParams, _] = useSearchParams();
-    const parameters = searchParams.get("params").split(",")
-    const isCompact = searchParams.get("compact") == "true"
-    const server = searchParams.get("server") || location.host
+    const parameters = props.params || searchParams.get("params").split(",")
+    const isCompact = props.compact || searchParams.get("compact") == "true"
+    const server = props.server || searchParams.get("server") || location.host
+    const limits = props.limits 
     const size = isCompact ? "small" : "large"
 
-    return <Dashboard size={size} parameters={parameters} server={server} />
+    return <Dashboard size={size} limits={limits} 
+                      parameters={parameters} server={server} 
+                      useURL={props.useURL} />
 }
 
 
