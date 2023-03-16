@@ -32,7 +32,7 @@ const _View = (props) => {
                 const Element = getElement.get(element.type) 
                 return (
                     <div key={i} style={{backgroundColor: bgcolor(i), display: "grid"}}>
-                        <Element style={{display: "grid"}} {...element} />
+                        <Element  {...element} />
                     </div>
                 )
             })}
