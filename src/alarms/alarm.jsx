@@ -257,10 +257,10 @@ const Alarm = (props) => {
                 : "is-danger"
 
     const messageText = passing
-        ? "PASS"
+        ? props.passingText || "PASS"
         : passing === undefined
             ? "UNKNOWN"
-            : "FAIL"
+            : props.failingText || "FAIL"
 
     const rule = showRule
         ? <div className="block"><code>{props.rule}</code></div>
@@ -278,7 +278,7 @@ const Alarm = (props) => {
             <div className="message-body">
                 <span><strong><button style={{all: "unset", cursor: "pointer"}} onClick={()=>setShowRule(x=>!x)}>{props.name}</button></strong> - {props.description}</span>
                 <span className="is-pulled-right">
-                    <span className="mr-2">{messageText}</span>
+                    <span className="mr-2 ml-2">{messageText}</span>
                     <button className="delete" aria-label="delete" onClick={props.remove}></button>
                 </span>
                 {rule}
