@@ -4,6 +4,9 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom'
 import { useServers } from './hooks';
 import { Loader } from './components/loader';
+import { useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setParamSet } from './redux/parametersSlice';
 
 const Navbar = lazy(() => import('./navbar/navbar'))
 const TimeframeSelector = lazy(() => import('./timeframe/timeframe'))
@@ -34,6 +37,13 @@ import { VistaErrorBoundary } from './components/error';
 const DecadesVista = () => {
 
   useServers()
+  const [searchParams, _] = useSearchParams()
+  const dispatch = useDispatch()
+
+  const paramSet = searchParams.get('params')
+  if (paramSet) {
+    dispatch(setParamSet(paramSet))
+  }
 
   return (
     <VistaErrorBoundary >

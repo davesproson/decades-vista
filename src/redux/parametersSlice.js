@@ -34,9 +34,17 @@ export const paramSlice = createSlice({
 	initialState: {
         // Params = {axisId=null, id, name, raw, units, selected=False, status=null}
         params: [],
-        axes: []
+        axes: [],
+        paramSet: '',
+        paramsDispatched: false
     },
 	reducers: {
+        setParamsDispatched: (state, action) => {
+            state.paramsDispatched = action.payload;
+        },
+        setParamSet: (state, action) => {
+            state.paramSet = action.payload;
+        },
 		addParam: (state, action) => {
 			const param = {
 				id: action.payload.id.toString(),
@@ -125,7 +133,7 @@ export const paramSlice = createSlice({
 
 export const { 
     addParam, setParams, toggleParamSelected, unselectAllParams, addNewAxis,
-    selectAxis, setParamStatus
+    selectAxis, setParamStatus, setParamSet, setParamsDispatched
 } = paramSlice.actions;
 
 export default paramSlice.reducer;

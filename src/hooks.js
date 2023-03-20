@@ -1,39 +1,53 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setParams, setParamStatus } from "./redux/parametersSlice";
+import { setParams, setParamsDispatched } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { 
-    serverPrefix, serverProtocol, apiEndpoints, apiTransforms, badData, base as siteBase
+    apiEndpoints, apiTransforms, badData, base as siteBase
 } from "./settings";
 import { getData } from "./plot/plotUtils";
+import { useSearchParams } from "react-router-dom";
 
 const useTransform = (name) => {
     if(apiTransforms[name]) return apiTransforms[name];
     return (data) => data;
 }
 
-let parametersDispatched = false;
+
 const useDispatchParameters = () => {
     
     const dispatch = useDispatch();
+    const dispatchDone = useSelector(state => state.vars.paramsDispatched);
+    const paramSet = useSelector(state => state.vars.paramSet);
+
+    let endPoint = `${apiEndpoints.parameter_availability}`
+    if(paramSet) {
+        endPoint = `${apiEndpoints.parameter_availability}?params=${paramSet}`
+    }
 
     useEffect(() => {
-        if(parametersDispatched) return;
-        fetch(`${apiEndpoints.parameter_availability}`)
+        if(dispatchDone) return;
+        fetch(endPoint)
             .then(response => response.json())
             .then(data => {
                 data = useTransform('parameters')(data)
                 dispatch(setParams(data))
-                parametersDispatched = true
+                dispatch(setParamsDispatched(true))
             })
         }, [])
 }
 
 const useGetParameters = () => {
     const [params, setParams] = useState(null);
+    const paramSet = useSelector(state => state.vars.paramSet);
+
+    let endPoint = `${apiEndpoints.parameters}`
+    if(paramSet) {
+        endPoint = `${apiEndpoints.parameters}?params=${paramSet}`
+    }
 
     useEffect(() => {
-        fetch(`${apiEndpoints.parameters}`)
+        fetch(endPoint)
             .then(response => response.json())
             .then(data => useTransform('parameters')(data))
             .then(data => {
