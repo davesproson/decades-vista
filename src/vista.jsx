@@ -23,6 +23,7 @@ const AlarmList = lazy(() => import('./alarms/alarm'))
 const JsonView = lazy(() => import('./views/jsonView'))
 
 import { VistaErrorBoundary } from './components/error';
+import { useEffect } from 'react';
 
 /**
  * The main app component. This is the entry point for the application, which
@@ -40,10 +41,12 @@ const DecadesVista = () => {
   const [searchParams, _] = useSearchParams()
   const dispatch = useDispatch()
 
-  const paramSet = searchParams.get('params')
-  if (paramSet) {
-    dispatch(setParamSet(paramSet))
-  }
+  useEffect(() => {
+    const paramSet = searchParams.get('params')
+    if (paramSet) {
+      dispatch(setParamSet(paramSet))
+    }
+  }, [searchParams, dispatch])
 
   return (
     <VistaErrorBoundary >
