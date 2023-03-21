@@ -1,12 +1,15 @@
 
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { 
-    addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, setConfig 
+import {
+    addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, setConfig,
+    setAdvancedConfig
 } from '../redux/viewSlice'
 import { usePlotUrl, getUrl } from '../plot/hooks'
 import { useRef, useState } from 'react';
 import { useViewUrl } from './hooks';
+
+import { AdvancedViewConfig } from './advancedViewConfig';
 
 const ViewConfigButtons = (props) => {
     const dispatch = useDispatch()
@@ -46,11 +49,11 @@ const ViewConfigButtons = (props) => {
     }
 
     const parseV1 = (json) => {
-        
+
         const nRows = json.config.nx
         const nCols = json.config.ny
         const plots = []
-        for(const plot of json.plots) {
+        for (const plot of json.plots) {
             const options = {
                 timeframe: plot.timeframe,
                 params: plot.params,
@@ -65,7 +68,7 @@ const ViewConfigButtons = (props) => {
             plots.push(getUrl(options))
         }
         dispatch(setConfig({ nRows, nCols, plots }))
-        
+
     }
 
     const importView = (e) => {
@@ -92,17 +95,17 @@ const ViewConfigButtons = (props) => {
         ref.current.value = ""
     }
 
-    const plotEnabled = (()=>{
+    const plotEnabled = (() => {
         let enabled = true
-        for(let plot of viewState.plots){
-            if(!plot){
+        for (let plot of viewState.plots) {
+            if (!plot) {
                 enabled = false
             }
         }
         return enabled
     })()
 
-    const plotButton = plotEnabled 
+    const plotButton = plotEnabled
         ? <Link to={viewUrl} className="button is-primary is-fullwidth" target="_blank">Plot</Link>
         : <button className="button is-primary is-fullwidth" disabled>Plot</button>
 
@@ -113,7 +116,7 @@ const ViewConfigButtons = (props) => {
             </div>
             <div className="field is-grouped is-expanded">
                 <p className="control is-expanded">
-                    <button className="button is-outlined is-primary is-fullwidth" onClick={()=>setSaveModalActive(true)}>
+                    <button className="button is-outlined is-primary is-fullwidth" onClick={() => setSaveModalActive(true)}>
                         Save
                     </button>
                 </p>
@@ -133,7 +136,7 @@ const ViewConfigButtons = (props) => {
                     </button>
                 </p>
             </div>
-            <SaveModal active={saveModalActive} close={()=>setSaveModalActive(false)}/>
+            <SaveModal active={saveModalActive} close={() => setSaveModalActive(false)} />
         </>
     )
 }
@@ -229,11 +232,11 @@ const SaveModal = (props) => {
                     <input className="input" type="text" value={viewName} onKeyDown={checkKey} onChange={onViewNameChange} placeholder="View Name" />
                     <div className="field is-grouped mt-2">
                         <div className="control is-expanded">
-                    <button className="button is-primary is-fullwidth" onClick={save}>Save</button>
-                    </div>
-                    <div className="control is-expanded">
-                    <button className="button is-secondary is-fullwidth" onClick={close}>Cancel</button>
-                    </div>
+                            <button className="button is-primary is-fullwidth" onClick={save}>Save</button>
+                        </div>
+                        <div className="control is-expanded">
+                            <button className="button is-secondary is-fullwidth" onClick={close}>Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -272,10 +275,10 @@ const ViewConfigNumSelector = (props) => {
     )
 }
 
-const ViewConfig = (props) => {
+const BasicViewConfig = (props) => {
 
     return (
-        <div className="container has-navbar-fixed-top">
+        <>
             <div className="panel is-dark mt-2">
                 <p className="panel-heading">
                     View Configuration
@@ -293,6 +296,28 @@ const ViewConfig = (props) => {
             </div>
             <ViewConfigPlotSelector />
             <ViewConfigButtons />
+        </>
+
+    )
+}
+
+
+
+const ViewConfig = () => {
+    const [isBasic, setIsBasic] = useState(true)
+
+    const basicTabClass = isBasic ? "is-active" : ""
+    const advancedTabClass = isBasic ? "" : "is-active"
+
+    return (
+        <div className="container has-navbar-fixed-top">
+            <div className="tabs is-centered">
+                <ul>
+                    <li className={basicTabClass}><a onClick={() => setIsBasic(true)}>Basic</a></li>
+                    <li className={advancedTabClass}><a onClick={() => setIsBasic(false)}>Advanced</a></li>
+                </ul>
+            </div>
+            {isBasic ? <BasicViewConfig /> : <AdvancedViewConfig />}
         </div>
     )
 }

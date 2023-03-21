@@ -18,9 +18,32 @@ export const viewSlice = createSlice({
         nRows: 1,
         nCols: 1,
         plots: [""],
-        savedViews: []
+        savedViews: [],
+        advancedConfig: {
+            "type": "view",
+            "rows": 1,
+            "columns": 1,
+            "rowPercent": [100],
+            "columnPercent": [100],
+            "elements": []
+        }
     },
 	reducers: {
+        setAdvancedConfig: (state, action) => {
+            console.log(action.payload)
+            if(action.payload === null) {
+                state.advancedConfig = {
+                    "type": "view",
+                    "rows": 1,
+                    "columns": 1,
+                    "rowPercent": [100],
+                    "columnPercent": [100],
+                    "elements": []
+                }
+                return;
+            }
+            state.advancedConfig = action.payload;
+        },
 		addColumn: (state) => {
             state.nCols += 1;
             addPlots(state);
@@ -75,7 +98,7 @@ export const viewSlice = createSlice({
 
 export const { 
     addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, loadSavedView,
-    setConfig, clearSavedViews
+    setConfig, clearSavedViews, setAdvancedConfig
 } = viewSlice.actions;
 
 export default viewSlice.reducer;

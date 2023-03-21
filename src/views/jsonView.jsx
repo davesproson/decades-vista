@@ -40,7 +40,7 @@ const _View = (props) => {
     )
 }
 
-import  PlotDispatcher  from '../plot/plot'
+import PlotDispatcher  from '../plot/plot'
 import Dashboard  from '../dashboard/dashboard'
 import AlarmList from '../alarms/alarm'
 
