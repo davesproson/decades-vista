@@ -42,7 +42,7 @@ const DecadesVista = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const paramSet = searchParams.get('params')
+    const paramSet = searchParams.get('paramset')
     if (paramSet) {
       dispatch(setParamSet(paramSet))
     }

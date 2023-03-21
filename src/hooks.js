@@ -2,11 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setParams, setParamsDispatched } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
-import { 
-    apiEndpoints, apiTransforms, badData, base as siteBase
-} from "./settings";
-import { getData } from "./plot/plotUtils";
-import { useSearchParams } from "react-router-dom";
+import { apiEndpoints, apiTransforms } from "./settings";
+
 
 const useTransform = (name) => {
     if(apiTransforms[name]) return apiTransforms[name];
