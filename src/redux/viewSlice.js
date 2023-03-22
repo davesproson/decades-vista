@@ -27,9 +27,17 @@ export const viewSlice = createSlice({
             "columnPercent": [100],
             "elements": []
         },
-        advancedConfigSaved: true
+        advancedConfigSaved: true,
+        viewConfigTab: "BASIC"
     },
 	reducers: {
+        setViewConfigTab: (state, action) => {
+            if(!["BASIC", "ADVANCED", "JSON"].includes(action.payload)) {
+                state.viewConfigTab = "BASIC";
+                return
+            }
+            state.viewConfigTab = action.payload;
+        },
         setAdvancedConfig: (state, action) => {
             console.log(action.payload)
             if(action.payload === null) {
@@ -110,7 +118,7 @@ export const viewSlice = createSlice({
 
 export const { 
     addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, loadSavedView,
-    setConfig, clearSavedViews, setAdvancedConfig, setAdvancedConfigSaved
+    setConfig, clearSavedViews, setAdvancedConfig, setAdvancedConfigSaved, setViewConfigTab
 } = viewSlice.actions;
 
 export default viewSlice.reducer;

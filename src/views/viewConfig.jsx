@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import {
     addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, setConfig,
-    setAdvancedConfig
+    setAdvancedConfig, setViewConfigTab
 } from '../redux/viewSlice'
 import { usePlotUrl, getUrl } from '../plot/hooks'
 import { useRef, useState } from 'react';
@@ -303,7 +303,13 @@ const BasicViewConfig = (props) => {
 }
 
 const ViewConfig = () => {
-    const [uiType, setUiType] = useState("BASIC")
+    // const [uiType, setUiType] = useState("BASIC")
+    const uiType = useSelector(state => state.view.viewConfigTab)
+    const dispatch = useDispatch()
+
+    const setUiType = (type) => {
+        dispatch(setViewConfigTab(type))
+    }
 
     const getClass = (type) => {
         return type === uiType ? "is-active" : ""

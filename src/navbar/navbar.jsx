@@ -9,7 +9,7 @@ import { usePlotUrl } from "../plot/hooks"
 import { useDashboardUrl } from "../dashboard/hooks"
 import { useTephiAvailable, useTephiUrl } from "../tephigram/hooks"
 import { Outlet } from "react-router-dom"
-import { loadSavedView } from "../redux/viewSlice"
+import { loadSavedView, setViewConfigTab } from "../redux/viewSlice"
 import { useNavigate } from "react-router-dom"
 import { presets, geoCoords } from "../settings"
 import PropTypes from "prop-types"
@@ -187,6 +187,16 @@ const ViewsSelector = () => {
 
     const goto = (id) => {
         dispatch(loadSavedView({id: id}))
+        const viewVersion = savedViews.find(x => x.id == id).version
+
+        switch(viewVersion) {
+            case 2:
+                dispatch(setViewConfigTab("BASIC"))
+                break
+            case 3:
+                dispatch(setViewConfigTab("ADVANCED"))
+        }
+
         navigate("/config-view")
     }
 
