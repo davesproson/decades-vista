@@ -180,11 +180,8 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
 const ConfigTephiArea = (props) => {
     return (
         <div className="mt-2">
-            <article className='message is-danger'>
-                <div className='message-body'>
-                    This feature is not yet implemented.
-                    </div>
-            </article>
+            Add a tephigram to the view. Currently this will only Use
+            the default tephigram options.
         </div>
     )
 }

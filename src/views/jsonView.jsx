@@ -1,6 +1,7 @@
 import { VistaErrorBoundary } from '../components/error'
 import PlotDispatcher  from '../plot/plot'
 import Dashboard  from '../dashboard/dashboard'
+import Tephigram from '../tephigram/tephigram'
 import AlarmList from '../alarms/alarm'
 import { useEffect } from 'react'
 
@@ -65,6 +66,7 @@ const plotStyle = {
 
 const getElement = new Map([
     ['plot', (props) => PlotDispatcher({...props, style: plotStyle})],
+    ['tephi', (props) => Tephigram({...props, style: plotStyle})],
     ['view', _View],
     ['dashboard', (props) => Dashboard({...props, useURL: false})],
     ['url', UrlView],
