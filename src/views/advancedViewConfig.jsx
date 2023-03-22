@@ -180,7 +180,7 @@ const ConfigDashboardArea = React.forwardRef((props, ref) => {
         return {
             getData: () => {
                 return {
-                    params: paramOptions.params.filter(x=>x.selected).map(x=>x.raw),
+                    params: [...paramOptions.params.filter(x=>x.selected).map(x=>x.raw)],
                     limits: []
                 }
             }
@@ -243,7 +243,7 @@ const ConfigWidget = (props) => {
             case "PLOT":
                 props.setViewType("plot")
                 data = plotRef.current.getData()
-                props.setData(data)
+                props.setData({...data})
                 props.hide()
                 dispatch(setAdvancedConfigSaved(false))
                 break
@@ -255,7 +255,7 @@ const ConfigWidget = (props) => {
             case "DASHBOARD":
                 props.setViewType("dashboard")
                 data = dashRef.current.getData()
-                props.setData(data)
+                props.setData({...data})
                 props.hide()
                 dispatch(setAdvancedConfigSaved(false))
                 break
