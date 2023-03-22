@@ -1,5 +1,4 @@
-import {cfg} from '../jsontest'
-
+import { VistaErrorBoundary } from '../components/error'
 
 const UrlView = (props) => {
     return (
@@ -13,10 +12,18 @@ const _View = (props) => {
 
     const elements = props.elements
 
+    const getRowColPercent = (i) => {
+        try {
+            return props[i].map(x=>`${x}%`).join(" ")
+        } catch (e) {
+            return "100%"
+        }
+    }
+
     const style = {
         display: "grid",
-        gridTemplateRows: props.rowPercent.map(x=>`${x}%`).join(" "),
-        gridTemplateColumns: props.columnPercent.map(x=>`${x}%`).join(" "),
+        gridTemplateRows: getRowColPercent("rowPercent"),
+        gridTemplateColumns: getRowColPercent("columnPercent"),
         width: props.top ? "100vw" : "100cw",
         height: props.top ? "100vh" : "100ch"
     }
@@ -27,6 +34,7 @@ const _View = (props) => {
     }
 
     return (
+        
         <div style={style}>
             {elements.map((element, i) => {
                 const Element = getElement.get(element.type) 
@@ -37,7 +45,9 @@ const _View = (props) => {
                 )
             })}
         </div>
+        
     )
+
 }
 
 import PlotDispatcher  from '../plot/plot'
@@ -52,8 +62,14 @@ const getElement = new Map([
     ['alarms', AlarmList]
 ])
 
-const JsonView = () => {
-    return <_View {...cfg} top={true} />
+const JsonView = (props) => {
+    const cfg = props.cfg || JSON.parse(localStorage.getItem('viewConfig'))
+    console.log(cfg)
+    return (
+        <VistaErrorBoundary errorMessage={"View may be misconfigured"}>
+            <_View {...cfg} top={true} />
+        </VistaErrorBoundary>
+    )
 }
 
 export default JsonView
