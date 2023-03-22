@@ -75,6 +75,7 @@ const JsonView = (props) => {
     const cfg = props.cfg || JSON.parse(localStorage.getItem('viewConfig'))
 
     useEffect(()=>{
+        document.getElementsByTagName('html')[0].style.overflow = "hidden"
         localStorage.removeItem('viewConfig')
     }, [])
 
