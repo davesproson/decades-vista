@@ -10,6 +10,7 @@ import { useRef, useState } from 'react';
 import { useViewUrl } from './hooks';
 
 import { AdvancedViewConfig } from './advancedViewConfig';
+import { JsonViewConfig } from './jsonViewConfg';
 
 const ViewConfigButtons = (props) => {
     const dispatch = useDispatch()
@@ -301,23 +302,34 @@ const BasicViewConfig = (props) => {
     )
 }
 
-
-
 const ViewConfig = () => {
-    const [isBasic, setIsBasic] = useState(true)
+    const [uiType, setUiType] = useState("BASIC")
 
-    const basicTabClass = isBasic ? "is-active" : ""
-    const advancedTabClass = isBasic ? "" : "is-active"
+    const getClass = (type) => {
+        return type === uiType ? "is-active" : ""
+    }
+
+    const getUi = (type) => {
+        switch (type) {
+            case "BASIC":
+                return <BasicViewConfig />
+            case "ADVANCED":
+                return <AdvancedViewConfig />
+            case "JSON":
+                return <JsonViewConfig />
+        }
+    }
 
     return (
         <div className="container has-navbar-fixed-top">
             <div className="tabs is-centered">
                 <ul>
-                    <li className={basicTabClass}><a onClick={() => setIsBasic(true)}>Basic</a></li>
-                    <li className={advancedTabClass}><a onClick={() => setIsBasic(false)}>Advanced</a></li>
+                    <li className={getClass("BASIC")}><a onClick={() => setUiType("BASIC")}>Basic</a></li>
+                    <li className={getClass("ADVANCED")}><a onClick={() => setUiType("ADVANCED")}>Advanced</a></li>
+                    <li className={getClass("JSON")}><a onClick={() => setUiType("JSON")}>JSON</a></li>
                 </ul>
             </div>
-            {isBasic ? <BasicViewConfig /> : <AdvancedViewConfig />}
+            {getUi(uiType)}
         </div>
     )
 }
