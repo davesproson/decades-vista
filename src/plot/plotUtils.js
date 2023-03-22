@@ -290,7 +290,28 @@ const getData = async (options, start, end) => {
 
 }
 
+/**
+ * Build an axis array reprensenting the axes and parameters
+ * 
+ * @param {*} vars - The redux parametersSlice
+ * @returns {Array} - An array of the axes, with each axis being a comma separated list of parameters
+ */
+const getAxesArray = (vars) => {
+    const params = vars.params
+    let axes = {}
+    for(const ax of vars.axes) {
+        axes[ax.id] = []
+    }
+
+    for(const param of params.filter(x=>x.selected)) {
+        axes[param.axisId].push(param.raw)
+    }
+
+    axes = Object.values(axes).map(x=>x.join(','))
+    return axes
+}
+
 export { 
     getData, startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, updatePlot,
-    plotIsOngoing
+    plotIsOngoing, getAxesArray
 }

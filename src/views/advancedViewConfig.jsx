@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { useImperativeHandle, useState, useId, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdvancedConfig, setAdvancedConfigSaved } from '../redux/viewSlice';
+import { getAxesArray } from '../plot/plotUtils';
 
 /**
  * Provides a form for adding a view to the advanced view. It's a
@@ -125,10 +126,25 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
     const options = useSelector(state => state.options)
     const paramOptions = useSelector(state => state.vars)
 
+    // Get the axes array representation
+    const axesStrings = getAxesArray(paramOptions)
+
     // Return the data to the parent
     useImperativeHandle(ref, (r) => {
         return {
-            getData: () => options
+            getData: () => {
+                return {
+                    params: paramOptions.params.filter(x=>x.selected).map(x=>x.raw),
+                    axes: axesStrings,
+                    timeframe: options.timeframes.filter(x=>x.selected)[0].value,
+                    plotStyle: options.plotStyle.value,
+                    scrolling: options.scrollingWindow,
+                    header: options.dataHeader,
+                    ordvar: options.ordinateAxis,
+                    swapxy: options.swapOrientation,
+                    server: options.server
+                }
+            }
         }
     }, [options, paramOptions])
 
@@ -339,7 +355,9 @@ const _AdvancedViewConfig = (props) => {
         }
     }, [props.data])
 
+    // Currently disabled due to tricky bug!
     const resetToView = () => {
+        return
         setVType("view")
         dispatch(setAdvancedConfigSaved(false))
     }

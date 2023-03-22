@@ -91,6 +91,7 @@ const usePlot = (options, ref) => {
     const [server, setServer] = useState(options.server)
     const [initDone, setInitDone] = useState(false)
     const [loadDone, setLoadDone] = useState(false)
+    console.log(options)
     
     useEffect(() => {
         
@@ -293,11 +294,11 @@ const usePlotOptions = (props) => {
 
     return {
         params: props.params || searchParams.get("params").split(","),
-        axes: props.axis || searchParams.getAll("axis"),
+        axes: props.axes || searchParams.getAll("axis"),
         timeframe: props.timeframe || searchParams.get("timeframe"),
         swapxy: props.swapxy || searchParams.get("swapxy") === "true",
         scrolling: props.scrolling || searchParams.get("scrolling") === "true",
-        style: props.style || searchParams.get("style"),
+        style: props.plotStyle || searchParams.get("style"),
         header: props.data_header || searchParams.get("data_header") === "true",
         ordvar: props.ordvar || searchParams.get("ordvar"),
         server: props.server || searchParams.get("server") || location.host

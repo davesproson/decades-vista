@@ -1,4 +1,8 @@
 import { VistaErrorBoundary } from '../components/error'
+import PlotDispatcher  from '../plot/plot'
+import Dashboard  from '../dashboard/dashboard'
+import AlarmList from '../alarms/alarm'
+import { useEffect } from 'react'
 
 const UrlView = (props) => {
     return (
@@ -24,8 +28,8 @@ const _View = (props) => {
         display: "grid",
         gridTemplateRows: getRowColPercent("rowPercent"),
         gridTemplateColumns: getRowColPercent("columnPercent"),
-        width: props.top ? "100vw" : "100cw",
-        height: props.top ? "100vh" : "100ch"
+        width: props.top ? "100vw" : null, //"100cw",
+        height: props.top ? "100vh" : null //"100ch"
     }
 
     const bgcolor = i => {
@@ -40,6 +44,7 @@ const _View = (props) => {
                 const Element = getElement.get(element.type) 
                 return (
                     <div key={i} style={{backgroundColor: bgcolor(i), display: "grid"}}>
+                        
                         <Element  {...element} />
                     </div>
                 )
@@ -50,12 +55,16 @@ const _View = (props) => {
 
 }
 
-import PlotDispatcher  from '../plot/plot'
-import Dashboard  from '../dashboard/dashboard'
-import AlarmList from '../alarms/alarm'
+
+
+const plotStyle = {
+    width: "100%",
+    height: "100%",
+    position: "relative"
+}
 
 const getElement = new Map([
-    ['plot', PlotDispatcher],
+    ['plot', (props) => PlotDispatcher({...props, style: plotStyle})],
     ['view', _View],
     ['dashboard', (props) => Dashboard({...props, useURL: false})],
     ['url', UrlView],
@@ -64,7 +73,11 @@ const getElement = new Map([
 
 const JsonView = (props) => {
     const cfg = props.cfg || JSON.parse(localStorage.getItem('viewConfig'))
-    console.log(cfg)
+
+    useEffect(()=>{
+        localStorage.removeItem('viewConfig')
+    }, [])
+
     return (
         <VistaErrorBoundary errorMessage={"View may be misconfigured"}>
             <_View {...cfg} top={true} />
