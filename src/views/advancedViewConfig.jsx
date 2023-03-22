@@ -390,6 +390,16 @@ const _AdvancedViewConfig = (props) => {
     }
 
     const getElement = () => {
+
+        const ImageElement = (props) => {
+            return (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <img onClick={resetToView} src={props.src} alt="plot" style={{ height: "64px", width: "64px" }} />
+                </div>
+            )
+        }
+
+
         if (!children?.length) {
             switch (vType) {
                 case "view":
@@ -401,23 +411,13 @@ const _AdvancedViewConfig = (props) => {
                         </div>
                     )
                 case "plot":
-                    return (
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img onClick={resetToView} src="chart.svg" alt="plot" style={{ height: "64px", width: "64px" }} />
-                        </div>
-                    )
+                    return <ImageElement src="chart.svg" />
                 case "tephi":
-                    return (
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img onClick={resetToView} src="tephi.svg" alt="tephi" style={{ height: "64px", width: "64px" }} />
-                        </div>
-                    )
+                    return <ImageElement src="tephi.svg" />
                 case "dashboard":
-                    return (
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img onClick={resetToView} src="dashboard.svg" alt="dashboard" style={{ height: "64px", width: "64px" }} />
-                        </div>
-                    )
+                    return <ImageElement src="dashboard.svg" />
+                case "alarms":
+                    return <ImageElement src="alarm.svg" />
             }
         }
         return null
