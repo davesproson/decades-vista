@@ -10,7 +10,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useImperativeHandle, useState, useId, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAdvancedConfig } from '../redux/viewSlice';
+import { setAdvancedConfig, setAdvancedConfigSaved } from '../redux/viewSlice';
 
 /**
  * Provides a form for adding a view to the advanced view. It's a
@@ -200,6 +200,7 @@ const ConfigWidget = (props) => {
 
     const modalClass = props.visible ? "modal is-active" : "modal"
     const [widget, setWidget] = useState("VIEW")
+    const dispatch = useDispatch()
     const viewRef = useRef()
     const plotRef = useRef()
     const dashRef = useRef()
@@ -236,6 +237,7 @@ const ConfigWidget = (props) => {
                     return
                 }
                 props.hide()
+                dispatch(setAdvancedConfigSaved(false))
                 props.split(data.rows, data.cols, data.rowPc, data.colPc)
                 break
             case "PLOT":
@@ -243,16 +245,19 @@ const ConfigWidget = (props) => {
                 data = plotRef.current.getData()
                 props.setData(data)
                 props.hide()
+                dispatch(setAdvancedConfigSaved(false))
                 break
             case "TEPHI":
                 props.setViewType("tephi")
                 props.hide()
+                dispatch(setAdvancedConfigSaved(false))
                 break
             case "DASHBOARD":
                 props.setViewType("dashboard")
                 data = dashRef.current.getData()
                 props.setData(data)
                 props.hide()
+                dispatch(setAdvancedConfigSaved(false))
                 break
         }
     }
@@ -309,7 +314,10 @@ const _AdvancedViewConfig = (props) => {
     const [showWidget, setShowWidget] = useState(false)
     const [data, setData] = useState({})
 
+
     const [children, setChildren] = useState([])
+
+    const saved = useSelector(state => state.view.advancedConfigSaved)
 
     useEffect(() => {
         if(props.data) {
@@ -345,13 +353,19 @@ const _AdvancedViewConfig = (props) => {
         setChildren(children)
     }
 
+    const borderStyle = saved
+        ? { border: "1px solid black" }
+        : props.top 
+            ? { border: "3px solid red" }
+            : { border: "1px solid black" }
+
     const style = {
-        border: "1px solid black",
         display: "grid",
         gridTemplateRows: rowPercent?.map(x => `${x}%`)?.join(" ") || "100%",
         gridTemplateColumns: columnPercent?.map(x => `${x}%`)?.join(" ") || "100%",
         width: props.top ? "100%" : "",
-        height: props.top ? 2 * innerHeight / 3 : ""
+        height: props.top ? 2 * innerHeight / 3 : "",
+        ...borderStyle
     }
 
     const getElement = () => {
@@ -425,6 +439,7 @@ const _AdvancedViewConfig = (props) => {
 const AdvancedViewConfig = () => {
     const ref = useId()
     const currentConfig = useSelector(state => state.view.advancedConfig)
+    const saved = useSelector(state => state.view.advancedConfigSaved)
     const dispatch = useDispatch()
 
     const parseElement = (element) => {
@@ -472,14 +487,27 @@ const AdvancedViewConfig = () => {
         const a = document.getElementById(ref)
         console.log(parseElement(a))
         dispatch(setAdvancedConfig(parseElement(a)))
+        dispatch(setAdvancedConfigSaved(true))
     }
 
     const resetCurrentConfig = () => {
         dispatch(setAdvancedConfig(null))
+        dispatch(setAdvancedConfigSaved(true))
     }
+
+    const warning = saved
+        ? null
+        : (
+            <article className="message is-danger">
+                <div className="message-body">
+                    <p>Config has changed. Ensure you save before navigating away from this page.</p>
+                </div>
+            </article>
+        )
 
     return (
         <>
+            {warning}
             <_AdvancedViewConfig top={true} data={currentConfig} id={ref} />
             <div className="buttons has-addons is-right mt-2">
                 <button className="button is-success" onClick={saveCurrentConfig}>Save</button>
