@@ -2,7 +2,7 @@ import React from "react"
 
 const VistaError = (props) => {
     const featuresColor = "#0abbef"
-
+    
     return (
         <div style={{
             display: "flex",
@@ -28,8 +28,10 @@ const VistaError = (props) => {
             <div className="is-size-2">Something went wrong!</div>
         </div>
         <div className="block">
-            <div className="is-size-8">{props.error}</div>
+            <div className="is-size-8">{props.message}</div>
+            
         </div>
+        <div className="is-size-8 has-text-danger">{props?.error?.toString()}</div>
         </div>
     )
 }
@@ -40,6 +42,7 @@ class VistaErrorBoundary extends React.Component {
         this.state = { 
             hasError: false,
             error: null,
+            errorMessage: props.errorMessage
         };
     }
   
@@ -54,7 +57,7 @@ class VistaErrorBoundary extends React.Component {
     render() {
       if (this.state.hasError) {
         // You can render any custom fallback UI
-        return <VistaError error={this.state.error} />
+        return <VistaError error={this.state.error} message={this.state.errorMessage}/>
       }
   
       return this.props.children; 
