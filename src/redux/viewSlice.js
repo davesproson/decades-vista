@@ -90,9 +90,17 @@ export const viewSlice = createSlice({
         },
         loadSavedView: (state, action) => {
             const savedView = state.savedViews.find(x => x.id === action.payload.id);
-            state.nRows = savedView.nRows;
-            state.nCols = savedView.nCols;
-            state.plots = savedView.plots;
+            const version = savedView.version;
+
+            switch(version) {
+                case 2:
+                    state.nRows = savedView.nRows;
+                    state.nCols = savedView.nCols;
+                    state.plots = savedView.plots;
+                    break;
+                case 3:
+                    state.advancedConfig = savedView
+            }
         },
         clearSavedViews: (state) => {
             state.savedViews = [];
