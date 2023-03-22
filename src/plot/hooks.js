@@ -6,6 +6,9 @@ import { base as siteBase } from '../settings';
 import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, plotIsOngoing } from './plotUtils';
 
 
+const darkBg = "#333333"
+const darkMode = false
+
 const getUrl = (options) => {
     
     const axisStrings = options.axes.map(x=>[].concat(x).join(','))
@@ -122,11 +125,17 @@ const usePlot = (options, ref) => {
 
         const layout = {
             showlegend: true,
+            plot_bgcolor: darkMode ? darkBg : "white",
+            paper_bgcolor: darkMode ? darkBg : "white",
+            font: {
+                color: darkMode ? "white" : "black"
+            },
             legend: {
                 font: {
                     size: 8,
+                    color: darkMode ? "white" : "black"
                 },
-                bgcolor: "rgba(255,255,255,0.8)",
+                bgcolor: darkMode ? darkBg : "white",
                 // This is dispicable, sorry future me
                 x: options.swapxy 
                     ? 0 
@@ -168,6 +177,10 @@ const usePlot = (options, ref) => {
             const ordParam = paramFromRawName(options.ordvar, params)
             layout[_ordAxis].title = `${ordParam.DisplayText} (${ordParam.DisplayUnits})`;
         }
+
+        layout[_ordAxis].linecolor = darkBg ? "gray" : "black";
+        if(darkMode) layout[_ordAxis].gridcolor = "gray";
+
 
         for(let i=0; i<numAxes; i++) {
             let _axisTitle;
@@ -212,7 +225,8 @@ const usePlot = (options, ref) => {
                 overlaying: _overlaying,
                 anchor: anchor,
                 position: position,
-                linecolor: "black",
+                linecolor: darkMode ? "gray" : "black",
+                gridcolor: darkMode ? "gray" : "lightgray",
                 mirror: true
             }
         }
