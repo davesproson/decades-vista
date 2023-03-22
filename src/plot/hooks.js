@@ -152,7 +152,9 @@ const usePlot = (options, ref) => {
                 t: 50
             },
             modebar: {
-                remove: ["sendDataToCloud", "lasso", "lasso2d", "select", "select2d"]
+                remove: ["sendDataToCloud", "lasso", "lasso2d", "select", "select2d", "zoom", "pan",
+                         "zoomIn2d", "zoomOut2d", "autoScale2d",
+                         "hoverClosestCartesian"]
             }
         }
 
@@ -287,13 +289,24 @@ const usePlot = (options, ref) => {
                         element.click();
                         document.body.removeChild(element);
                     }
-                }
+                },
+                {
+                    name: "Clear plot",
+                    icon: null,
+                    click: () => {
+                        for(let t of traces) {
+                            t.x = [t.x[t.x.length-1]];
+                            t.y = [t.y[t.y.length-1]];
+                        }
+                    }
+                } 
             ]
         }
         
         import('plotly.js-dist').then(Plotly => {
             setLoadDone(true);
             config.modeBarButtonsToAdd[0].icon = Plotly.Icons.disk;
+            config.modeBarButtonsToAdd[1].icon = Plotly.Icons.eraseshape;
             Plotly.newPlot(ref.current, traces, layout, config)
                 .then(setInitDone(true))
         })
