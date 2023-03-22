@@ -313,6 +313,7 @@ const _AdvancedViewConfig = (props) => {
     const [vType, setVType] = useState(props?.data?.type || "view")
     const [showWidget, setShowWidget] = useState(false)
     const [data, setData] = useState({})
+    const dispatch = useDispatch()
 
 
     const [children, setChildren] = useState([])
@@ -337,6 +338,11 @@ const _AdvancedViewConfig = (props) => {
             }
         }
     }, [props.data])
+
+    const resetToView = () => {
+        setVType("view")
+        dispatch(setAdvancedConfigSaved(false))
+    }
 
     const innerHeight = window.innerHeight
 
@@ -382,19 +388,19 @@ const _AdvancedViewConfig = (props) => {
                 case "plot":
                     return (
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img onClick={() => setVType("view")} src="chart.svg" alt="plot" style={{ height: "64px", width: "64px" }} />
+                            <img onClick={resetToView} src="chart.svg" alt="plot" style={{ height: "64px", width: "64px" }} />
                         </div>
                     )
                 case "tephi":
                     return (
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img onClick={() => setVType("view")} src="tephi.svg" alt="tephi" style={{ height: "64px", width: "64px" }} />
+                            <img onClick={resetToView} src="tephi.svg" alt="tephi" style={{ height: "64px", width: "64px" }} />
                         </div>
                     )
                 case "dashboard":
                     return (
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img onClick={() => setVType("view")} src="dashboard.svg" alt="dashboard" style={{ height: "64px", width: "64px" }} />
+                            <img onClick={resetToView} src="dashboard.svg" alt="dashboard" style={{ height: "64px", width: "64px" }} />
                         </div>
                     )
             }
@@ -442,9 +448,30 @@ const AdvancedViewConfig = () => {
     const saved = useSelector(state => state.view.advancedConfigSaved)
     const dispatch = useDispatch()
 
+    useEffect(() => {
+        return () => dispatch(setAdvancedConfigSaved(true))
+    }, [])
+
     const parseElement = (element) => {
         const allowedTypes = ["view", "plot", "tephi", "dashboard"]
         const eType = element.getAttribute("data-type")
+
+        const getRowColPercent = (rowcol) => {
+            const rowPercent = element.getAttribute(`data-${rowcol}percent`)
+            if (rowPercent) {
+                return rowPercent.split(",").map(parseFloat)
+            }
+            return [100]
+        }
+
+        const getNRowsNCols = (rowcol) => {
+            const nRowsNCols = element.getAttribute(`data-n${rowcol}s`)
+            if (nRowsNCols) {
+                return parseInt(nRowsNCols)
+            }
+            return 1
+        }
+
         const retObj = {
             "type": eType
         }
@@ -453,10 +480,10 @@ const AdvancedViewConfig = () => {
             case "view": {
                 return {
                     ...retObj,
-                    "rows": parseInt(element.getAttribute("data-nrows")),
-                    "columns": parseInt(element.getAttribute("data-ncols")),
-                    "rowPercent": element.getAttribute("data-rowpercent").split(",").map(parseFloat),
-                    "columnPercent": element.getAttribute("data-colpercent").split(",").map(parseFloat),
+                    "rows": getNRowsNCols("row"),
+                    "columns": getNRowsNCols("col"),
+                    "rowPercent": getRowColPercent("row"),
+                    "columnPercent": getRowColPercent("col"),
                     "elements": Array.from(element.children)
                         .map(x => x?.children[0])
                         .filter(x => allowedTypes.includes(x?.getAttribute("data-type")))
@@ -483,9 +510,7 @@ const AdvancedViewConfig = () => {
     }
 
     const saveCurrentConfig = () => {
-
         const a = document.getElementById(ref)
-        console.log(parseElement(a))
         dispatch(setAdvancedConfig(parseElement(a)))
         dispatch(setAdvancedConfigSaved(true))
     }
