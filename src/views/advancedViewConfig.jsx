@@ -89,7 +89,7 @@ const ConfigViewArea = React.forwardRef((props, ref) => {
     const setter = (e, setter) => {
         let val = e.target.value
         setter(val)
-        validate()
+        // validate()
     }
 
     return (
