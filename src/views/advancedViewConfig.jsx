@@ -325,7 +325,7 @@ const _AdvancedViewConfig = (props) => {
     const [columnPercent, setColumnPercent] = useState([100])
     const [vType, setVType] = useState(props?.data?.type || "view")
     const [showWidget, setShowWidget] = useState(false)
-    const [data, setData] = useState({})
+    const [data, setData] = useState(props.data)
     const dispatch = useDispatch()
 
 
@@ -458,7 +458,7 @@ const _AdvancedViewConfig = (props) => {
 
 
 const AdvancedViewConfig = () => {
-    const ref = useId()
+    const ref = "blahblah" //useId()
     const currentConfig = useSelector(state => state.view.advancedConfig)
     const saved = useSelector(state => state.view.advancedConfigSaved)
     const dispatch = useDispatch()
@@ -470,6 +470,8 @@ const AdvancedViewConfig = () => {
     const parseElement = (element) => {
         const allowedTypes = ["view", "plot", "tephi", "dashboard"]
         const eType = element.getAttribute("data-type")
+
+        console.log(element)
 
         const getRowColPercent = (rowcol) => {
             const rowPercent = element.getAttribute(`data-${rowcol}percent`)
@@ -545,6 +547,7 @@ const AdvancedViewConfig = () => {
             </article>
         )
 
+    console.log('**', currentConfig)
     return (
         <>
             {warning}
