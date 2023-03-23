@@ -137,7 +137,7 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
                     params: paramOptions.params.filter(x => x.selected).map(x => x.raw),
                     axes: axesStrings,
                     // TODO: Implement custom timeframes? Is it worth it?
-                    timeframe: options.timeframes.filter(x => x.selected)[0].value || "30min",
+                    timeframe: options.timeframes.filter(x => x.selected)[0]?.value || "30min",
                     plotStyle: options.plotStyle.value,
                     scrolling: options.scrollingWindow,
                     header: options.dataHeader,
