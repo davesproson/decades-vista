@@ -136,7 +136,8 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
                 return {
                     params: paramOptions.params.filter(x => x.selected).map(x => x.raw),
                     axes: axesStrings,
-                    timeframe: options.timeframes.filter(x => x.selected)[0].value,
+                    // TODO: Implement custom timeframes? Is it worth it?
+                    timeframe: options.timeframes.filter(x => x.selected)[0].value || "30min",
                     plotStyle: options.plotStyle.value,
                     scrolling: options.scrollingWindow,
                     header: options.dataHeader,
@@ -154,7 +155,7 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
         timeframe = options.timeframes.filter(x => x.selected)[0].label
     } catch (e) {
         if (options.useCustomTimeframe) {
-            timeframe = `Custom`
+            timeframe = `Custom [NOT SUPPORTED]`
         }
     }
 
