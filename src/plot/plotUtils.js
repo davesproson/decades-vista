@@ -135,9 +135,14 @@ const updatePlot = (options, data, ref) => {
     // but leaving missing data in the plot causes issues with data < 1 Hz, or
     // data with regular gaps, e.g. the GIN data reformatted by the prtaft DLU.
     for(const param of options.params) {
-        const isBad = data[param].map(x => x === badData)
+        const paramIsBad = data[param].map(x => x === badData)
+        const ordVarIsBad = data[options.ordvar].map(x => x === badData)
+
+        const isBad = paramIsBad.map((x, i) => x || ordVarIsBad[i])
+
         yData.push(data[param].filter((x, i) => !isBad[i]))
         xData.push(data[options.ordvar].filter((x, i) => !isBad[i]).map(timeMap))
+        
     }
 
     if(options.swapxy) {
@@ -257,7 +262,8 @@ const startData = ({options, start, end, callback, ref, signal}) => {
             .then(response => response.json())
             .then(data => {
                 callback(options, data, ref)
-                newStart = data.utc_time[data.utc_time.length-1] + 1
+                
+                newStart = data.utc_time[data.utc_time.length-1] + 1 || start
                 
                 setTimeout(() => {
                     startData({...callOpts, start: newStart})
