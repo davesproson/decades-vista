@@ -468,7 +468,7 @@ const AdvancedViewConfig = () => {
     }, [])
 
     const parseElement = (element) => {
-        const allowedTypes = ["view", "plot", "tephi", "dashboard"]
+        const allowedTypes = ["view", "plot", "tephi", "dashboard", "alarms"]
         const eType = element.getAttribute("data-type")
 
         const getRowColPercent = (rowcol) => {
@@ -515,6 +515,12 @@ const AdvancedViewConfig = () => {
                 return retObj
             }
             case "dashboard": {
+                return {
+                    ...retObj,
+                    ...JSON.parse(element.getAttribute("data-data"))
+                }
+            }
+            case "alarms": {
                 return {
                     ...retObj,
                     ...JSON.parse(element.getAttribute("data-data"))
