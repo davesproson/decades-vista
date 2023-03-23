@@ -42,6 +42,10 @@ const getTimeLims = (tf) => {
     }
 
     const end = nowSecs()
+
+    if (tf === 'all') {
+        return [0, end]
+    }
     
     let multiplier = 1
     if(tf.includes('h')) {
