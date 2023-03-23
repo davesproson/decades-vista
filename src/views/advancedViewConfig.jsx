@@ -354,7 +354,6 @@ const _AdvancedViewConfig = (props) => {
 
     // Currently disabled due to tricky bug!
     const resetToView = () => {
-        return
         setVType("view")
         dispatch(setAdvancedConfigSaved(false))
     }
