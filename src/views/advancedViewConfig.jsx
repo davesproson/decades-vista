@@ -48,7 +48,15 @@ const ConfigViewArea = React.forwardRef((props, ref) => {
 
     // Validate the form data
     const validate = () => {
-        if (rows === "" || cols === "" || rowPc === "" || colPc === "") {
+        if(rowPc == "") {
+            setRowPc(new Array(rows).fill(100/rows).join(","))
+        }
+
+        if(colPc == "") {
+            setColPc(new Array(cols).fill(100/cols).join(","))
+        }
+
+        if (rows === "" || cols === "") {
             return false
         }
         if (rowPc.split(",").map(x => parseFloat(x)).reduce((a, b) => a + b) !== 100) {
