@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setCustomTimeframe } from '../redux/optionsSlice'
 import { getTimeLims } from '../plot/plotUtils'
 import { useEffect } from 'react'
+import { useFlightSummary } from './hooks'
 
 const TimeframeTextBox = (props) => {
     
@@ -170,7 +171,96 @@ const TimePicker = (props) => {
 }
 
 
-const TimeframeSelector = (props) => {
+const TimeFrameSelectorBox = (props) => {
+    return (
+        <nav className="panel mt-4 is-dark">
+                <p className="panel-heading">
+                    Select a timeframe
+                </p>
+                <div className="columns">
+                    <div className="column is-6">
+                        <TimePicker title="Start Time" time={props.startTime*1000} boundary="start"/>
+                    </div>
+                    <div className="column is-6">
+                        <TimePicker title="End Time" allowOngoing={true} isOngoing={props.endOnGoing} boundary="end"/>
+                    </div>
+                </div>
+            </nav>
+    )
+}
+
+const FlightSummaryEntry = (props) => {
+    const dispatch = useDispatch()
+
+    const setTimeframe = (start, end) => {
+        dispatch(setCustomTimeframe({start: start, end: end}))
+    }
+
+    const formatTime = (time) => {
+        const date = new Date(time)
+        return date.toLocaleTimeString()
+    }
+
+    const fromMs = props.entry.start.time * 1000
+    const toMs = props.entry.stop.time * 1000
+    const from = formatTime(fromMs)
+    const to = formatTime(toMs)
+
+    const tagStyle = (() => {
+        const evt = props.entry.event
+        if(evt.startsWith("Run")) {
+            return "is-success"
+        }
+        if(evt.startsWith("Profile")) {
+            return "is-warning"
+        }
+        if(evt.startsWith("Orbit")) {
+            return "is-info"
+        }
+        return "is-light"
+    })()
+
+    return (
+        <div className="mt-2">
+            <span className="is-size-5">
+                <a className="is-primary" onClick={()=>setTimeframe(fromMs, toMs)}><span className={`tag is-medium ${tagStyle} mr-2`}> {props.entry.event}</span> from {from} until {to}</a>
+            </span>
+        </div>
+    )
+}
+
+const FlightSummarySelector = (props) => {
+    const fs = useFlightSummary()
+
+    const filterFlightSummary = (fs) => {
+        if(!fs) {
+            return []
+        }
+        const asArray = Object.values(fs).sort(x=>-x?.start?.time)
+        
+        return asArray.filter(x=>x?.start?.time && x?.stop?.time)
+             
+    }
+
+    const filtered = filterFlightSummary(fs)
+    
+
+    return (
+        <nav className="panel mt-4 is-dark">
+                <p className="panel-heading">
+                    Flight summary events
+                </p>
+                <div className="panel-block">
+                    <ul>
+                        {filtered.map((x, i) => <li><FlightSummaryEntry id={i} entry={x}/></li>)}
+                    </ul>
+                </div>
+            </nav>
+    )
+}
+
+
+const TimeframeSelector = () => {
     const timeframes = useSelector(state => state.options.timeframes)
     const usingCustomTimeframe = useSelector(state => state.options.useCustomTimeframe)
     const customTimeframe = useSelector(state => state.options.customTimeframe)
@@ -190,19 +280,8 @@ const TimeframeSelector = (props) => {
     return (
         <div className="container has-navbar-fixed-top">
             <TimeframeTextBox />
-            <nav className="panel mt-4 is-dark">
-                <p className="panel-heading">
-                    Select a timeframe
-                </p>
-                <div className="columns">
-                    <div className="column is-6">
-                        <TimePicker title="Start Time" time={startTime*1000} boundary="start"/>
-                    </div>
-                    <div className="column is-6">
-                        <TimePicker title="End Time" allowOngoing={true} isOngoing={endOnGoing} boundary="end"/>
-                    </div>
-                </div>
-            </nav>
+            <TimeFrameSelectorBox startTime={startTime} endOnGoing={endOnGoing}/>
+            <FlightSummarySelector />
         </div>
     )
 

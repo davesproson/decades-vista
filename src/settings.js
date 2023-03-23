@@ -26,6 +26,7 @@ export const apiEndpoints = {
     'parameter_availability': `${apiBase}/params/availability`,
     'data': `${apiBase}/livedata`,
     'tank_status': `${apiBase}/tank_status`,
+    'flightsummary': `${apiBase}/flightsummary/get`,
 }
 
 export const enableTutorial = true
