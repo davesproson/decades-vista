@@ -134,9 +134,9 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
         return {
             getData: () => {
                 return {
-                    params: paramOptions.params.filter(x=>x.selected).map(x=>x.raw),
+                    params: paramOptions.params.filter(x => x.selected).map(x => x.raw),
                     axes: axesStrings,
-                    timeframe: options.timeframes.filter(x=>x.selected)[0].value,
+                    timeframe: options.timeframes.filter(x => x.selected)[0].value,
                     plotStyle: options.plotStyle.value,
                     scrolling: options.scrollingWindow,
                     header: options.dataHeader,
@@ -151,19 +151,19 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
     // Configure the timeframe string
     let timeframe
     try {
-        timeframe = options.timeframes.filter(x=>x.selected)[0].label
+        timeframe = options.timeframes.filter(x => x.selected)[0].label
     } catch (e) {
-        if(options.useCustomTimeframe) {
+        if (options.useCustomTimeframe) {
             timeframe = `Custom`
         }
     }
 
     // Configure the parameter string
-    const paramList = paramOptions.params.filter(x=>x.selected).map(x=>x.raw).join(", ")
+    const paramList = paramOptions.params.filter(x => x.selected).map(x => x.raw).join(", ")
 
     return (
         <div className="mt-2">
-            Add a plot to the dashboard. The plot currently configured is 
+            Add a plot to the dashboard. The plot currently configured is
             <ul className="mt-2">
                 <li><strong>Timeframe</strong>: {timeframe}</li>
                 <li><strong>Parameters</strong>: {paramList}</li>
@@ -188,12 +188,12 @@ const ConfigTephiArea = (props) => {
 
 const ConfigDashboardArea = React.forwardRef((props, ref) => {
     const paramOptions = useSelector(state => state.vars)
-    const paramList = paramOptions.params.filter(x=>x.selected).map(x=>x.raw).join(", ")
+    const paramList = paramOptions.params.filter(x => x.selected).map(x => x.raw).join(", ")
     useImperativeHandle(ref, (r) => {
         return {
             getData: () => {
                 return {
-                    params: [...paramOptions.params.filter(x=>x.selected).map(x=>x.raw)],
+                    params: [...paramOptions.params.filter(x => x.selected).map(x => x.raw)],
                     limits: []
                 }
             }
@@ -202,7 +202,7 @@ const ConfigDashboardArea = React.forwardRef((props, ref) => {
 
     return (
         <div className="mt-2">
-            Add a dashboard to the to the view, with the currently selected set of 
+            Add a dashboard to the to the view, with the currently selected set of
             parameters. Currently selected parameters are: {paramList}
         </div>
     )
@@ -256,7 +256,7 @@ const ConfigWidget = (props) => {
             case "PLOT":
                 props.setViewType("plot")
                 data = plotRef.current.getData()
-                props.setData({...data})
+                props.setData({ ...data })
                 props.hide()
                 dispatch(setAdvancedConfigSaved(false))
                 break
@@ -268,7 +268,7 @@ const ConfigWidget = (props) => {
             case "DASHBOARD":
                 props.setViewType("dashboard")
                 data = dashRef.current.getData()
-                props.setData({...data})
+                props.setData({ ...data })
                 props.hide()
                 dispatch(setAdvancedConfigSaved(false))
                 break
@@ -334,17 +334,17 @@ const _AdvancedViewConfig = (props) => {
     const saved = useSelector(state => state.view.advancedConfigSaved)
 
     useEffect(() => {
-        if(props.data) {
+        if (props.data) {
             setNRows(props.data.rows)
             setNCols(props.data.columns)
             setRowPercent(props.data.rowPercent)
             setColumnPercent(props.data.columnPercent)
             setVType(props.data.type)
             const children = []
-            if(props.data.type === "view") {
-                for(let element of props.data.elements) {
+            if (props.data.type === "view") {
+                for (let element of props.data.elements) {
                     children.push(
-                      <_AdvancedViewConfig id={element.id} data={element} showWidget={props.showWidget} /> 
+                        <_AdvancedViewConfig id={element.id} data={element} showWidget={props.showWidget} />
                     )
                 }
                 setChildren(children)
@@ -367,7 +367,7 @@ const _AdvancedViewConfig = (props) => {
         setNRows(columns)
 
         const children = new Array(rows * columns).fill(null).map(
-            (x, i) => <_AdvancedViewConfig id={i} showWidget={props.showWidget} /> 
+            (x, i) => <_AdvancedViewConfig id={i} showWidget={props.showWidget} />
         )
 
         setChildren(children)
@@ -375,7 +375,7 @@ const _AdvancedViewConfig = (props) => {
 
     const borderStyle = saved
         ? { border: "1px solid black" }
-        : props.top 
+        : props.top
             ? { border: "3px solid red" }
             : { border: "1px solid black" }
 
@@ -534,6 +534,12 @@ const AdvancedViewConfig = () => {
         dispatch(setAdvancedConfigSaved(true))
     }
 
+    const launch = () => {
+        saveCurrentConfig()
+        localStorage.setItem("viewConfig", JSON.stringify(currentConfig))
+        window.open("jsonview", "_blank")
+    }
+
     const warning = saved
         ? null
         : (
@@ -548,11 +554,15 @@ const AdvancedViewConfig = () => {
         <>
             {warning}
             <_AdvancedViewConfig top={true} data={currentConfig} id={ref} />
-            <div className="buttons has-addons is-right mt-2">
-                <button className="button is-success" onClick={saveCurrentConfig}>Save</button>
-                <button className="button is-danger" onClick={resetCurrentConfig}>Reset</button>
+            <div className="is-flex is-justify-content-space-between  mt-2">
+                <div className="buttons has-addons">
+                    <button className="is-flex button is-success" onClick={saveCurrentConfig}>Save</button>
+                    <button className="is-flex button is-danger" onClick={resetCurrentConfig}>Reset</button>
+                </div>
+                <div>
+                    <button className="button is-info" onClick={launch}>Launch</button>
+                </div>
             </div>
-
         </>
     )
 }
