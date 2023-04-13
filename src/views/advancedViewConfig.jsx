@@ -188,8 +188,15 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
     )
 })
 
-// Add a tephigram to the advanced view. This is not yet implemented.
-const ConfigTephiArea = (props) => {
+/**
+ * Add a tephigram to the advanced view. We currenly just use the 
+ * default tephigram options.
+ * 
+ * 
+ * @component
+ * 
+*/
+const ConfigTephiArea = () => {
     return (
         <div className="mt-2">
             Add a tephigram to the view. Currently this will only Use
@@ -198,6 +205,16 @@ const ConfigTephiArea = (props) => {
     )
 }
 
+/**
+ * Add a dashboard to the advanced view. It's a forwardRef which uses an
+ * imperative handle to get the data back out. The current dashboard
+ * configuration is used, and is simply displayed to the user here.
+ * 
+ * @param {*} props - the react props
+ * @param {*} ref - the react ref
+ * 
+ * @component
+ */
 const ConfigDashboardArea = React.forwardRef((props, ref) => {
     const paramOptions = useSelector(state => state.vars)
 
@@ -227,7 +244,21 @@ const ConfigDashboardArea = React.forwardRef((props, ref) => {
     )
 })
 
-
+/**
+ * Display the configuration widget. 
+ * 
+ * @param {*} props - the react props
+ * @param {boolean} props.visible - whether the widget is visible
+ * @param {*} props.split - a callback to split the view
+ * @param {*} props.hide - a callback to hide the widget
+ * @param {*} props.setViewType - a callback to set the view type. Allowed values are
+ *                                "plot", "tephi", "dashboard"
+ * @param {*} props.setData - a callback to set the data for the view
+ * @param {boolean} props.top - whether the widget is the ancestor view
+ * 
+ * @component
+ * 
+ */
 const ConfigWidget = (props) => {
 
     const modalClass = props.visible ? "modal is-active" : "modal"
@@ -256,14 +287,23 @@ const ConfigWidget = (props) => {
             wjsx = null
     }
 
+    /**
+     * Get the class for the modal 
+     */
     const getClass = (w) => {
         return widget === w ? "is-active" : ""
     }
 
+    /**
+     * Save the configuration
+     * 
+     * @param {*} e - the event
+     */
     const saveAction = (e) => {
         let data
         switch (widget) {
             case "VIEW":
+                // We're splitting the view
                 data = viewRef.current.getData()
                 if (!data.valid) {
                     return
@@ -273,6 +313,7 @@ const ConfigWidget = (props) => {
                 props.split(data.rows, data.cols, data.rowPc, data.colPc)
                 break
             case "PLOT":
+                // We're adding a plot
                 props.setViewType("plot")
                 data = plotRef.current.getData()
                 props.setData({ ...data })
@@ -280,11 +321,13 @@ const ConfigWidget = (props) => {
                 dispatch(setAdvancedConfigSaved(false))
                 break
             case "TEPHI":
+                // We're adding a tephigram
                 props.setViewType("tephi")
                 props.hide()
                 dispatch(setAdvancedConfigSaved(false))
                 break
             case "DASHBOARD":
+                // We're adding a dashboard
                 props.setViewType("dashboard")
                 data = dashRef.current.getData()
                 props.setData({ ...data })
@@ -294,6 +337,13 @@ const ConfigWidget = (props) => {
         }
     }
 
+    /**
+     * Get the other tabs. If we're the top view, we don't show the
+     * plot, tephigram or dashboard tabs, as the root view can't
+     * contain those, and must be a view.
+     * 
+     * @returns {JSX.Element|null} - the other tabs if we're not the top view
+     */
     const otherTabs = () => {
         if (props.top) return null
 
@@ -306,6 +356,7 @@ const ConfigWidget = (props) => {
         )
     }
 
+    // Build the JSX
     return (
         <div className={modalClass}>
             <div className="modal-background"></div>
