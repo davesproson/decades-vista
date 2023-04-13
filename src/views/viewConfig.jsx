@@ -11,6 +11,8 @@ import { useViewUrl } from './hooks';
 
 import { AdvancedViewConfig } from './advancedViewConfig';
 import { JsonViewConfig } from './jsonViewConfg';
+import { Modal } from '../components/modal';
+import { Control, GroupedField, Field, Label, Input } from '../components/forms';
 
 const ViewConfigButtons = (props) => {
     const dispatch = useDispatch()
@@ -112,31 +114,31 @@ const ViewConfigButtons = (props) => {
 
     return (
         <>
-            <div className="field is-grouped is-expanded">
+            <Field grouped expanded>
                 {plotButton}
-            </div>
-            <div className="field is-grouped is-expanded">
-                <p className="control is-expanded">
+            </Field>
+            <Field grouped expended>
+                <Control expanded>
                     <button className="button is-outlined is-primary is-fullwidth" onClick={() => setSaveModalActive(true)}>
                         Save
                     </button>
-                </p>
-                <p className="control is-expanded">
+                </Control>
+                <Control expanded>
                     <span className="button  is-outlined is-primary is-fullwidth" onClick={showFileSelect}>
                         Import <input ref={ref} type="file" style={{ display: "none" }} onChange={importView} />
                     </span>
-                </p>
-                <p className="control is-expanded">
+                </Control>
+                <Control expanded>
                     <button className="button  is-outlined is-primary is-fullwidth" onClick={download} disabled={!plotEnabled}>
                         Export
                     </button>
-                </p>
-                <p className="control is-expanded">
+                </Control>
+                <Control expanded>
                     <button className="button is-outlined is-danger is-fullwidth" onClick={() => dispatch(reset())}>
                         Reset
                     </button>
-                </p>
-            </div>
+                </Control>
+            </Field>
             <SaveModal active={saveModalActive} close={() => setSaveModalActive(false)} />
         </>
     )
@@ -161,15 +163,15 @@ const PlotInputBlock = (props) => {
     return (
         <div className="panel-block">
             <div className="field is-grouped is-flex-grow-1">
-                <p className="control is-expanded">
-                    <input className="input" type="text" value={url[props.n]}
+                <Control expanded>
+                    <Input type="text" value={url[props.n]}
                         onChange={onChange} placeholder="Plot URL..." />
-                </p>
-                <p className="control">
+                </Control>
+                <Control>
                     <button className="button is-dark" onClick={onUseCurrentConfig} disabled={!paramsSelected}>
                         Use current config
                     </button>
-                </p>
+                </Control>
             </div>
         </div>
     )
@@ -198,7 +200,6 @@ const SaveModal = (props) => {
     const [viewName, setViewName] = useState("")
 
     const active = props.active;
-    const modalClass = active ? "modal is-active" : "modal"
     const close = props.close
 
     const save = () => {
@@ -225,24 +226,23 @@ const SaveModal = (props) => {
     }
 
     return (
-        <div className={modalClass}>
-            <div className="modal-background"></div>
-            <div className="modal-content">
+        <Modal active={active} close={close}>
+            <Modal.Content>
                 <div className="box">
                     <p className="is-size-5 mb-2">Save Current View</p>
-                    <input className="input" type="text" value={viewName} onKeyDown={checkKey} onChange={onViewNameChange} placeholder="View Name" />
-                    <div className="field is-grouped mt-2">
-                        <div className="control is-expanded">
+                    <Input type="text" value={viewName} onKeyDown={checkKey} onChange={onViewNameChange} placeholder="View Name" />
+                    <p className="mt-2"></p>
+                    <Field grouped>
+                        <Control expanded>
                             <button className="button is-primary is-fullwidth" onClick={save}>Save</button>
-                        </div>
-                        <div className="control is-expanded">
+                        </Control>
+                        <Control expanded>
                             <button className="button is-secondary is-fullwidth" onClick={close}>Cancel</button>
-                        </div>
-                    </div>
+                        </Control>
+                    </Field>
                 </div>
-            </div>
-            <button className="modal-close is-large" aria-label="close" onClick={close}></button>
-        </div>
+            </Modal.Content>
+        </Modal>
     )
 }
 
@@ -255,23 +255,23 @@ const ViewConfigNumSelector = (props) => {
     const remove = () => dispatch(props.reducers[1]())
 
     return (
-        <div className="column is-6">
-            <div className="field is-grouped">
-                <div className="control">
-                    <label className="label mt-2">{props.dim}:</label>
-                </div>
-                <div className="control">
-                    <label className="label mt-2">{value}</label>
-                </div>
-                <div className="field has-addons">
-                    <div className="control">
+        <div className="column">
+            <GroupedField>
+                <Control>
+                    <Label>{props.dim}:</Label>
+                </Control>
+                <Control>
+                    <Label>{value}</Label>
+                </Control>
+                <Field addons={true}>
+                    <Control>
                         <button className="button is-outlined is-primary" onClick={add}>+</button>
-                    </div>
-                    <div className="control">
+                    </Control>
+                    <Control>
                         <button className="button is-outlined is-primary" onClick={remove}>-</button>
-                    </div>
-                </div>
-            </div>
+                    </Control>
+                </Field>
+            </GroupedField>
         </div>
     )
 }
