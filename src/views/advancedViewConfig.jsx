@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setAdvancedConfig, setAdvancedConfigSaved } from '../redux/viewSlice';
 import { getAxesArray } from '../plot/plotUtils';
 import { Tag, BooleanTag } from '../components/tags';
+import { Input, FieldInput, GroupedField } from '../components/forms';
 
 /**
  * Provides a form for adding a view to the advanced view. It's a
@@ -95,24 +96,12 @@ const ConfigViewArea = React.forwardRef((props, ref) => {
 
     return (
         <>
-            <div className="field is-grouped">
-                <p className="control">
-                    <input className="input" type="number" placeholder="Number of rows" value={rows} onChange={(e) => valPosInt(e, setRows)} />
-                </p>
-                <p className="control">
-                    <input className="input" type="number" placeholder="Number of columns" value={cols} onChange={(e) => valPosInt(e, setCols)} />
-                </p>
-            </div>
-            <div className="field">
-                <p className="control">
-                    <input className="input" type="text" placeholder="Row percentages (comma sep.)" value={rowPc} onChange={e => setter(e, setRowPc)} />
-                </p>
-            </div>
-            <div className="field">
-                <p className="control">
-                    <input className="input" type="text" placeholder="Column percentages (comma sep.)" value={colPc} onChange={e => setter(e, setColPc)} />
-                </p>
-            </div>
+            <GroupedField>
+                <Input type="number" placeholder="Number of rows" value={rows} onChange={(e) => valPosInt(e, setRows)} />
+                <Input type="number" placeholder="Number of columns" value={cols} onChange={(e) => valPosInt(e, setCols)} />
+            </GroupedField>
+            <FieldInput type="text" placeholder="Row percentages (comma sep.)" value={rowPc} onChange={e => setter(e, setRowPc)} />
+            <FieldInput type="text" placeholder="Column percentages (comma sep.)" value={colPc} onChange={e => setter(e, setColPc)} />
         </>
     )
 })
