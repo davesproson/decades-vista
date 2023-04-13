@@ -200,7 +200,11 @@ const ConfigTephiArea = (props) => {
 
 const ConfigDashboardArea = React.forwardRef((props, ref) => {
     const paramOptions = useSelector(state => state.vars)
-    const paramList = paramOptions.params.filter(x => x.selected).map(x => x.raw).join(", ")
+
+    const paramList = paramOptions.params.filter(x => x.selected).map(x => {
+        return <Tag text={x.raw} is="info" extraClasses={"mr-1"} />
+    })
+
     useImperativeHandle(ref, (r) => {
         return {
             getData: () => {
@@ -214,8 +218,11 @@ const ConfigDashboardArea = React.forwardRef((props, ref) => {
 
     return (
         <div className="mt-2">
-            Add a dashboard to the to the view, with the currently selected set of
-            parameters. Currently selected parameters are: {paramList}
+            <p>Add a dashboard to the to the view, with the currently selected set of
+            parameters.</p> 
+            <p className="mt-2">
+                Currently selected parameters are: {paramList}
+            </p>
         </div>
     )
 })
