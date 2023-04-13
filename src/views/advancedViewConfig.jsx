@@ -433,10 +433,10 @@ const _AdvancedViewConfig = (props) => {
     }
 
     const borderStyle = saved
-        ? { border: "1px solid black" }
+        ? { outline: "1px solid black" }
         : props.top
-            ? { border: "3px solid red" }
-            : { border: "1px solid black" }
+            ? { outline: "3px solid red" }
+            : { outline: "1px solid black" }
 
     const style = {
         display: "grid",
