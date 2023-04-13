@@ -12,6 +12,7 @@ import { useImperativeHandle, useState, useId, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdvancedConfig, setAdvancedConfigSaved } from '../redux/viewSlice';
 import { getAxesArray } from '../plot/plotUtils';
+import { Tag, BooleanTag } from '../components/tags';
 
 /**
  * Provides a form for adding a view to the advanced view. It's a
@@ -168,18 +169,20 @@ const ConfigPlotArea = React.forwardRef((props, ref) => {
     }
 
     // Configure the parameter string
-    const paramList = paramOptions.params.filter(x => x.selected).map(x => x.raw).join(", ")
+    const paramList = paramOptions.params.filter(x => x.selected).map(x => {
+        return <Tag text={x.raw} is="info" extraClasses={"mr-1"} />
+    })
 
     return (
         <div className="mt-2">
             Add a plot to the dashboard. The plot currently configured is
             <ul className="mt-2">
-                <li><strong>Timeframe</strong>: {timeframe}</li>
-                <li><strong>Parameters</strong>: {paramList}</li>
-                <li><strong>Style</strong>: {options.plotStyle.value}</li>
-                <li><strong>Ordinate var</strong>: {options.ordinateAxis}</li>
-                <li><strong>Swap x & y axes?</strong>: {options.swapOrientation.toString()}</li>
-                <li><strong>Scrolling?</strong>: {options.scrollingWindow.toString()}</li>
+                <li><strong>Timeframe</strong>: <Tag text={timeframe} is="info" /></li>
+                <li><strong>Parameters</strong>:  {paramList}</li>
+                <li><strong>Style</strong>: <Tag text={options.plotStyle.value} is="info" /></li>
+                <li><strong>Ordinate var</strong>: <Tag text={options.ordinateAxis} is="info" /></li>
+                <li><strong>Swap x & y axes?</strong>: <BooleanTag value={options.swapOrientation} /></li>
+                <li><strong>Scrolling?</strong>: <BooleanTag value={options.scrollingWindow} /></li>
             </ul>
         </div>
     )
