@@ -9,7 +9,7 @@ export const serverProtocol = {
 
 export const base = {
     "demo": "/decades-demo/",
-    "dev": "/decades-dev/",
+    "dev": "/decades-vista/",
     "prod": "/decades-vista/"
 }[deployment]
 
