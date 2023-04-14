@@ -47,20 +47,22 @@ export const Label = ({children}) => {
 }
 
 const Input = (props) => {
+
+    let inputClass = "input"
+    if(props.kind) inputClass += ` is-${props.kind}`
+
     return (
         <div className="control">
-            <input className="input" 
+            <input className={inputClass}
                     {...props} />
         </div>
     )
 }
 
-const InputNumber = (props) => {
+Input.Primary = (props) => {
     return (
-        <Input type="number" {...props} />
+        <Input kind="primary" {...props} />
     )
 }
-
-Input.Number = InputNumber
 
 export { Input }

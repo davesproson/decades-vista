@@ -4,6 +4,7 @@ import { useGetParameters } from "../hooks";
 import { useDashboardData } from "./hooks";
 import { badData } from "../settings";
 import { SimplePlot } from "../plot/plot";
+import { Button } from "../components/buttons";
 
 /**
  * A LimitSetter renders a component that allows the user to set the valid limits
@@ -71,9 +72,9 @@ const LimitSetter = (props) => {
                         placeholder="Valid Minimum" />
                 </div>
                 <div className="control">
-                    <button className="button is-info" onClick={setMin}>
+                    <Button.Info onClick={setMin}>
                         Set
-                    </button>
+                    </Button.Info>
                 </div>
             </div>
             <div className="field has-addons is-flex-grow-1">
@@ -85,13 +86,13 @@ const LimitSetter = (props) => {
                         placeholder="Valid Maximum" />
                 </div>
                 <div className="control">
-                    <button className="button is-info" onClick={setMax}>
+                    <Button.Info onClick={setMax}>
                         Set
-                    </button>
+                    </Button.Info>
                 </div>
             </div>
             <div className="field is-flex-grow-1">
-                <button className="button is-danger is-fullwidth" onClick={props.onHide}>Hide</button>
+                <Button.Danger fullWidth onClick={props.onHide}>Hide</Button.Danger>
             </div>
         </div>
     )
@@ -190,10 +191,10 @@ const LargeDashPanel = (props) => {
     }
 
     const editLimitsButton = props.useURL
-        ? <button className="button is-small is-info" style={{
+        ? <Button.Info style={{
                 background: "#252243",
                 color: "#0abbef",
-            }} onClick={() => setShowSetter(!showSetter)}>!</button>
+            }} onClick={() => setShowSetter(!showSetter)}>!</Button.Info>
         : null
 
     return (

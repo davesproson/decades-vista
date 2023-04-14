@@ -3,6 +3,7 @@ import { useAlarm, useAlarmUrl } from './hooks'
 import { encode } from 'base-64'
 import { base as siteBase } from '../settings'
 import { useEffect } from 'react'
+import { Button } from '../components/buttons'
 
 const AlarmEditor = (props) => {
 
@@ -62,12 +63,12 @@ const AlarmEditor = (props) => {
                     </div>
                 </div>
                 <div className="block">
-                    <a className="button is-primary is-fullwidth" 
+                    <Button.Primary anchor fullWidth
                             href={onLaunch()}
                             disabled={!checkValid(props.text)}
                             target={props.openExternal ? "_blank" : null}>
                         Launch
-                    </a>
+                    </Button.Primary>
                 </div>  
             </div>
         </article>
@@ -183,10 +184,11 @@ const Unloaded = (props) => {
             <div className="section">
                 <AlarmEditor display={showEditor} text={alarmJson} onEdit={setAlarmJson} openExternal={props.openExternal} />
                 <AlarmInfo display={showInfo} hide={()=>setShowInfo(false)} />
-                <button className="button  is-outlined is-secondary is-fullwidth mb-1" onClick={newJson}>New </button>
-                <span className="button  is-outlined is-secondary is-fullwidth" onClick={showFileSelect}>
+                <Button.Secondary outlined fullWidth onClick={newJson}>New </Button.Secondary>
+                <p style={{marginBottom: "0.5rem"}}></p>
+                <Button.Secondary outlined fullWidth onClick={showFileSelect}>
                     Load <input ref={ref} type="file" style={{ display: "none" }} onChange={load} />
-                </span>
+                </Button.Secondary>
 
             </div>
         </div>

@@ -12,6 +12,8 @@ import { Outlet } from "react-router-dom"
 import { loadSavedView, setViewConfigTab } from "../redux/viewSlice"
 import { useNavigate } from "react-router-dom"
 import { presets, geoCoords } from "../settings"
+import { Button } from "../components/buttons"
+import { Input } from "../components/forms"
 import PropTypes from "prop-types"
 
 /**
@@ -32,13 +34,14 @@ const NavSearchInput = (props) => {
     }
 
     return (
-        <input
-            className="m-2 input is-primary"
-            type="text"
-            placeholder="Filter..."
-            onChange={setFilter}
-            value={props.filterText}
-        />
+        <div style={{margin: ".5em"}}>
+            <Input.Primary
+                type="text"
+                placeholder="Filter..."
+                onChange={setFilter}
+                value={props.filterText}
+            />
+        </div>
     )
 }
 NavSearchInput.propTypes = {
@@ -368,21 +371,21 @@ const PlotButton = () => {
     if(disable) {
         return (
             <>
-                <button style={leftStyle} className="button is-primary" disabled>Plot</button>
-                <button style={rightStyle} className="button is-primary" disabled>▾</button>
+                <Button.Primary style={leftStyle} disabled>Plot</Button.Primary>
+                <Button.Primary style={rightStyle} disabled>▾</Button.Primary>
             </>
         )
     }
     
     return (
         <>
-            <a style={leftStyle} href={plotUrl} target="_blank" rel="noopener noreferrer" className="button is-primary">
+            <Button.Primary anchor style={leftStyle} href={plotUrl} target="_blank" rel="noopener noreferrer">
                 Plot
-            </a>
-            <div style={rightStyle} className="button is-primary" onClick={toggleMenuVisible}>
+            </Button.Primary>
+            <Button.Primary style={rightStyle} className="button is-primary" onClick={toggleMenuVisible}>
                 ▾
                 <PlotButtonMenu visible={menuVisible} hide={()=>setMenuVisible(false)} />
-            </div>
+            </Button.Primary>
         </>
     )
 }
@@ -405,14 +408,14 @@ const TephiButton = () => {
 
     if(!available) {
         return (
-            <button className="button is-primary" disabled>Tephigram</button>
+            <Button.Primary disabled>Tephigram</Button.Primary>
         )
     }
 
     return (
-        <a href={url} className="button is-primary" target="_blank" rel="noopener noreferrer">
+        <Button.Primary anchor href={url} target="_blank" rel="noopener noreferrer">
             Tephigram
-        </a>
+        </Button.Primary>
     )
 }
 
@@ -435,15 +438,14 @@ const DashButton = () => {
 
     if(disable) {
         return (
-            <button className="button is-primary" disabled>Dashboard</button>
+            <Button.Primary disabled>Dashboard</Button.Primary>
         )
     }
 
     return (
-        <a href={dashUrl} className="button is-primary" target="_blank"
-           rel="noopener noreferrer">
+        <Button.Primary anchor href={dashUrl} target="_blank" rel="noopener noreferrer">
             Dashboard
-        </a>
+        </Button.Primary>
     )
 }
 
@@ -465,9 +467,9 @@ const OptionsButton = () => {
     const text = location.pathname !== "/" ? "Home" : "Options"
 
     return (
-        <Link to={to} className="button is-dark is-outlined">
+        <Button.Dark rrLink outlined to={to}>
             {text}
-        </Link>
+        </Button.Dark>
     )
 }
 
@@ -493,9 +495,9 @@ const ClearButton = () => {
     }
 
     return (
-        <a className="button is-info is-outlined" onClick={clear}>
+        <Button.Info outlined onClick={clear}>
             Clear
-        </a>
+        </Button.Info>
     )
 }
 

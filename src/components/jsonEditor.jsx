@@ -1,3 +1,5 @@
+import { Button } from "./buttons"
+
 const JsonEditor = (props) => {
 
     if (!props.display) return null
@@ -34,7 +36,7 @@ const JsonEditor = (props) => {
     return (
         <article className="message is-dark">
             <div className="message-header">
-                <p>Alarm Editor</p>
+                <p>JSON Editor</p>
             </div>
             <div className="message-body">
                 <div className="block">
@@ -51,13 +53,13 @@ const JsonEditor = (props) => {
                     </div>
                 </div>
                 <div className="block">
-                    <a className="button is-primary is-fullwidth" 
+                    <Button.Primary anchor fullWidth
                             href={getUrl()}
                             disabled={!checkValid(props.text)}
                             target={props.openExternal ? "_blank" : null}
                             onClick={onLaunch}>
                         Launch
-                    </a>
+                    </Button.Primary>
                 </div>  
             </div>
         </article>

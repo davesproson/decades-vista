@@ -1,5 +1,7 @@
 import { useDispatch } from "react-redux"
 import { PropTypes } from "prop-types"
+import { Button } from "./buttons"
+import { Control, Field } from "./forms"
 
 /**
  * A component that allows the user to select between two options.
@@ -22,23 +24,23 @@ import { PropTypes } from "prop-types"
 const OptionSwitch = (props) => {
     const dispatch = useDispatch()
 
-    const offClass = "button is-light"
-    const onClass = "button is-info"
+    const OffButton = Button.Light
+    const OnButton = Button.Info
 
-    const leftClass = props.value === props.options[0] ? onClass : offClass
-    const rightClass = props.value === props.options[1] ? onClass : offClass
+    const LeftButton = props.value === props.options[0] ? OnButton : OffButton
+    const RightButton = props.value === props.options[1] ? OnButton : OffButton
 
     const toggle = () => dispatch(props.toggle())
 
     return (
-        <div className="field has-addons">
-            <p className="control">
-                <button className={leftClass} onClick={toggle}>{props.options[0]}</button>
-            </p>
-            <p className="control">
-                <button className={rightClass} onClick={toggle}>{props.options[1]}</button>
-            </p>
-        </div>
+        <Field addons>
+            <Control>
+                <LeftButton onClick={toggle}>{props.options[0]}</LeftButton>
+            </Control>
+            <Control>
+                <RightButton onClick={toggle}>{props.options[1]}</RightButton>
+            </Control>
+        </Field>
     )
 }
 OptionSwitch.propTypes = {

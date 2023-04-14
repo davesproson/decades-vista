@@ -4,6 +4,7 @@ import { setCustomTimeframe } from '../redux/optionsSlice'
 import { getTimeLims } from '../plot/plotUtils'
 import { useEffect } from 'react'
 import { useFlightSummary } from './hooks'
+import { Button } from '../components/buttons'
 
 const TimeframeTextBox = (props) => {
     
@@ -116,13 +117,12 @@ const TimePicker = (props) => {
         setter(val)
     }
 
-    const onGoingClass = isOngoing ? "is-primary" : "is-light"
-    const ongoingButton = props.allowOngoing ? (
-        <div className="control">
-            <button className={`button ${onGoingClass} is-fullwidth`}
-                    onClick={toggleOngoing}>Ongoing?</button>
-        </div>
-    ) : null
+    
+    const Btn = isOngoing ? Button.Primary : Button.Light
+
+    const ongoingButton = props.allowOngoing 
+        ? <Btn onClick={toggleOngoing}>Ongoing?</Btn>
+        : null
 
     const timeSelector = isOngoing ? null : (
         <>
@@ -161,9 +161,8 @@ const TimePicker = (props) => {
                 <div className="field is-grouped">
                     {timeSelector}
                     {ongoingButton}
-
                 </div>
-                <button className="button is-primary is-fullwidth" onClick={onApply}>Apply</button>
+                <Button.Primary fullWidth onClick={onApply}>Apply</Button.Primary>
             </div>
         </div>
         </>

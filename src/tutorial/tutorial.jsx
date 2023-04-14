@@ -4,6 +4,7 @@ import { useTutorialAction } from "./hooks"
 import { setShowTutorial, incrementPosition } from "../redux/tutorialSlice"
 import { useNavigate } from "react-router-dom"
 import { enableTutorial } from "../settings"
+import { Button } from "../components/buttons"
 
 /**
  * The TutorialPanel is the actual UI for the tutorial. It is responsible for rendering
@@ -43,7 +44,7 @@ const TutorialPanel = (props) => {
 
     const continueButton = props.hideContinue
         ? null
-        : <button className="button mr-1 is-success" onClick={onContinue}>{props.continueText || "Continue"}</button>
+        : <Button.Success onClick={onContinue}>{props.continueText || "Continue"}</Button.Success>
 
     return (
         <div style={{
@@ -63,7 +64,8 @@ const TutorialPanel = (props) => {
                     {props.text}
                     <div className="mt-4">
                     {continueButton}
-                    <button className="button is-danger" onClick={props.abort}>{props.abortText || "Close"}</button>
+                    <span style={{marginRight: ".3em"}}></span>
+                    <Button.Danger onClick={props.abort}>{props.abortText || "Close"}</Button.Danger>
                     </div>
                 </div>
             </div>

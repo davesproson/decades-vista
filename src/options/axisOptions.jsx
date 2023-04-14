@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { PropTypes } from "prop-types"
 import { OptionBlock } from "./plotOptions"
 import { addNewAxis, selectAxis } from "../redux/parametersSlice"
+import { Button } from "../components/buttons"
 
 /**
  * A button that adds a new axis to a given parameter. By default, all parameters
@@ -29,9 +30,7 @@ const AddAxisButton = (props) => {
     }
 
     return (
-        <div className="control">
-            <button className="button is-primary" onClick={addAxis}>+</button>
-        </div>
+        <Button.Primary onClick={addAxis}>+</Button.Primary>
     )
 }
 AddAxisButton.propTypes = {

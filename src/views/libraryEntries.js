@@ -57,7 +57,7 @@ const libraryViews = [
             "type": "view",
             "rows": 2,
             "columns": 1,
-            "rowPercent": [30, 70],
+            "rowPercent": [35, 65],
             "columnPercent": [100],
             "elements": [{
                 "type": "view",

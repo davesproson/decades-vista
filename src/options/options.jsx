@@ -2,6 +2,7 @@
 import { usePlotUrl } from '../plot/hooks';
 import { PlotOptionCard } from './plotOptions';
 import { AxisOptionsCard } from './axisOptions';
+import { Button } from '../components/buttons';
 
 const AddressBar = () => {
     const address = usePlotUrl()
@@ -11,7 +12,7 @@ const AddressBar = () => {
                 <input className="input" type="text" value={address} readOnly />
             </div>
             <div className='control'>
-                <button className="button is-info" onClick={() => navigator.clipboard.writeText(address)}>Copy</button>
+                <Button.Info onClick={() => navigator.clipboard.writeText(address)}>Copy</Button.Info>
             </div>
         </div>
     )

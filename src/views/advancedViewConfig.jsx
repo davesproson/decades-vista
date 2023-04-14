@@ -14,6 +14,7 @@ import { setAdvancedConfig, setAdvancedConfigSaved } from '../redux/viewSlice';
 import { getAxesArray } from '../plot/plotUtils';
 import { Tag, BooleanTag } from '../components/tags';
 import { Input, FieldInput, GroupedField } from '../components/forms';
+import { Button } from '../components/buttons';
 
 /**
  * Provides a form for adding a view to the advanced view. It's a
@@ -365,8 +366,8 @@ const ConfigWidget = (props) => {
                 </section>
                 <footer className="modal-card-foot">
 
-                    <button className="button is-success" onClick={saveAction}>Add</button>
-                    <button className="button" onClick={props.hide}>Cancel</button>
+                    <Button.Success onClick={saveAction}>Add</Button.Success>
+                    <Button onClick={props.hide}>Cancel</Button>
 
                 </footer>
             </div>
@@ -463,9 +464,9 @@ const _AdvancedViewConfig = (props) => {
                 case "view":
                     return (
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <button className="button is-info" onClick={() => setShowWidget(true)}>
+                            <Button.Info onClick={() => setShowWidget(true)}>
                                 Configure
-                            </button>
+                            </Button.Info>
                         </div>
                     )
                 case "plot":
@@ -619,13 +620,13 @@ const AdvancedViewConfig = () => {
         <>
             {warning}
             <_AdvancedViewConfig top={true} data={currentConfig} id={ref} />
-            <div className="is-flex is-justify-content-space-between  mt-2">
-                <div className="buttons has-addons">
-                    <button className="is-flex button is-success" onClick={saveCurrentConfig}>Save</button>
-                    <button className="is-flex button is-danger" onClick={resetCurrentConfig}>Reset</button>
+            <div className="is-flex is-justify-content-space-between mt-2">
+                <div>
+                    <Button.Success onClick={saveCurrentConfig}>Save</Button.Success>
+                    <Button.Danger onClick={resetCurrentConfig}>Reset</Button.Danger>
                 </div>
                 <div>
-                    <button className="button is-info" onClick={launch}>Launch</button>
+                    <Button.Info onClick={launch}>Launch</Button.Info>
                 </div>
             </div>
         </>

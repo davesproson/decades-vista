@@ -13,6 +13,7 @@ import { AdvancedViewConfig } from './advancedViewConfig';
 import { JsonViewConfig } from './jsonViewConfg';
 import { Modal } from '../components/modal';
 import { Control, GroupedField, Field, Label, Input } from '../components/forms';
+import { Button } from '../components/buttons';
 
 const ViewConfigButtons = (props) => {
     const dispatch = useDispatch()
@@ -109,34 +110,34 @@ const ViewConfigButtons = (props) => {
     })()
 
     const plotButton = plotEnabled
-        ? <Link to={viewUrl} className="button is-primary is-fullwidth" target="_blank">Plot</Link>
-        : <button className="button is-primary is-fullwidth" disabled>Plot</button>
+        ? <Button.Primary fullWidth rrLink to={viewUrl} target="_blank">Plot</Button.Primary>
+        : <Button.Primary fullWidth disabled>Plot</Button.Primary>
 
     return (
         <>
             <Field grouped expanded>
                 {plotButton}
             </Field>
-            <Field grouped expended>
+            <Field grouped expanded>
                 <Control expanded>
-                    <button className="button is-outlined is-primary is-fullwidth" onClick={() => setSaveModalActive(true)}>
+                    <Button.Primary fullWidth outlined onClick={() => setSaveModalActive(true)}>
                         Save
-                    </button>
+                    </Button.Primary>
                 </Control>
                 <Control expanded>
-                    <span className="button  is-outlined is-primary is-fullwidth" onClick={showFileSelect}>
+                    <Button.Primary fullWidth outlined onClick={showFileSelect}>
                         Import <input ref={ref} type="file" style={{ display: "none" }} onChange={importView} />
-                    </span>
+                    </Button.Primary>
                 </Control>
                 <Control expanded>
-                    <button className="button  is-outlined is-primary is-fullwidth" onClick={download} disabled={!plotEnabled}>
+                    <Button.Primary fullWidth outlined onClick={download} disabled={!plotEnabled}>
                         Export
-                    </button>
+                    </Button.Primary>
                 </Control>
                 <Control expanded>
-                    <button className="button is-outlined is-danger is-fullwidth" onClick={() => dispatch(reset())}>
+                    <Button.Danger fullWidth outlined onClick={() => dispatch(reset())}>
                         Reset
-                    </button>
+                    </Button.Danger>
                 </Control>
             </Field>
             <SaveModal active={saveModalActive} close={() => setSaveModalActive(false)} />
@@ -168,9 +169,9 @@ const PlotInputBlock = (props) => {
                         onChange={onChange} placeholder="Plot URL..." />
                 </Control>
                 <Control>
-                    <button className="button is-dark" onClick={onUseCurrentConfig} disabled={!paramsSelected}>
+                    <Button.Dark onClick={onUseCurrentConfig} disabled={!paramsSelected}>
                         Use current config
-                    </button>
+                    </Button.Dark>
                 </Control>
             </div>
         </div>
@@ -234,10 +235,10 @@ const SaveModal = (props) => {
                     <p className="mt-2"></p>
                     <Field grouped>
                         <Control expanded>
-                            <button className="button is-primary is-fullwidth" onClick={save}>Save</button>
+                            <Button.Primary fullWidth onClick={save}>Save</Button.Primary>
                         </Control>
                         <Control expanded>
-                            <button className="button is-secondary is-fullwidth" onClick={close}>Cancel</button>
+                            <Button.Secondary fullWidth onClick={close}>Cancel</Button.Secondary>
                         </Control>
                     </Field>
                 </div>
@@ -265,10 +266,10 @@ const ViewConfigNumSelector = (props) => {
                 </Control>
                 <Field addons={true}>
                     <Control>
-                        <button className="button is-outlined is-primary" onClick={add}>+</button>
+                        <Button.Primary outlined onClick={add}>+</Button.Primary>
                     </Control>
                     <Control>
-                        <button className="button is-outlined is-primary" onClick={remove}>-</button>
+                        <Button.Primary outlined onClick={remove}>-</Button.Primary>
                     </Control>
                 </Field>
             </GroupedField>

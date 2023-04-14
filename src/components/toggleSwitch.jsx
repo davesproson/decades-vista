@@ -1,5 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { PropTypes } from 'prop-types'
+import { Button } from './buttons'
+import { Control, Field } from './forms'
 
 /**
  * A component that allows the user to toggle an on/off option.
@@ -21,20 +23,20 @@ const ToggleSwitch = (props) => {
 
     const dispatch = useDispatch()
 
-    const onClass = `button ${props.on ? "is-success" : "is-light"}`;
-    const offClass = `button ${props.on ? "is-light" : "is-danger"}`;
+    const OnButton = props.on ? Button.Success : Button.Light
+    const OffButton = props.on ? Button.Light : Button.Danger
 
     const toggle = () => dispatch(props.toggle())
 
     return (
-        <div className="field has-addons">
-            <p className="control">
-                <button className={onClass} onClick={toggle}>on</button>
-            </p>
-            <p className="control">
-                <button className={offClass} onClick={toggle}>off</button>
-            </p>
-        </div>
+        <Field addons>
+            <Control>
+                <OnButton onClick={toggle}>on</OnButton>
+            </Control>
+            <Control>
+                <OffButton onClick={toggle}>off</OffButton>
+            </Control>
+        </Field>
     )
 }
 ToggleSwitch.propTypes = {
