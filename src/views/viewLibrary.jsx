@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { PropTypes } from "prop-types"
 import { saveView } from "../redux/viewSlice"
 import { libraryViews } from "./libraryEntries"
+import { Button } from "../components/buttons"
 import { v4 as uuidv4 } from 'uuid'
 
 /**
@@ -66,40 +67,21 @@ const LibraryCard = (props) => {
     const loadButtonText = viewIsLoaded ? "Loaded" : "Load"
 
     const button = (
-        viewIsLoaded ? null :
-        <button className="button is-primary is-outlined is-fullwidth mt-1" onClick={load} disabled={viewIsLoaded}>
+        <Button.Primary outlined fullWidth onClick={load} disabled={viewIsLoaded}>
             {loadButtonText}
-        </button>
+        </Button.Primary>
     )
 
     return (
         <div className="card mt-2">
             <div className="card-content">
-
                 <div className="content">
-
-                    {/* <div className="columns"> */}
-                        {/* <div className="column is-2">
-                            <div className="is-flex is-flex-direction-column">
-                                <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image" />
-                                <button className="button is-primary is-fullwidth mt-1" onClick={load} disabled={viewIsLoaded}>
-                                    {loadButtonText}
-                                </button>
-                            </div>
-                        </div> */}
-
-                        {/* <div className="column is-10"> */}
                             
-                            <h4 className="title is-4">{props.title}</h4>
-                            <LoadedInfo loaded={viewIsLoaded} title={props.title} />
-                            {viewIsLoaded ? null : props.description}
-                            
-                            {button}
-                            
-                        {/* </div> */}
-
-                    {/* </div> */}
-
+                    <h4 className="title is-4">{props.title}</h4>
+                    <LoadedInfo loaded={viewIsLoaded} title={props.title} />
+                    {viewIsLoaded ? null : props.description}
+                    {viewIsLoaded ? null : <p style={{ marginTop: "1rem" }} />}
+                    {viewIsLoaded ? null : button}
                 </div>
             </div>
         </div>
