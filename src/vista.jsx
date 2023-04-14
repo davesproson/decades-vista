@@ -63,7 +63,7 @@ const DecadesVista = () => {
         <Route path="/view" element={<Suspense><View /></Suspense>} />
         <Route path="/jsonview" element={<Suspense><JsonView /></Suspense>} />
         <Route path="/plot" element={<Suspense><PlotDispatcher /></Suspense>} />
-        <Route path="/dashboard" element={<Suspense><DashboardDispatcher /></Suspense>} />
+        <Route path="/dashboard" element={<Suspense><DashboardDispatcher useURL={true}/></Suspense>} />
         <Route path="/tephigram" element={<Suspense><Tephigram /></Suspense>} />
         <Route path="/alarms" element={<Suspense><AlarmList /></Suspense>} />
         
