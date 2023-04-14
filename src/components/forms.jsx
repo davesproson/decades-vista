@@ -19,15 +19,6 @@ export const Field = ({children, addons, grouped, expanded}) => {
     )
 }
 
-export const Input = (props) => {
-    return (
-        <div className="control">
-            <input  className="input" 
-                    {...props} />
-        </div>
-    )
-}
-
 export const FieldInput = (props) => {
     return (
         <Field>
@@ -54,3 +45,22 @@ export const Label = ({children}) => {
         </label>
     )
 }
+
+const Input = (props) => {
+    return (
+        <div className="control">
+            <input className="input" 
+                    {...props} />
+        </div>
+    )
+}
+
+const InputNumber = (props) => {
+    return (
+        <Input type="number" {...props} />
+    )
+}
+
+Input.Number = InputNumber
+
+export { Input }
