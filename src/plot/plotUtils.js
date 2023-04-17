@@ -255,12 +255,35 @@ const startData = ({options, start, end, callback, ref, signal}) => {
 
     const callOpts = {options: options, callback: callback, ref: ref, signal: signal}
 
+
+    /**
+     * Check if all the latest data points are bad data.
+     * 
+     * @param {Object} data - The data object
+     * @returns {boolean} - True if all the latest data points are bad data, false otherwise
+     */
+    const allLatestDataBad = (data) => {
+        for(const param of Object.keys(data)) {
+            if(data[param][data[param].length-1] !== badData) {
+                return false
+            }
+        }
+        return true
+    }
+
     let newStart = start;
 
     try {
         fetch(url)
             .then(response => response.json())
             .then(data => {
+
+                if(allLatestDataBad(data)) {
+                    for(const param of Object.keys(data)) {
+                        data[param].pop()
+                    }
+                }
+
                 callback(options, data, ref)
                 
                 newStart = data.utc_time[data.utc_time.length-1] + 1 || start
