@@ -4,6 +4,7 @@ import { encode } from 'base-64'
 import { base as siteBase } from '../settings'
 import { useEffect } from 'react'
 import { Button } from '../components/buttons'
+import { JsonEditor } from '../components/jsonEditor'
 
 const AlarmEditor = (props) => {
 
@@ -26,52 +27,24 @@ const AlarmEditor = (props) => {
         }
     }
 
-    const jsonChanged = (e) => {
-        const json = e.target.value
-        props.onEdit(json)
-    }
-
-    const onLaunch = () => {
+    const getUrl = () => {
         if (!checkValid(props.text)) return null
         const urlPars = new URLSearchParams()
-            for (let alarm of JSON.parse(props.text)) {
-                urlPars.append("alarm", encode(JSON.stringify(alarm)))
-            }
+        for (let alarm of JSON.parse(props.text)) {
+            urlPars.append("alarm", encode(JSON.stringify(alarm)))
+        }
 
         return `${siteBase}alarms/?${urlPars.toString()}`
     }
 
-    const bgClass = checkValid(props.text) ? "has-background-success-light" : "has-background-danger-light"
-
     return (
-        <article className="message is-dark">
-            <div className="message-header">
-                <p>Alarm Editor</p>
-            </div>
-            <div className="message-body">
-                <div className="block">
-                    <div className="field">
-                        <div className="control">
-                            <textarea className={`textarea ${bgClass}`}
-                                      type="text"
-                                      placeholder="Type your json here..."
-                                      rows={20}
-                                      value={props.text} 
-                                      style={{fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New"}}
-                                      onChange={jsonChanged} />
-                        </div>
-                    </div>
-                </div>
-                <div className="block">
-                    <Button.Primary anchor fullWidth
-                            href={onLaunch()}
-                            disabled={!checkValid(props.text)}
-                            target={props.openExternal ? "_blank" : null}>
-                        Launch
-                    </Button.Primary>
-                </div>  
-            </div>
-        </article>
+        <JsonEditor checkValid={checkValid} 
+                    display={props.display}
+                    openExternal={true}
+                    onEdit={props.onEdit}
+                    text={props.text}
+                    getUrl={getUrl}
+        />
     )
 }
 
