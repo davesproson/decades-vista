@@ -6,10 +6,30 @@ import { useEffect } from 'react'
 import { Button } from '../components/buttons'
 import { JsonEditor } from '../components/jsonEditor'
 
+/** 
+ * The alarm editor component. This component implements a json editor for the alarm
+ * configuration. It also provides a button to launch the alarm viewer.
+ * 
+ * @param {Object} props - The props for the component
+ * @param {boolean} props.display - Whether the component is displayed
+ * @param {string} props.text - The text to display in the editor
+ * @param {function} props.onEdit - The function to call when the text is edited
+ * 
+ * @component
+ * @example
+ * <AlarmEditor display={true} text={text} onEdit={onEdit} />
+ * 
+*/
 const AlarmEditor = (props) => {
 
     if (!props.display) return null
 
+    /** 
+    * Check that the json is valid
+    *
+    * @param {string} json - The json to check
+    * @returns {boolean} Whether the json is valid
+    */
     const checkValid = (json) => {
         try {
             const parsed = JSON.parse(json)
@@ -27,6 +47,11 @@ const AlarmEditor = (props) => {
         }
     }
 
+    /**
+     * Get the url for the alarms according to the current configuration
+     * 
+     * @returns {string} The url for the alarms
+     */
     const getUrl = () => {
         if (!checkValid(props.text)) return null
         const urlPars = new URLSearchParams()
@@ -85,7 +110,7 @@ const AlarmInfo = (props) => {
         "name": "Temperature above 30 when airborne",
         "description": "An alarm that fails when the temperature is above 30 and the aircraft is airborne",
         "parameters": ["deiced_true_air_temp_c", "prtaft01_wow_flag"],
-        "rule": "deiced_true_air_temp_c < 30 | prtaft01_wow_flag == 1"
+        "rule": "deiced_true_air_temp_c < 30 or prtaft01_wow_flag == 1"
     }
 ]`}
 
