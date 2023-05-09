@@ -53,13 +53,10 @@ const ParameterTable = (props) => {
 
     const paramsChecked = vars.params.length && vars.params.every(x => x.status !== null)
 
-    if(server===null) {
-        throw("Unable to connect to server.")
-    }
-    
+    if(server===undefined) return <Loader text="Waiting for server availability..." />
     if(!paramsChecked) return <Loader text="Checking Parameter Availability..." />
-    
     if(!vars.params) return <Loader text="Getting parameters..." />;
+    if(server===null) return <VistaErrorBoundary text="Server is not available." />
 
     const params = [...vars.params];
 
