@@ -15,7 +15,7 @@ export const base = {
 
 export const badData = -999.99
 
-const apiBase = {
+export const apiBase = {
     "demo": "/live",
     "dev": "/decades",
     "prod": "/decades"
