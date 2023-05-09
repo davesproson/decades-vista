@@ -31,7 +31,10 @@ const useDispatchParameters = () => {
                 dispatch(setParams(data))
                 dispatch(setParamsDispatched(true))
             })
-        }, [])
+            .catch((e) => {
+                console.log("Error fetching parameter availability:", e)
+            })
+    }, [])
 }
 
 const useGetParameters = () => {
@@ -51,7 +54,7 @@ const useGetParameters = () => {
                 setParams(data);
             })
             .catch((e) => {
-                console.log("Error fetching parameters")
+                console.log("Error fetching parameters:", e)
             })
     }, [setParams])
 
@@ -71,7 +74,7 @@ const useServers = () => {
                 const reportedServers = data.topo.secondaries
                 reportedServers.push(data.topo.primary)
                 setServers(reportedServers);
-                if(serverState === null) {
+                if(serverState === undefined) {
                     const serverToSet = reportedServers.sort(() => .5 - Math.random())[0]
                     dispatch(setServer(serverToSet))
                 }

@@ -11,7 +11,7 @@ export const optionsSlice = createSlice({
         scrollingWindow: false,
         dataHeader: false,
         ordinateAxis: 'utc_time',
-        server: null,
+        server: undefined,
         timeframes: [
             {selected: false, value: 'all', label: 'All'},
             {selected: false, value: '2hr', label: '2 hours'},
