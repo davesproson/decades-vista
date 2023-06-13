@@ -60,14 +60,14 @@ const ViewConfigButtons = (props) => {
         for (const plot of json.plots) {
             const options = {
                 timeframe: plot.timeframe,
-                params: plot.params,
+                params: [...[plot.params]],
                 ordinateAxis: plot.ordvar === 'javascript_time' ? 'utc_time' : plot.ordvar,
                 plotStyle: plot.style,
                 swapOrientation: plot.swapxy,
                 scrollingWindow: plot.scrolling,
                 server: plot.server,
                 dataHeader: plot.data_header,
-                axes: plot.axis
+                axes: [...[plot.axis]]
             }
             plots.push(getUrl(options))
         }
@@ -93,6 +93,7 @@ const ViewConfigButtons = (props) => {
                 parseMap[version](json)
             } catch (e) {
                 alert("Error parsing file - please check it is a valid view config file")
+                console.log(e)
             }
         }
         reader.readAsText(selectedFile)
