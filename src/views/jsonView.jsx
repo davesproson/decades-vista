@@ -76,7 +76,6 @@ const JsonView = (props) => {
 
     useEffect(()=>{
         document.getElementsByTagName('html')[0].style.overflow = "hidden"
-        localStorage.removeItem('viewConfig')
     }, [])
 
     return (
