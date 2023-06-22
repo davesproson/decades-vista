@@ -1,4 +1,4 @@
-const deployment = 'dev'
+export const deployment = 'dev'
 
 export const serverPrefix = ""
 export const serverProtocol = {
