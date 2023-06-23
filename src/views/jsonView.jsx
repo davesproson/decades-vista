@@ -15,6 +15,11 @@ const UrlView = (props) => {
 
 const _View = (props) => {
 
+    useEffect(()=>{
+        if(!props.top) return
+        document.title = props.title || 'DECADES View'
+    }, [])
+
     const elements = props.elements
 
     const getRowColPercent = (i) => {
