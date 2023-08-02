@@ -521,6 +521,7 @@ const AdvancedViewConfig = () => {
     const currentConfig = useSelector(state => state.view.advancedConfig)
     const saved = useSelector(state => state.view.advancedConfigSaved)
     const dispatch = useDispatch()
+    const [viewTitle, setViewTitle] = useState(currentConfig?.title || "")
 
     useEffect(() => {
         return () => dispatch(setAdvancedConfigSaved(true))
@@ -591,12 +592,15 @@ const AdvancedViewConfig = () => {
 
     const saveCurrentConfig = () => {
         const a = document.getElementById(ref)
-        dispatch(setAdvancedConfig(parseElement(a)))
+        let parsed = parseElement(a)
+        parsed['title'] = viewTitle
+        dispatch(setAdvancedConfig(parsed))
         dispatch(setAdvancedConfigSaved(true))
     }
 
     const resetCurrentConfig = () => {
         dispatch(setAdvancedConfig(null))
+        setViewTitle("")
         dispatch(setAdvancedConfigSaved(true))
     }
 
@@ -619,6 +623,7 @@ const AdvancedViewConfig = () => {
     return (
         <>
             {warning}
+            <FieldInput placeholder="View Title" value={viewTitle} onChange={(e)=>{setViewTitle(e.target.value)}} />
             <_AdvancedViewConfig top={true} data={currentConfig} id={ref} />
             <div className="is-flex is-justify-content-space-between mt-2">
                 <div>
