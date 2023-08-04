@@ -170,7 +170,7 @@ const updatePlot = (options, data, ref) => {
  */
 function getYAxis(options, param) {
     for(let i=0; i<options.axes.length; i++) {
-        const paramsOnAxis = options.axes[i].split(",")
+        const paramsOnAxis = options.axes[i].split('|')[0].split(",")
         if(paramsOnAxis.includes(param)) {
             return i ? 'y' + (i+1) : 'y'
         }
@@ -187,7 +187,7 @@ function getYAxis(options, param) {
  */
 function getXAxis(options, param) {
     for(let i=0; i<options.axes.length; i++) {
-        const paramsOnAxis = options.axes[i].split(",")
+        const paramsOnAxis = options.axes[i].split('|')[0].split(",")
         if(paramsOnAxis.includes(param)) {
             return i ? 'x' + (i+1) : 'x'
         }
@@ -324,24 +324,49 @@ const getData = async (options, start, end) => {
 }
 
 /**
- * Build an axis array reprensenting the axes and parameters
+ * Build an axis array reprensenting the axes and parameters. This may look
+ * something like:
+ * 
+ * ["x,y", "z"]
+ * 
+ * This would represent two axes, the first with x and y parameters, and the
+ * second with z.
+ * 
+ * The scaling is also included if it is not auto, for example
+ * 
+ * ["x,y", "z|0:100"]
+ * 
+ * This would represent two axes, the first with x and y parameters, and the
+ * second with z, with the scaling set to 0 to 100.
  * 
  * @param {*} vars - The redux parametersSlice
- * @returns {Array} - An array of the axes, with each axis being a comma separated list of parameters
+ * @returns {Array} - An array of the axes, with each axis being a comma separated
+ *                    list of parameters, including the scaling if it is not auto
  */
 const getAxesArray = (vars) => {
     const params = vars.params
-    let axes = {}
+
+    let axesObj = {}
     for(const ax of vars.axes) {
-        axes[ax.id] = []
+        axesObj[ax.id] = {
+            params: [],
+            scaling: ax.scaling
+        }
     }
 
     for(const param of params.filter(x=>x.selected)) {
-        axes[param.axisId].push(param.raw)
+        axesObj[param.axisId].params.push(
+            param.raw
+        )
     }
 
-    axes = Object.values(axes).map(x=>x.join(','))
-    return axes
+    return Object.values(axesObj).map(x=>{
+        let retval = x?.params?.join(',')
+        if(x?.scaling?.auto === false) {
+            retval += `|${x.scaling.min}:${x.scaling.max}`
+        }
+        return retval
+    })
 }
 
 export { 

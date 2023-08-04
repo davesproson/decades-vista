@@ -376,7 +376,7 @@ const PlotButton = () => {
             </>
         )
     }
-    
+
     return (
         <>
             <Button.Primary anchor style={leftStyle} href={plotUrl} target="_blank" rel="noopener noreferrer">

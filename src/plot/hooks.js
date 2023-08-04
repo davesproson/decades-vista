@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { useGetParameters, useServers } from '../hooks';
 import { base as siteBase } from '../settings';
-import { startData, paramFromRawName, getYAxis, getXAxis, getTimeLims, plotIsOngoing } from './plotUtils';
+import { startData, paramFromRawName, getYAxis, getXAxis, 
+         getTimeLims, plotIsOngoing, getAxesArray } from './plotUtils';
 
 
 const darkBg = "#333333"
@@ -35,6 +36,7 @@ const usePlotUrl = (override={}) => {
     const [plotUrl, setPlotUrl] = useState("");
 
     const plotOptions = useSelector(state => state.options);
+    const axisOptions = useSelector(state => state.vars.axes);
     const vars = useSelector(state => state.vars);
     const server = useSelector(state => state.options.server);
     const useCustomTimeframe = useSelector(state => state.options.useCustomTimeframe);
@@ -51,17 +53,7 @@ const usePlotUrl = (override={}) => {
     }
 
     const params = vars.params
-    let axes = {}
-    for(const ax of vars.axes) {
-        axes[ax.id] = []
-    }
-
-    for(const param of params.filter(x=>x.selected)) {
-        axes[param.axisId].push(param.raw)
-    }
-
-    axes = Object.values(axes).map(x=>x.join(','))
-
+    let axes = getAxesArray(vars)
 
     const selectedParams = params.filter(param => param.selected)
                                  .map(param => param.raw)
@@ -82,7 +74,7 @@ const usePlotUrl = (override={}) => {
 
         setPlotUrl(getUrl(optionSet))
 
-    }, [plotOptions, params])
+    }, [plotOptions, params, axisOptions])
 
     return plotUrl;
 }
@@ -183,17 +175,27 @@ const usePlot = (options, ref) => {
         layout[_ordAxis].linecolor = darkBg ? "gray" : "black";
         if(darkMode) layout[_ordAxis].gridcolor = "gray";
 
+        const ranges = options.axes.map((axis) => {
+            let rangeString = axis.split("|")[1]
+            if(rangeString) {
+                rangeString = rangeString.split(":")
+                return [rangeString[0], rangeString[1]]
+            }
+            return null
+        })
 
         for(let i=0; i<numAxes; i++) {
             let _axisTitle;
     
+            let currentAxes = options.axes[i].split("|")[0]
+
             // If there's more than one variable on a axis, label axis, axis2 etc.
             // Otherwise we can label with the DisplayName / DisplayUnits
-            if(options.axes[i].split(",").length > 1) {
-                let _unit = paramFromRawName(options.axes[i].split(",")[0], params)?.DisplayUnits || "Unknown units"
+            if(currentAxes.split(",").length > 1) {
+                let _unit = paramFromRawName(currentAxes.split(",")[0], params)?.DisplayUnits || "Unknown units"
                 _axisTitle = options.swapxy ? `X-axis ${i+1} (${_unit})` : `Y-axis ${i+1} (${_unit})`;
             } else {
-                const _param = paramFromRawName(options.axes[i], params)
+                const _param = paramFromRawName(currentAxes, params)
                 _axisTitle = `${_param?.DisplayText || 'y-axis'} (${_param?.DisplayUnits || 'Unknown units'})`;
             }
     
@@ -231,6 +233,11 @@ const usePlot = (options, ref) => {
                 gridcolor: darkMode ? "gray" : "lightgray",
                 mirror: true
             }
+
+            if(ranges[i]) {
+                layout[_axisName].range = ranges[i]
+            }
+
         }
 
         const traces = [];
