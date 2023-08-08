@@ -14,12 +14,13 @@ import { PropTypes } from "prop-types"
  * @param {boolean} props.rrLink - Whether the button is a react router link
  * @param {Object} props.children - The children of the button
  * @param {Object} props.rest - The rest of the props to pass to the element
+ * @param {string} props.extraClasses - Any extra classes to add to the button
  * 
  * @component
  * @example
  * <Button>My Button</Button>
  */
-const Button = ({kind, outlined, fullWidth, small, anchor, div, rrLink, children, ...rest}) => {
+const Button = ({kind, outlined, fullWidth, small, anchor, div, rrLink, children, extraClasses, ...rest}) => {
 
     // Build the class name
     let buttonClass = "button"
@@ -27,6 +28,7 @@ const Button = ({kind, outlined, fullWidth, small, anchor, div, rrLink, children
     if(outlined) buttonClass += " is-outlined"
     if(fullWidth) buttonClass += " is-fullwidth"
     if(small) buttonClass += " is-small"
+    if(extraClasses) buttonClass += ` ${extraClasses}`
 
     // Return the correct element
     // ...an anchor
