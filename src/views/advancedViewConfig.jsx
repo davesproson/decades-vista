@@ -196,6 +196,18 @@ const ConfigTephiArea = () => {
 }
 
 /**
+ * Add some timers to the advanced view. We currenly just use a blank timer page.
+ */
+const ConfigTimerArea = () => {
+    return (
+        <div className="mt-2">
+            Add a timer to the view. Currently this will give a blank area
+            to which you can add timers.
+        </div>
+    )
+}
+
+/**
  * Add a dashboard to the advanced view. It's a forwardRef which uses an
  * imperative handle to get the data back out. The current dashboard
  * configuration is used, and is simply displayed to the user here.
@@ -242,7 +254,7 @@ const ConfigDashboardArea = React.forwardRef((props, ref) => {
  * @param {*} props.split - a callback to split the view
  * @param {*} props.hide - a callback to hide the widget
  * @param {*} props.setViewType - a callback to set the view type. Allowed values are
- *                                "plot", "tephi", "dashboard"
+ *                                "plot", "tephi", "dashboard", "timers"
  * @param {*} props.setData - a callback to set the data for the view
  * @param {boolean} props.top - whether the widget is the ancestor view
  * 
@@ -272,6 +284,9 @@ const ConfigWidget = (props) => {
             break
         case "DASHBOARD":
             wjsx = <ConfigDashboardArea ref={dashRef} />
+            break
+        case "TIMERS":
+            wjsx = <ConfigTimerArea />
             break
         default:
             wjsx = null
@@ -316,6 +331,12 @@ const ConfigWidget = (props) => {
                 props.hide()
                 dispatch(setAdvancedConfigSaved(false))
                 break
+            case "TIMERS":
+                // We're adding a timer
+                props.setViewType("timers")
+                props.hide()
+                dispatch(setAdvancedConfigSaved(false))
+                break
             case "DASHBOARD":
                 // We're adding a dashboard
                 props.setViewType("dashboard")
@@ -342,6 +363,7 @@ const ConfigWidget = (props) => {
                 <li className={getClass("PLOT")}><a onClick={() => setWidget("PLOT")}>Plot</a></li>
                 <li className={getClass("TEPHI")}><a onClick={() => setWidget("TEPHI")}>Tephi</a></li>
                 <li className={getClass("DASHBOARD")}><a onClick={() => setWidget("DASHBOARD")}>Dashboard</a></li>
+                <li className={getClass("TIMERS")}><a onClick={() => setWidget("TIMERS")}>Timers</a></li>
             </>
         )
     }
@@ -477,6 +499,8 @@ const _AdvancedViewConfig = (props) => {
                     return <ImageElement src="dashboard.svg" />
                 case "alarms":
                     return <ImageElement src="alarm.svg" />
+                case "timers":
+                    return <ImageElement src="timer.svg" />
             }
         }
         return null
@@ -528,7 +552,7 @@ const AdvancedViewConfig = () => {
     }, [])
 
     const parseElement = (element) => {
-        const allowedTypes = ["view", "plot", "tephi", "dashboard", "alarms"]
+        const allowedTypes = ["view", "plot", "tephi", "dashboard", "alarms", "timers"]
         const eType = element.getAttribute("data-type")
 
         const getRowColPercent = (rowcol) => {
@@ -586,8 +610,13 @@ const AdvancedViewConfig = () => {
                     ...JSON.parse(element.getAttribute("data-data"))
                 }
             }
+            case "timers": {
+                return {
+                    ...retObj,
+                    ...JSON.parse(element.getAttribute("data-data"))
+                }
+            }   
         }
-
     }
 
     const saveCurrentConfig = () => {

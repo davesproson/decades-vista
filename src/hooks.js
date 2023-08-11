@@ -90,6 +90,28 @@ const useServers = () => {
 
 }
 
+const useDarkMode = () => {
+    const getDarkMode = () => {
+        return localStorage.getItem('vista-dark-mode') === 'true';
+    }
+    
+    const [darkMode, _setDarkMode] = useState(getDarkMode())
+    const setDarkMode = (mode) => {
+        localStorage.setItem('vista-dark-mode', mode);
+        _setDarkMode(mode);
+    }
+
+    useEffect(() => {
+        if(darkMode) {
+          document.getElementById("vista-css").href = "public/css/vista-dark.css"
+        } else {
+          document.getElementById("vista-css").href = "public/css/vista-light.css"
+        }
+      }, [darkMode])
+
+    return [darkMode, setDarkMode];
+}
+
 export { 
-    useDispatchParameters, useServers, useGetParameters
+    useDispatchParameters, useServers, useGetParameters, useDarkMode
 }

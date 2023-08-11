@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { useGetParameters, useServers } from '../hooks';
+import { useDarkMode, useGetParameters, useServers } from '../hooks';
 import { base as siteBase } from '../settings';
 import { startData, paramFromRawName, getYAxis, getXAxis, 
          getTimeLims, plotIsOngoing, getAxesArray } from './plotUtils';
 
 
 // Options for dark mode. These are currently hard-coded, and disabled
-const darkBg = "#333333"
-const darkMode = false
+const darkBg = "#000000"
 
 /**
  * Get the URL for the plot, given the current state of the plot options
@@ -154,6 +153,8 @@ const usePlot = (options, ref) => {
     const [server, setServer] = useState(options.server)
     const [initDone, setInitDone] = useState(false)
     const [loadDone, setLoadDone] = useState(false)
+
+    const [darkMode, setDarkMode] = useDarkMode()
 
     console.log(options)
     

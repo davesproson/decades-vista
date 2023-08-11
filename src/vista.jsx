@@ -1,8 +1,6 @@
-import 'bulma/css/bulma.min.css';
-
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom'
-import { useServers } from './hooks';
+import { useServers, useDarkMode } from './hooks';
 import { Loader } from './components/loader';
 import { useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -38,10 +36,11 @@ import { useEffect } from 'react';
  * )
  */
 const DecadesVista = () => {
-
+  
   useServers()
   const [searchParams, _] = useSearchParams()
   const dispatch = useDispatch()
+  const [darkMode, setDarkMode] = useDarkMode()
 
   useEffect(() => {
     const paramSet = searchParams.get('paramset')
@@ -69,9 +68,7 @@ const DecadesVista = () => {
         <Route path="/dashboard" element={<Suspense><DashboardDispatcher useURL={true}/></Suspense>} />
         <Route path="/tephigram" element={<Suspense><Tephigram /></Suspense>} />
         <Route path="/alarms" element={<Suspense><AlarmList /></Suspense>} />
-        <Route path="/timer" element={<Suspense><Timers /></Suspense>} />
-        
-
+        <Route path="/timers" element={<Suspense><Timers /></Suspense>} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </Suspense>

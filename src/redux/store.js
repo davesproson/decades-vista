@@ -5,6 +5,7 @@ import paramFilterReducer from './filterSlice'
 import optionsReducer from './optionsSlice'
 import viewReducer from './viewSlice'
 import tutorialReducer from './tutorialSlice'
+import configReducer from './configSlice'
 
 const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
     paramfilter: paramFilterReducer,
     options: optionsReducer,
     view: viewReducer,
-    tutorial: tutorialReducer
+    tutorial: tutorialReducer,
+    config: configReducer
   }
 })
 

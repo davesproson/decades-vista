@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { JsonEditor } from "../components/jsonEditor"
 import { Button } from "../components/buttons"
+import { base as siteBase } from "../settings"
 
 /** 
  * The alarm editor component. This component implements a json editor for the alarm
@@ -45,12 +46,7 @@ const TimerEditor = (props) => {
      * @returns {string} The url for the alarms
      */
     const getUrl = () => {
-        if (!checkValid(props.text)) return null
-        const urlPars = new URLSearchParams()
-        for (let alarm of JSON.parse(props.text)) {
-            urlPars.append("alarm", encode(JSON.stringify(alarm)))
-        }
-
+        if (!checkValid(jsonText)) return null
         return `${siteBase}timers`
     }
 
@@ -89,13 +85,14 @@ const TimerInfo = (props) => {
                 <pre>
                     <code>
                         {`[{
-    "title": "My Timer",
-    "type": "timer",
-    "time": 0
+    "name": "My Timer",
+    "type": "timer"
 }, {
-    "title": "My Countdown",
+    "name": "My Countdown",
     "type": "countdown",
-    "time": 300
+    "time": 300,
+    "alarmBelow": 20,
+    "warnBelow": 60
 }]`}
                     </code>
                 </pre>
@@ -116,7 +113,7 @@ const TimerConfig = (props) => {
             <>
                 <TimerInfo hide={() => setDisplayEditor(true)} />
                 <Button.Primary outlined fullWidth onClick={() => setDisplayEditor(!displayEditor)}>
-                    New
+                    Begin...
                 </Button.Primary>
             </>
         )

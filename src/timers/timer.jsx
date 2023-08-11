@@ -3,7 +3,7 @@ import { useState } from "react"
 
 import { Button } from "../components/buttons"
 
-const TimerContainer = ({ title, time, buttons, inAlarm, inWarning }) => {
+const TimerContainer = ({ name, time, buttons, inAlarm, inWarning }) => {
 
     const panelStyle = {
         border: "1px solid black",
@@ -33,7 +33,7 @@ const TimerContainer = ({ title, time, buttons, inAlarm, inWarning }) => {
                 }}>
                     <h3 className="p-3 is-uppercase is-justify-content-center is-flex-grow-1 is-flex">
                         <div className="is-flex is-justify-content-space-between">
-                            {title}
+                            {name}
                         </div>
                     </h3>
                     <div className="m-2">
@@ -53,8 +53,8 @@ const TimerContainer = ({ title, time, buttons, inAlarm, inWarning }) => {
     )
 }
 
-const CountUp = (props) => {
-    const [time, setTime] = useState(parseInt(props.time))
+const CountUp = ({name}) => {
+    const [time, setTime] = useState(0)
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -63,13 +63,13 @@ const CountUp = (props) => {
         return () => clearInterval(interval)
     }, [])
 
-    return <TimerContainer time={time} title={props.title} buttons={[
+    return <TimerContainer time={time} name={name} buttons={[
         { text: 'Reset', onClick: () => setTime(0) }
     ]} />
 }
 
-const CountDown = (props) => {
-    const [time, setTime] = useState(parseInt(props.time))
+const CountDown = ({initialTime, name, warnBelow, alarmBelow}) => {
+    const [time, setTime] = useState(parseInt(initialTime))
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -78,17 +78,20 @@ const CountDown = (props) => {
         return () => clearInterval(interval)
     }, [])
 
-    return <TimerContainer time={time} inAlarm={time < 20} inWarning={time < 60} 
-                title={props.title} buttons={[
-                    { text: 'Reset', onClick: () => setTime(props.time)},
+    return <TimerContainer 
+                time={time}
+                inAlarm={time < (alarmBelow || 20)}
+                inWarning={time < (warnBelow || 60)} 
+                name={name} buttons={[
+                    { text: 'Reset', onClick: () => setTime(initialTime)},
                     { text: '+1', onClick: () => setTime(t => t + 60)},
                     { text: '+5', onClick: () => setTime(t => t + 300)},
                 ]} 
             />
 }
 
-const Timers = () => {
-    const [timers, setTimers] = useState([])
+const Timers = ({initialTimers}) => {
+    const [timers, setTimers] = useState(initialTimers || [])
     const [showContextMenu, setShowContextMenu] = useState(false)
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 10, y: 10 })
 
@@ -114,20 +117,20 @@ const Timers = () => {
         }, 3000)
     }
 
-    const addCountdown = ({title}) => {
+    const addCountdown = ({name, initialTime}) => {
         const newCountdown = { 
             type: "countdown",
-            time: 65,
-            title: title || "Countdown"
+            initialTime: initialTime || 60,
+            name: name || "Countdown"
         }
         setTimers([...timers, newCountdown])
     }
 
-    const addCountUp = ({title}) => {
+    const addCountUp = ({name}) => {
         const newCountUp = {
             type: "timer",
             time: 0,
-            title: title || "Timer"
+            name: name || "Timer"
         }
         setTimers([...timers, newCountUp])
     }
