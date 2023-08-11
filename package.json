@@ -5,16 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run sass-build && vite build",
     "preview": "vite preview",
-    "deploy-demo": "vite build && rsync -avz --delete dist/ faam-webserver:/var/www/html/additional/decades-vista",
-    "deploy-tanks": "vite build && rsync -avz --delete dist/ fltman@192.168.101.110:/home/fltman/web/decades-vista && rsync -avz --delete dist/ fltman@192.168.101.108:/home/fltman/web/decades-vista",
-    "deploy-ground": "vite build && rsync -avz --delete dist/ faam-dataserver:/home/ubuntu/web/decades-vista"
+    "deploy-demo": "npm run build && rsync -avz --delete dist/ faam-webserver:/var/www/html/additional/decades-vista",
+    "deploy-tanks": "npm run build && rsync -avz --delete dist/ fltman@192.168.101.110:/home/fltman/web/decades-vista && rsync -avz --delete dist/ fltman@192.168.101.108:/home/fltman/web/decades-vista",
+    "deploy-ground": "npm run build && rsync -avz --delete dist/ faam-dataserver:/home/ubuntu/web/decades-vista",
+    "sass-watch": "sass -w src/scss/:public/css/",
+    "sass-build": "sass src/scss/:public/css/"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
     "base-64": "^1.0.0",
-    "bulma": "^0.9.4",
+    "bulmaswatch": "^0.8.1",
     "mathjs": "^11.6.0",
     "plotly.js-dist": "^2.16.4",
     "prop-types": "^15.8.1",
@@ -28,7 +30,9 @@
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^2.2.0",
+    "bulma": "^0.9.4",
     "jsdoc": "^4.0.0",
+    "sass": "^1.65.1",
     "vite": "^3.2.3"
   }
 }
