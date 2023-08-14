@@ -1,3 +1,5 @@
+import noscroll from "../../assets/css/no-scroll.css"
+
 import { VistaErrorBoundary } from '../components/error'
 import PlotDispatcher  from '../plot/plot'
 import Dashboard  from '../dashboard/dashboard'
@@ -6,7 +8,6 @@ import AlarmList from '../alarms/alarm'
 import Timers from '../timers/timer'
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import "../../public/css/no-scroll.css"
 import { libraryViews } from './libraryEntries'
 
 const UrlView = (props) => {

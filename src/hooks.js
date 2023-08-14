@@ -4,6 +4,9 @@ import { setParams, setParamsDispatched } from "./redux/parametersSlice";
 import { setServer } from "./redux/optionsSlice";
 import { apiEndpoints, apiTransforms } from "./settings";
 
+import vistaLight from '../assets/css/vista-light.css?inline'
+import vistaDark from '../assets/css/vista-dark.css?inline'
+
 
 const useTransform = (name) => {
     if(apiTransforms[name]) return apiTransforms[name];
@@ -103,9 +106,9 @@ const useDarkMode = () => {
 
     useEffect(() => {
         if(darkMode) {
-          document.getElementById("vista-css").href = "public/css/vista-dark.css"
+          document.getElementById("vista-css").innerHTML =  vistaDark
         } else {
-          document.getElementById("vista-css").href = "public/css/vista-light.css"
+          document.getElementById("vista-css").innerHTML =  vistaLight
         }
       }, [darkMode])
 

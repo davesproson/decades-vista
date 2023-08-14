@@ -10,8 +10,8 @@
     "deploy-demo": "npm run build && rsync -avz --delete dist/ faam-webserver:/var/www/html/additional/decades-vista",
     "deploy-tanks": "npm run build && rsync -avz --delete dist/ fltman@192.168.101.110:/home/fltman/web/decades-vista && rsync -avz --delete dist/ fltman@192.168.101.108:/home/fltman/web/decades-vista",
     "deploy-ground": "npm run build && rsync -avz --delete dist/ faam-dataserver:/home/ubuntu/web/decades-vista",
-    "sass-watch": "sass -w src/scss/:public/css/",
-    "sass-build": "sass src/scss/:public/css/"
+    "sass-watch": "sass -w src/scss/:assets/css/",
+    "sass-build": "sass src/scss/:assets/css/"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",

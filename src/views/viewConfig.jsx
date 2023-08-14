@@ -1,9 +1,8 @@
 
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
 import {
     addColumn, addRow, removeColumn, removeRow, setPlot, reset, saveView, setConfig,
-    setAdvancedConfig, setViewConfigTab
+    setViewConfigTab
 } from '../redux/viewSlice'
 import { usePlotUrl, getUrl } from '../plot/hooks'
 import { useRef, useState } from 'react';
@@ -15,7 +14,7 @@ import { Modal } from '../components/modal';
 import { Control, GroupedField, Field, Label, Input } from '../components/forms';
 import { Button } from '../components/buttons';
 
-const ViewConfigButtons = (props) => {
+const ViewConfigButtons = () => {
     const dispatch = useDispatch()
     const viewState = useSelector(s => s.view)
     const viewUrl = useViewUrl()

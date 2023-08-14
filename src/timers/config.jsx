@@ -3,6 +3,7 @@ import { JsonEditor } from "../components/jsonEditor"
 import { Button } from "../components/buttons"
 import { base as siteBase } from "../settings"
 
+
 /** 
  * The alarm editor component. This component implements a json editor for the alarm
  * configuration. It also provides a button to launch the alarm viewer.
@@ -58,6 +59,9 @@ const TimerEditor = (props) => {
             onEdit={setJsonText}
             text={jsonText}
             getUrl={getUrl}
+            onLaunch={(text) => {
+                localStorage.setItem("timerConfig", JSON.stringify(JSON.parse(text)))
+            }}
         />
     )
 }
