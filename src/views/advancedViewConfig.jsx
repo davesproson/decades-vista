@@ -501,6 +501,8 @@ const _AdvancedViewConfig = (props) => {
                     return <ImageElement src="alarm.svg" />
                 case "timers":
                     return <ImageElement src="timer.svg" />
+                case "url":
+                    return <ImageElement src="link.svg" />
             }
         }
         return null
@@ -552,7 +554,7 @@ const AdvancedViewConfig = () => {
     }, [])
 
     const parseElement = (element) => {
-        const allowedTypes = ["view", "plot", "tephi", "dashboard", "alarms", "timers"]
+        const allowedTypes = ["view", "plot", "tephi", "dashboard", "alarms", "timers", "url"]
         const eType = element.getAttribute("data-type")
 
         const getRowColPercent = (rowcol) => {
@@ -598,6 +600,11 @@ const AdvancedViewConfig = () => {
             case "tephi": {
                 return retObj
             }
+            case "url": {
+                return {
+                    ...retObj,
+                }
+            }
             case "dashboard": {
                 return {
                     ...retObj,
@@ -615,7 +622,7 @@ const AdvancedViewConfig = () => {
                     ...retObj,
                     ...JSON.parse(element.getAttribute("data-data"))
                 }
-            }   
+            } 
         }
     }
 
