@@ -192,6 +192,10 @@ const Timers = ({initialTimers}) => {
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 10, y: 10 })
 
     useEffect(() => {
+        if(initialTimers) {
+            localStorage.removeItem("timerConfig")
+            return
+        }
         const timerConfig = localStorage.getItem("timerConfig")
         if(timerConfig) {
             setTimers(JSON.parse(timerConfig))

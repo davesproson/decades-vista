@@ -74,7 +74,7 @@ const getElement = new Map([
     ['dashboard', (props) => Dashboard({...props, useURL: false})],
     ['url', UrlView],
     ['alarms', AlarmList],
-    ['timers', Timers]
+    ['timers', (props) => Timers(props)]
 ])
 
 const JsonView = (props) => {
