@@ -15,6 +15,7 @@ import { getAxesArray } from '../plot/plotUtils';
 import { Tag, BooleanTag } from '../components/tags';
 import { Input, FieldInput, GroupedField } from '../components/forms';
 import { Button } from '../components/buttons';
+import { useDarkMode } from '../hooks';
 
 /**
  * Provides a form for adding a view to the advanced view. It's a
@@ -409,6 +410,7 @@ const _AdvancedViewConfig = (props) => {
     const [showWidget, setShowWidget] = useState(false)
     const [data, setData] = useState(props.data)
     const dispatch = useDispatch()
+    const [darkMode, setDarkMode] = useDarkMode()
 
 
     const [children, setChildren] = useState([])
@@ -455,11 +457,14 @@ const _AdvancedViewConfig = (props) => {
         setChildren(children)
     }
 
+    const defaultBorder = {
+        outline: darkMode ? "1px solid gray" : "1px solid black"
+    }
     const borderStyle = saved
-        ? { outline: "1px solid black" }
+        ? defaultBorder
         : props.top
             ? { outline: "3px solid red" }
-            : { outline: "1px solid black" }
+            : defaultBorder
 
     const style = {
         display: "grid",
@@ -471,11 +476,12 @@ const _AdvancedViewConfig = (props) => {
     }
 
     const getElement = () => {
+        const dmFilter = darkMode ? "invert(63%) sepia(2%) saturate(13%) hue-rotate(331deg) brightness(86%) contrast(79%)" : ""
 
         const ImageElement = (props) => {
             return (
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <img onClick={resetToView} src={props.src} alt="plot" style={{ height: "64px", width: "64px" }} />
+                    <img onClick={resetToView} src={props.src} alt="plot" style={{ height: "64px", width: "64px", filter: dmFilter}} />
                 </div>
             )
         }
