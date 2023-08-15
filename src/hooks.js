@@ -94,13 +94,15 @@ const useServers = () => {
 }
 
 const useDarkMode = () => {
+    const darkModeStorageName = "vistaDarkMode"
+
     const getDarkMode = () => {
-        return localStorage.getItem('vista-dark-mode') === 'true';
+        return localStorage.getItem(darkModeStorageName) === 'true';
     }
     
     const [darkMode, _setDarkMode] = useState(getDarkMode())
     const setDarkMode = (mode) => {
-        localStorage.setItem('vista-dark-mode', mode);
+        localStorage.setItem(darkModeStorageName, mode);
         _setDarkMode(mode);
     }
 
