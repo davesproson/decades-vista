@@ -51,12 +51,12 @@ const ConfigViewArea = React.forwardRef((props, ref) => {
 
     // Validate the form data
     const validate = () => {
-        if(rowPc == "") {
-            setRowPc(new Array(rows).fill(100/rows).join(","))
+        if (rowPc == "") {
+            setRowPc(new Array(rows).fill(100 / rows).join(","))
         }
 
-        if(colPc == "") {
-            setColPc(new Array(cols).fill(100/cols).join(","))
+        if (colPc == "") {
+            setColPc(new Array(cols).fill(100 / cols).join(","))
         }
 
         if (rows === "" || cols === "") {
@@ -238,7 +238,7 @@ const ConfigDashboardArea = React.forwardRef((props, ref) => {
     return (
         <div className="mt-2">
             <p>Add a dashboard to the to the view, with the currently selected set of
-            parameters.</p> 
+                parameters.</p>
             <p className="mt-2">
                 Currently selected parameters are: {paramList}
             </p>
@@ -573,56 +573,23 @@ const AdvancedViewConfig = () => {
             return 1
         }
 
-        const retObj = {
-            "type": eType
+        if (eType === "view") {
+            return {
+                "type": "view",
+                "rows": getNRowsNCols("row"),
+                "columns": getNRowsNCols("col"),
+                "rowPercent": getRowColPercent("row"),
+                "columnPercent": getRowColPercent("col"),
+                "elements": Array.from(element.children)
+                    .map(x => x?.children[0])
+                    .filter(x => allowedTypes.includes(x?.getAttribute("data-type")))
+                    .map(parseElement)
+            }
         }
 
-        switch (eType) {
-            case "view": {
-                return {
-                    ...retObj,
-                    "rows": getNRowsNCols("row"),
-                    "columns": getNRowsNCols("col"),
-                    "rowPercent": getRowColPercent("row"),
-                    "columnPercent": getRowColPercent("col"),
-                    "elements": Array.from(element.children)
-                        .map(x => x?.children[0])
-                        .filter(x => allowedTypes.includes(x?.getAttribute("data-type")))
-                        .map(parseElement)
-                }
-            }
-            case "plot": {
-                return {
-                    ...retObj,
-                    ...JSON.parse(element.getAttribute("data-data"))
-                }
-            }
-            case "tephi": {
-                return retObj
-            }
-            case "url": {
-                return {
-                    ...retObj,
-                }
-            }
-            case "dashboard": {
-                return {
-                    ...retObj,
-                    ...JSON.parse(element.getAttribute("data-data"))
-                }
-            }
-            case "alarms": {
-                return {
-                    ...retObj,
-                    ...JSON.parse(element.getAttribute("data-data"))
-                }
-            }
-            case "timers": {
-                return {
-                    ...retObj,
-                    ...JSON.parse(element.getAttribute("data-data"))
-                }
-            } 
+        return {
+            "type": eType,
+            ...JSON.parse(element.getAttribute("data-data"))
         }
     }
 
@@ -659,7 +626,7 @@ const AdvancedViewConfig = () => {
     return (
         <>
             {warning}
-            <FieldInput placeholder="View Title" value={viewTitle} onChange={(e)=>{setViewTitle(e.target.value)}} />
+            <FieldInput placeholder="View Title" value={viewTitle} onChange={(e) => { setViewTitle(e.target.value) }} />
             <_AdvancedViewConfig top={true} data={currentConfig} id={ref} />
             <div className="is-flex is-justify-content-space-between mt-2">
                 <div>
