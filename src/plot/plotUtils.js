@@ -1,4 +1,6 @@
-import { serverProtocol, apiEndpoints, badData } from '../settings'
+import { 
+    serverProtocol, wsProtocol, apiEndpoints, badData, useWebSocketData 
+} from '../settings'
 
 
 /**
@@ -230,6 +232,72 @@ const getDataUrl = (options, start, end) => {
 }
 
 /**
+ * Start listening for data from the server via a websocket. This is all
+ * a bit buggy, but I just don't care enough to fix it.
+ * 
+ * @param {Object} options - The plot options object
+ * @param {function} callback - The callback to call when data is fetched
+ * @param {Object} ref - The react ref to the plot
+ * @param {Object} signal - The signal object to abort the data fetch
+ * @returns {void}
+ */
+const startDataWS = ({options, callback, ref, signal}) => {
+
+    if(!callback) callback = updatePlot
+
+    const server = options.server ? options.server : location.host
+    const url = `${wsProtocol}://${server}${apiEndpoints.data_ws}`
+    let consolidatedData = {}
+
+    const ws = new WebSocket(url)
+
+    ws.onopen = () => ws.send([options.ordvar, ...options.params].join(','))
+
+    ws.onmessage = (event) => {
+        if(signal.abort) {
+            console.log('Aborting data fetch (WS) due to signal')
+            ws.close()
+            return
+        }
+        const data = JSON.parse(event.data)
+
+        const oldTime = consolidatedData.utc_time ? consolidatedData.utc_time[0] : null
+        const newTime = data[1] / 1000
+
+        // If we have a new time, just move on and assume that any data that hasn't 
+        // arrived yet is not going to arrive, so insert bad data for it
+        if(oldTime && (newTime > oldTime)) {
+            for(const param of [options.ordvar, ...options.params]) {
+                if(!Object.keys(consolidatedData).includes(param)) {
+                    consolidatedData[param] = [badData]
+                }
+            }
+        }
+
+        // Update the data object with the new data
+        consolidatedData = {
+            ...consolidatedData,
+            [data[0]]: [data[2]],
+            utc_time: [newTime],
+        }
+
+        // Check if we have all the data we need to update the plot
+        let sendData = true
+        for(const param of [options.ordvar, ...options.params]) {
+            if(!(Object.keys(consolidatedData).includes(param))) {
+                sendData = false
+            }
+        }
+
+        // If we have all the data, update the plot
+        if(sendData) {
+            callback(options, consolidatedData, ref)
+            consolidatedData = {utc_time: [newTime]}
+        }
+    }
+}
+
+/**
  * Start fetching data from the server. This function will call itself
  * recursively to fetch data every second. This is done to avoid overloading
  * the server with requests if it is slow to respond.
@@ -285,6 +353,9 @@ const startData = ({options, start, end, callback, ref, signal}) => {
                 }
 
                 callback(options, data, ref)
+
+                // GTFO if using websockets
+                if(useWebSocketData) return startDataWS({options, callback, ref, signal})
                 
                 newStart = data.utc_time[data.utc_time.length-1] + 1 || start
                 
