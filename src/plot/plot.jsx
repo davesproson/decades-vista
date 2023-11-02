@@ -6,14 +6,29 @@ import { Dashboard } from '../dashboard/dashboard'
 import { plotHeaderDefaults } from '../settings'
 import { Loader } from '../components/loader'
 
+/**
+ * A plot component. This component provides a single decades plot, potentially
+ * combined with a dashboard if a 'plot header' is requested.
+ * 
+ * @param {Object} props
+ * @param {Object} props.style - The style for the plot
+ * @param {boolean} props.loadDone - Whether the plot has finished loading
+ * @param {Object[]} props.parameters - The parameters to display in the plot header
+ * @param {Object} ref - The ref for the plot
+ * 
+ * @returns {JSX.Element}
+ */
 const Plot = forwardRef((props, ref) => {
 
+    // If the plot hasn't finished loading, display a loader
     const load = props.loadDone ? null : <Loader text="Loading plot..." />
 
+    // Create a dashboard if requested
     const dash = props.parameters
         ? <Dashboard parameters={Array(...new Set([...props.parameters, ...plotHeaderDefaults]))} />
         : null
 
+    // Set the style, defaulting to filling the parent container
     const style = props.style || {     
         top: "0px",
         left: "0px",
@@ -24,6 +39,7 @@ const Plot = forwardRef((props, ref) => {
         flexDirection: "column",  
     }
 
+    // Return the plot and optionally the dashboard
     return (
         <div style={style}>
             {dash}
@@ -35,8 +51,20 @@ const Plot = forwardRef((props, ref) => {
     )
 })
 
+/**
+ * A simple plot component. This component provides a single decades plot,
+ * with no plot header, intended for components where a quick 'n' dirty plot
+ * is required.
+ * 
+ * @param {Object} props
+ * @param {Object} props.style - The style for the plot
+ * @param {Object} props.params - The parameters to display in the plot
+ * 
+ * @returns {JSX.Element}
+ */
 const SimplePlot = (props) => {
     const ref = useRef(null)
+
     const options = {
         params: props.params,
         axes: props.params,
@@ -59,6 +87,16 @@ const SimplePlot = (props) => {
     )
 }
 
+/**
+ * A plot dispatcher component - deals with parsing the plot options and
+ * passing them to the plot component.
+ * 
+ * @param {Object} props
+ * @param {Object} props.style - The style for the plot
+ * @param {Object} props.params - The parameters to display in the plot
+ * 
+ * @returns {JSX.Element}
+ */
 const PlotDispatcher = (props) => {
     
     const ref = useRef(null)

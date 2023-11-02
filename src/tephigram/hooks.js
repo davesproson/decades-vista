@@ -5,7 +5,14 @@ import { useSearchParams } from "react-router-dom";
 import { getData, getTimeLims, plotIsOngoing } from "../plot/plotUtils";
 import { getTraces, populateTephigram } from "./utils";
 import { useServers, useDarkMode } from "../hooks";
+import { getPlotlyTephiOptions, getEmptyDataTrace } from "./plotOptions";
 
+/**
+ * Returns the URL for the tephigram page, with the current parameters and
+ * timeframe
+ * 
+ * @returns {string} The URL for the tephigram page
+ */
 const useTephiUrl = () => {
     const params = useSelector(state => state.vars.params);
     const plotOptions = useSelector(state => state.options);
@@ -18,18 +25,33 @@ const useTephiUrl = () => {
     
     let timeframe = ""
     if(useCustomTimeframe) {
-
+        // Erm... TODO?
     } else {
         timeframe = plotOptions.timeframes.find(x=>x.selected).value;
     }
     
-    return origin + `${siteBase}tephigram?params=${selectedParams.join(',')}&timeframe=${timeframe}&server=${server}`
+    const url = new URL(`${origin}${siteBase}tephigram`)
+    url.searchParams.set('params', selectedParams.join(','))
+    url.searchParams.set('timeframe', timeframe)
+    url.searchParams.set('server', server)
+    return url.toString()
 }
 
+/**
+ * Returns true if the currently selected parameters are sufficient to plot a
+ * tephigram
+ * 
+ * @returns {boolean} True if the currently selected parameters are sufficient
+ * to plot a tephigram
+ */
 const useTephiAvailable = () => {
+    
     const params = useSelector(state => state.vars.params);
     const selectedParams = params.filter(param => param.selected)
                                     .map(param => param.raw)
+    
+    let has_required_temps = false
+    let has_required_humids = false
     
     const required_temps = [
         'deiced_true_air_temp_c', 'nondeiced_true_air_temp_c'
@@ -38,9 +60,6 @@ const useTephiAvailable = () => {
     const required_humids = [
         'dew_point', 'buck_mirror_temp'
     ]
-
-    let has_required_temps = false
-    let has_required_humids = false
 
     for(const param of selectedParams) {
         if(!required_humids.includes(param) && !required_temps.includes(param)) {
@@ -57,6 +76,11 @@ const useTephiAvailable = () => {
     return has_required_temps && has_required_humids
 }
 
+/**
+ * Creates a tephigram plot in the given ref
+ * 
+ * @param {React.Ref} ref The ref to create the plot in
+ */
 const useTephigram = (ref) => {
 
     const [searchParams, _] = useSearchParams();
@@ -68,12 +92,25 @@ const useTephigram = (ref) => {
     const [server, setServer] = useState(null)
     const [darkMode, setDarkMode] = useDarkMode()
 
+    /**
+     * Set the server to a random one from the list of available servers
+     * 
+     * Watched variables:
+     * - servers
+     * - server
+     */
     useEffect(() => {
         if(server) return
         const rServer = servers.sort(() => .5 - Math.random())[0]
         setServer(rServer)
     }, [setServer, server, servers])
 
+    /**
+     * Create the plot in the given ref once the server is set
+     *
+     * Watched variables:
+     * - server
+     */
     useEffect(() => {
         if(!server) return
 
@@ -84,70 +121,34 @@ const useTephigram = (ref) => {
             server: server
         }
 
+        // Get the tephi traces
         let plotTraces = getTraces(darkMode)
+
+        // Record how much crap we've got on the axes
         const n = plotTraces.length;
-        const colors = [
-            "#0000aa", "#00aa00", "#aa0000", "#00aaaa", "#aa00aa"
-        ]
 
+        // Whack on empty traces for the parameters
         options.params.forEach((p, i) => {
-            plotTraces.push({
-                x: [],
-                y: [],
-                showlegend: true,
-                mode: 'lines',
-                hoverinfo: 'none',
-                name: p,
-                line: {
-                    width: 5,
-                    color: colors[i%colors.length]
-                }
-            });
+            plotTraces.push(getEmptyDataTrace(p, i));
         });
 
+        // Async import of plotly.js and initisation of plot
         import('plotly.js-dist').then((Plotly) => {
-            Plotly.newPlot(ref.current, plotTraces  ,  {
-                margin: {t: 0, l: 0, r: 0, b: 0},   
-                plot_bgcolor: darkMode ? "black" : "white",
-                paper_bgcolor: darkMode ? "black" : "white",
-                legend: {   
-                    font: { 
-                        size: 8,   
-                        color: darkMode ? "white" : "black"
-                    },  
-                    x: 0,   
-                    y: 0    ,
-                    bgcolor: darkMode ? "black" : "white",
-                },  
-                
-                hoverinfo: 'none',  
-                yaxis: {    
-                    range: [1678, 1820],    
-                    showline: false,    
-                    ticks: '',  
-                    showgrid: false,    
-                    showticklabels: false   
-                },  
-                xaxis: {    
-                    range: [1600, 1780],    
-                    showline: false,    
-                    ticks: '',  
-                    showgrid: false,    
-                    showticklabels: false   
-                }   
-            }, {    
-                displayModeBar:false,   
-                responsive: true,
-                displaylogo: false
-            })
+            Plotly.newPlot(
+                ref.current, plotTraces, 
+                ...getPlotlyTephiOptions(darkMode)
+            )
         });
 
-        
+        // Populate plot with data
         getData(options, ...getTimeLims(options.timeframe))
             .then(data=>populateTephigram(n, data, ref))
             
+        // Update plot with new data <=> the plot is ongoing and the page is visible
+        // at 1 second intervals
         if(plotIsOngoing(options)) {
             const interval = setInterval(() => {
+                if(document.hidden) return
                 getData(options).then(data=>populateTephigram(n, data, ref))
             }, 1000);
 

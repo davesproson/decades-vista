@@ -1,5 +1,17 @@
-
+/**
+ * A little loader spinner thingy. I mean, nothing spins, but it's a loader.
+ * 
+ * @param {Object} props
+ * @param {string} props.text - The text to display
+ * @param {number} props.value - The current value of the progress bar. This may
+ *                               or may not actually do anything.
+ * @param {number} props.max - The maximum value of the progress bar.
+ * 
+ * @returns {JSX.Element}
+ */
 const Loader = (props) => {
+    // Nothing says professional like a progress bar that doesn't progress
+    // with a bunch of inlined styles
     return (
         <div style={{
             display: "flex",

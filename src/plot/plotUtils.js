@@ -314,6 +314,13 @@ const startData = ({options, start, end, callback, ref, signal}) => {
 
     if(!callback) callback = updatePlot
 
+    if(document.hidden) {
+        setTimeout(() => {
+            startData({options, start, end, callback, ref, signal})
+        }, 1000)
+        return
+    }
+
     const url = getDataUrl(options, start, end)
 
     if(signal.abort) {

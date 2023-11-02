@@ -1,11 +1,23 @@
-import { lazy, Suspense } from 'react';
+/**
+ *      _                    _                      _     _        
+ *   __| | ___  ___ __ _  __| | ___  ___     __   _(_)___| |_ __ _ 
+ *  / _` |/ _ \/ __/ _` |/ _` |/ _ \/ __|____\ \ / / / __| __/ _` |
+ * | (_| |  __/ (_| (_| | (_| |  __/\__ \_____\ V /| \__ \ || (_| |
+ *  \__,_|\___|\___\__,_|\__,_|\___||___/      \_/ |_|___/\__\__,_|
+ * 
+ * Does for the DECADES project what the Vista operating system did for
+ * Microsoft.
+ */
+
+// Import some stuff
+import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom'
-import { useServers, useDarkMode } from './hooks';
 import { Loader } from './components/loader';
 import { useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setParamSet } from './redux/parametersSlice';
 
+// Import some other stuff, bit be lazy about it. The FAAM way.
 const Navbar = lazy(() => import('./navbar/navbar'))
 const TimeframeSelector = lazy(() => import('./timeframe/timeframe'))
 const ViewConfig = lazy(() => import('./views/viewConfig'))
@@ -22,8 +34,8 @@ const JsonView = lazy(() => import('./views/jsonView'))
 const Timers = lazy(() => import('./timers/timer'))
 const TimerConfig = lazy(() => import('./timers/config'))
 
+import { useServers, useDarkMode } from './hooks';
 import { VistaErrorBoundary } from './components/error';
-import { useEffect } from 'react';
 
 /**
  * The main app component. This is the entry point for the application, which

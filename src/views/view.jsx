@@ -2,6 +2,12 @@ import { useSearchParams } from 'react-router-dom'
 import { decode } from 'base-64';
 import { base } from '../settings'
 
+/**
+ * A old style view, which just bungs a loads of crap into iframes, parsing the content
+ * from b64 encoded guff in the search parameters.
+ * 
+ * @returns {JSX.Element}
+ */
 const View = () => {
     const [searchParams, _] = useSearchParams();
     const encodedUrls = searchParams.getAll('plot')

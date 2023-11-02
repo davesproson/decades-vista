@@ -1,3 +1,10 @@
+/**
+ * Let's wrap Bulma's form components in React components.
+ * That's a good idea, right?
+ * 
+ * (It's not a good idea, bit it killed some time.)
+ */
+
 export const GroupedField = (props) => {
     return (
         <div className="field is-grouped">

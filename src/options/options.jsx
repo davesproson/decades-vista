@@ -4,6 +4,12 @@ import { PlotOptionCard } from './plotOptions';
 import { AxisSelectionCard, AxisScalingCard } from './axisOptions';
 import { Button } from '../components/buttons';
 
+/**
+ * This is a horrible name for a component. It's the little text box that displays the url
+ * for the plot.
+ * 
+ * @returns {JSX.Element}
+ */
 const AddressBar = () => {
     const address = usePlotUrl()
     return (
@@ -18,6 +24,12 @@ const AddressBar = () => {
     )
 }
 
+/**
+ * The options page. This is the page that displays the plot options, axis options, and
+ * the address bar.
+ * 
+ * @returns {JSX.Element}
+ */
 const Options = () => {
     return (
         <div className="container has-navbar-fixed-top">

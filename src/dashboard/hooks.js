@@ -21,6 +21,7 @@ const useDashboardData = (dataOptions) => {
                             .catch(() => setData([]))
                             
         const interval = setInterval(() => {
+            if(document.hidden) return
             getData(dataOptions).then(data => setData(data))
                                 .catch(() => setData([]))
         }, 1000)

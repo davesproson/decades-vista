@@ -1,5 +1,9 @@
 import React from "react"
 
+/**
+ * The sad error face is probably the only worthwhile thing I've done
+ * at FAAM
+ */
 const VistaError = (props) => {
     const featuresColor = "#0abbef"
     
@@ -36,6 +40,10 @@ const VistaError = (props) => {
     )
 }
 
+/**
+ * A custom error boundary component which displays a nice error message. 
+ * For small values of nice.
+ */
 class VistaErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
@@ -56,7 +64,6 @@ class VistaErrorBoundary extends React.Component {
   
     render() {
       if (this.state.hasError) {
-        // You can render any custom fallback UI
         return <VistaError error={this.state.error} message={this.state.errorMessage}/>
       }
   

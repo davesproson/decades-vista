@@ -5,6 +5,20 @@ import { toggleParamSelected } from "../redux/parametersSlice"
 import { Loader } from "../components/loader"
 import { VistaErrorBoundary } from "../components/error"
 
+/**
+ * A single line in the parameter table. When clicked, it toggles the selected
+ * state of the parameter. This is an accessibility nightmare, and should be
+ * replaced with something that's meant to be clicked.
+ * 
+ * @param {Object} props
+ * @param {number} props.id - The parameter id
+ * @param {string} props.name - The parameter name
+ * @param {boolean} props.selected - Whether the parameter is selected
+ * @param {string} props.units - The parameter units
+ * @param {boolean} props.status - The parameter status (indicating available/unavailable)
+ * 
+ * @returns {JSX.Element}
+ */
 const ParameterLine = (props) => {
     const dispatch = useDispatch()
 
@@ -44,7 +58,12 @@ const ParameterLine = (props) => {
     )
 }
 
-const ParameterTable = (props) => {
+/**
+ * A table of parameters. This is the main component for the parameters view.
+ * 
+ * @returns {JSX.Element}
+ */
+const ParameterTable = () => {
 
     const vars = useSelector(state => state.vars)
     const filterText = useSelector(state => state.paramfilter)
